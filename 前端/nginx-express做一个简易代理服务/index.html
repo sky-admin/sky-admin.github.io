@@ -6,15 +6,15 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head><link rel=manifest href=/manifest.json>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.9.0"><link rel="manifest" href="/manifest.json">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -29,7 +29,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -37,38 +37,39 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="skyADMIN, 环宇, 环宇博客" />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
+  <meta name="keywords" content="nodejs,">
 
 
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
 
 
 
-<meta name="description" content="以前我只烦开会，明明QQ上三言两语，实在不行一封邮件，就能搞定的问题，非要把一帮人集齐，浪费两三个小时。现在遇上另一种讨厌的东西了——投票。">
+<meta name="description" content="用 NGINX + EXPRESS + Let’s Encrypt 构建HTTPS接口服务">
+<meta name="keywords" content="nodejs">
 <meta property="og:type" content="article">
-<meta property="og:title" content="投票是个什么鬼">
-<meta property="og:url" content="https://www.lihuanyu.com/随笔/投票是个什么鬼/index.html">
-<meta property="og:site_name" content="skyADMIN&#39;s Blog">
-<meta property="og:description" content="以前我只烦开会，明明QQ上三言两语，实在不行一封邮件，就能搞定的问题，非要把一帮人集齐，浪费两三个小时。现在遇上另一种讨厌的东西了——投票。">
+<meta property="og:title" content="nginx+express做一个简易代理服务">
+<meta property="og:url" content="https://www.lihuanyu.com/前端/nginx-express做一个简易代理服务/index.html">
+<meta property="og:site_name" content="环宇的Blog">
+<meta property="og:description" content="用 NGINX + EXPRESS + Let’s Encrypt 构建HTTPS接口服务">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-02-05T07:55:59.533Z">
+<meta property="og:updated_time" content="2020-06-20T05:59:04.542Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="投票是个什么鬼">
-<meta name="twitter:description" content="以前我只烦开会，明明QQ上三言两语，实在不行一封邮件，就能搞定的问题，非要把一帮人集齐，浪费两三个小时。现在遇上另一种讨厌的东西了——投票。">
+<meta name="twitter:title" content="nginx+express做一个简易代理服务">
+<meta name="twitter:description" content="用 NGINX + EXPRESS + Let’s Encrypt 构建HTTPS接口服务">
 
 
 
@@ -96,13 +97,13 @@
 
 
 
-  <link rel="canonical" href="https://www.lihuanyu.com/随笔/投票是个什么鬼/"/>
+  <link rel="canonical" href="https://www.lihuanyu.com/前端/nginx-express做一个简易代理服务/">
 
 
 
 
 
-  <title> 投票是个什么鬼 | skyADMIN's Blog </title>
+  <title> nginx+express做一个简易代理服务 | 环宇的Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -141,14 +142,14 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
-      <span class="site-title">skyADMIN's Blog</span>
+      <span class="site-title">环宇的Blog</span>
       <span class="logo-line-after"><i></i></span>
     </a>
   </div>
     
-      <p class="site-subtitle">一只菜鸟的自娱自乐</p>
+      <p class="site-subtitle">工程师的笔记</p>
     
 </div>
 
@@ -170,7 +171,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -180,7 +181,7 @@
         <li class="menu-item menu-item-categories">
           <a href="/categories" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
             
             分类
           </a>
@@ -190,7 +191,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
             
             关于
           </a>
@@ -200,7 +201,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -235,18 +236,18 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/随笔/投票是个什么鬼/">
+  <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/前端/nginx-express做一个简易代理服务/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="skyADMIN">
-    <meta itemprop="description" content="">
+    <meta itemprop="description" content>
     <meta itemprop="image" content="/images/avatar.png">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="skyADMIN's Blog">
+    <meta itemprop="name" content="环宇的Blog">
     <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="skyADMIN's Blog" src="">
+      <img style="display:none;" itemprop="url image" alt="环宇的Blog" src>
     </span>
   </span>
 
@@ -259,7 +260,7 @@
             
             
               
-                投票是个什么鬼
+                nginx+express做一个简易代理服务
               
             
           </h1>
@@ -274,8 +275,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-12-29T01:35:05+00:00">
-                2015-12-29
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-31T12:05:08+00:00">
+                2020-05-31
               </time>
             
 
@@ -285,7 +286,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -297,8 +298,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/随笔/" itemprop="url" rel="index">
-                    <span itemprop="name">随笔</span>
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
                   </a>
                 </span>
 
@@ -315,8 +316,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/随笔/投票是个什么鬼/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="随笔/投票是个什么鬼/" itemprop="commentCount"></span>
+                <a href="/前端/nginx-express做一个简易代理服务/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="前端/nginx-express做一个简易代理服务/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -342,24 +343,30 @@
       
 
       
-        <p>以前我只烦开会，明明QQ上三言两语，实在不行一封邮件，就能搞定的问题，非要把一帮人集齐，浪费两三个小时。现在遇上另一种讨厌的东西了——投票。</p>
+        <blockquote>
+<p>用 NGINX + EXPRESS + Let’s Encrypt 构建HTTPS接口服务</p>
+</blockquote>
 <a id="more"></a>
-<p>投票多好啊，民主，公开，那为啥我烦这种东西呢？</p>
-<p>现在身在学校，不清楚社会上会咋处理这些问题。学校里搞个活动就喜欢叫人来投票，评一评比一比。初衷可能还是好的，但是现在越来越变味了。</p>
-<p>互联网时代，有了微信这个东西，说实话我挺难理解微信的， IM产品的核心功能不就是聊天么，感觉QQ已经完全实现了IM产品的全部功能，偏偏现在居然杀出一个微信。如果微信是别家的产品，来和腾讯QQ抢市场，我也能理解，结果微信也是腾讯家的产品，这么左右互搏有意思么……</p>
-<p>在电脑、手机、软件方面，使用各类产品都是无压力的，一点不觉得微信的交互更人性化，为什么受到了大批群众的喜爱……</p>
-<p>应该都感觉出我对微信深深的怨念了，是的，我很少用微信，所以投票讨厌的一点来了。</p>
-<p>干着自己的事儿呢，一条QQ消息过来，帮我投个票呗，加微信号XXXX，输入我要投票，投X号一票，谢谢啊。</p>
-<p>一开始我也挺乐意帮忙的，都是自己的兄弟、朋友，又确实是举手之劳。于是各种加公众号，现在列表里攒了一堆公众号。</p>
-<p>其实这个也不太碍事，反正我不用，但是真的，随着现在越来越忙，越来越讨厌被这些碎片事务所打扰。但是打扰不是关键，毕竟帮朋友的忙，打扰一下不是问题。</p>
-<p>可是这种方式是有问题的啊，本来投票是由评委为选手投票，竞选学生会主席，现场的同学老师听了竞职演讲参与投票，决出获胜人员，是公平，是民主。现在竞选学生会主席，竞选人员演讲完毕后，让大家去微信上投票，有微信号就能投，中国石油大学的学生会选举，让四川农业大学的学生也投一票是几个意思？</p>
-<p>以上例子并不是真实案例，只是那么一比喻，因为就我感觉，学校学生会主席怎么可能是学生投票选出来的呢，等我一下，收个快递……</p>
-<p>……</p>
-<p>……</p>
-<p>开个玩笑呵呵哒……</p>
-<p>不过真实情况差不多，常常可以在QQ群里看见有人喊，我的朋友在参加XXX评选，大家帮忙投一票。请问，这比赛是啥？比谁人脉广么？我感觉目前基本所有的这种评选啊，投票啊，都是在比谁的面子大，人脉广，朋友多。</p>
-<p>甚至呢，有的技术含量比较低的，在比谁的电脑技术好。谁有能力刷票，唔，还得刷得让别人看不出来……</p>
-<p>有意思么？在线投票本来是个方便大家的产品，被活生生用成这样，给无数忙着的人心里添一份堵。</p>
+<p>最近想搞个小程序，需要查询下github的api服务。小程序的请求是走的小程序提供的api，没有跨域问题，不过需要配置下请求域名白名单。</p>
+<p>本以为可以在小程序后台配置一下域名之后直接请求，结果发现小程序后台配置里只允许设备案过的域名，GitHub显然不可能有国内备案。</p>
+<p>还好自己也有服务器+域名，自己动手搭一个。而且小程序要求全是HTTPS的，还是有遇到一点小坑。</p>
+<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><p>其实NGINX本身就可以完成反向代理功能，不过考虑到以后可能还想在这个基础上做一些别的东西，还是来个可编程的服务比较好。出于简便性考虑直接无脑选了express。</p>
+<p>开个新的二级域名，因为只有一台云虚拟机，80/443端口已经被NGINX占用了，那就NGINX转发给express吧，所以整个结构就是NGINX反向代理express（这个express服务又是个对github的反向代理，真巧……）</p>
+<p>NGINX加一个新配置，监听80端口，对 / 全转发去本机的3000端口，完事。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">     server_name  域名马赛克;</span><br><span class="line">     listen 80;</span><br><span class="line"> </span><br><span class="line">     location / &#123;</span><br><span class="line">         proxy_pass    http://127.0.0.1:3000;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后用Let’s Encrypt搞一下HTTPS，用 <a href="https://certbot.eff.org/" target="_blank" rel="noopener">certbot</a> 这个工具，直接选服务器软件和系统，可以自动帮你完成配置HTTPS。</p>
+<p>用express写个hello world，再全局安装pm2，启动我们的express程序，访问域名即可看到hello world，基本搞定。接下来再选个反向代理中间件，配置下target为api.github.com，大功告成。</p>
+<h2 id="超时"><a href="#超时" class="headerlink" title="超时"></a>超时</h2><p>结果接下来实际测试发现炸了……</p>
+<p>很多请求报504 网关超时</p>
+<p>一通搜索，发现很多是给NGINX和PHP结合的方案用的（后仰：什么叫全宇宙最好的语言啊），不过差不多，都是说设置上游超时时间。</p>
+<p>创建 <code>/etc/nginx/conf.d/timeout.conf</code> ，加上以下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">proxy_connect_timeout       600;</span><br><span class="line">proxy_send_timeout          600;</span><br><span class="line">proxy_read_timeout          600;</span><br><span class="line">send_timeout                600;</span><br></pre></td></tr></table></figure>
+<p>然后再试，发现还是容易出现504。</p>
+<p>就需要细节排查问题了，先查nginx的日志，access.log和error.log，发现这个504在nginx的错误日志里是没有的，access里有记录express程序给返回了200和504，问题应该是出在express里。</p>
+<p>接下来打印pm2的日志，发现错误信息是 <code>Error occurred while trying to proxy request xxxxx from 127.0.0.1:xxxx to https://api.github.com (ECONNREFUSED) (https://nodejs.org/api/errors.html#errors_common_system_errors)</code></p>
+<p>打开这个链接，这个错误信息是：ECONNREFUSED (Connection refused): No connection could be made because the target machine actively refused it. This usually results from trying to connect to a service that is inactive on the foreign host.</p>
+<p>目标机器主动拒绝了请求，这说明Github应该是觉得这个请求不正常，想了下估计是没带一个浏览器的头，伪装成浏览器应该就好。</p>
+<p>配置下代理的headers，再重启服务，终于OK了</p>
 
       
     </div>
@@ -381,10 +388,20 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/nodejs/" rel="tag"># nodejs</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
+            
+              <a href="/前端/NPM小技巧/" rel="next" title="NPM小技巧">
+                <i class="fa fa-chevron-left"></i> NPM小技巧
+              </a>
             
           </div>
 
@@ -392,8 +409,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/架构/对前后端分离的思考/" rel="prev" title="对前后端分离的思考">
-                对前后端分离的思考 <i class="fa fa-chevron-right"></i>
+              <a href="/前端/滴滴出行小程序体积优化实践/" rel="prev" title="滴滴出行小程序体积优化实践">
+                滴滴出行小程序体积优化实践 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -448,12 +465,19 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/images/avatar.png"
-               alt="skyADMIN" />
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="skyADMIN">
           <p class="site-author-name" itemprop="name">skyADMIN</p>
           <p class="site-description motion-element" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</p>
         </div>
@@ -462,7 +486,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -480,7 +504,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">标签</span>
               
             </div>
@@ -527,7 +551,7 @@
         
           <div class="cc-license motion-element" itemprop="license">
             <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
-              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
             </a>
           </div>
         
@@ -541,6 +565,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#方案"><span class="nav-number">1.</span> <span class="nav-text">方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#超时"><span class="nav-number">2.</span> <span class="nav-text">超时</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
     </div>
   </aside>
@@ -552,10 +592,10 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2016 - 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -568,7 +608,7 @@
 </div>
 
 <div class="powered-by">
-  蜀ICP备15023364号
+  <a rel="nofollow" target="_blank" href="http://beian.miit.gov.cn/">蜀ICP备15023364号</a>
 </div>
 
 <div class="theme-info">
@@ -663,9 +703,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'skyadmin';
-      var disqus_identifier = '随笔/投票是个什么鬼/';
+      var disqus_identifier = '前端/nginx-express做一个简易代理服务/';
 
-      var disqus_title = "投票是个什么鬼";
+      var disqus_title = "nginx+express做一个简易代理服务";
 
 
       function run_disqus_script(disqus_script) {
@@ -711,7 +751,7 @@
 
 
 <script>if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js?t=1517817393097')
+  navigator.serviceWorker.register('/sw.js?t=1592632750979')
     .then(function () {console.log('ServiceWorker Register Successfully.')})
     .catch(function (e) {console.error(e)});
 }

@@ -24,15 +24,15 @@ var precacheUrls = [];
 
   precacheUrls.push('/');
 
-  precacheUrls.push('/前端/写了个前端渲染的教程/');
+  precacheUrls.push('/前端/NPM小技巧/');
 
   precacheUrls.push('/docker/docker-for-windows不响应react项目改变后的重编译/');
 
-  precacheUrls.push('/前端/前端项目工程化实践/');
+  precacheUrls.push('/其它/hello-world/');
 
-  precacheUrls.push('/前端/谈谈CORS下前端的cookie/');
+  precacheUrls.push('/前端/mpx1/');
 
-  precacheUrls.push('/工程化/使用Docker解决开发环境问题/');
+  precacheUrls.push('/前端/nginx-express做一个简易代理服务/');
 
 toolbox.precache(precacheUrls);
 toolbox.options = {"networkTimeoutSeconds":5};

@@ -1,0 +1,794 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0"><link rel="manifest" href="/manifest.json">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="小程序,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="背景在19年下半年，我们将微信/支付宝的钱包入口中的滴滴出行由webapp迁移为小程序，在迁移过程中我们遇到了一系列问题和挑战，其中包体积问题尤为突出。 18年至19年初时，滴滴出行小程序里承载的业务只有网约车，且业务需求较少，就全在主包内搞定了。在那之后，其他业务方，诸如公交/代驾/车服/单车/顺风车等业务开始接入，同时网约车的业务也要做全面的补齐，业务量和代码量一起爆炸式增长。 微信对小程序包">
+<meta name="keywords" content="小程序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="滴滴出行小程序体积优化实践">
+<meta property="og:url" content="https://www.lihuanyu.com/前端/滴滴出行小程序体积优化实践/index.html">
+<meta property="og:site_name" content="环宇的Blog">
+<meta property="og:description" content="背景在19年下半年，我们将微信/支付宝的钱包入口中的滴滴出行由webapp迁移为小程序，在迁移过程中我们遇到了一系列问题和挑战，其中包体积问题尤为突出。 18年至19年初时，滴滴出行小程序里承载的业务只有网约车，且业务需求较少，就全在主包内搞定了。在那之后，其他业务方，诸如公交/代驾/车服/单车/顺风车等业务开始接入，同时网约车的业务也要做全面的补齐，业务量和代码量一起爆炸式增长。 微信对小程序包">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://dpubstatic.udache.com/static/dpubimg/0d3a813f-e7e2-482f-968b-86873acc68af.jpg">
+<meta property="og:image" content="https://dpubstatic.udache.com/static/dpubimg/c8a9dfff-3feb-4b76-8284-b43081291a00.png">
+<meta property="og:image" content="https://dpubstatic.udache.com/static/dpubimg/b93e7f3c-8a62-4a28-99ed-b1660391aec9.png">
+<meta property="og:updated_time" content="2020-06-20T05:59:04.542Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="滴滴出行小程序体积优化实践">
+<meta name="twitter:description" content="背景在19年下半年，我们将微信/支付宝的钱包入口中的滴滴出行由webapp迁移为小程序，在迁移过程中我们遇到了一系列问题和挑战，其中包体积问题尤为突出。 18年至19年初时，滴滴出行小程序里承载的业务只有网约车，且业务需求较少，就全在主包内搞定了。在那之后，其他业务方，诸如公交/代驾/车服/单车/顺风车等业务开始接入，同时网约车的业务也要做全面的补齐，业务量和代码量一起爆炸式增长。 微信对小程序包">
+<meta name="twitter:image" content="https://dpubstatic.udache.com/static/dpubimg/0d3a813f-e7e2-482f-968b-86873acc68af.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.lihuanyu.com/前端/滴滴出行小程序体积优化实践/">
+
+
+
+
+
+  <title> 滴滴出行小程序体积优化实践 | 环宇的Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?7e71dd8991a7f847af3a2afaf7898a38";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">环宇的Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">工程师的笔记</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/前端/滴滴出行小程序体积优化实践/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="skyADMIN">
+    <meta itemprop="description" content>
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="环宇的Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="环宇的Blog" src>
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                滴滴出行小程序体积优化实践
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T13:16:38+00:00">
+                2020-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/前端/滴滴出行小程序体积优化实践/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="前端/滴滴出行小程序体积优化实践/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在19年下半年，我们将微信/支付宝的钱包入口中的滴滴出行由webapp迁移为小程序，在迁移过程中我们遇到了一系列问题和挑战，其中包体积问题尤为突出。</p>
+<p>18年至19年初时，滴滴出行小程序里承载的业务只有网约车，且业务需求较少，就全在主包内搞定了。在那之后，其他业务方，诸如公交/代驾/车服/单车/顺风车等业务开始接入，同时网约车的业务也要做全面的补齐，业务量和代码量一起爆炸式增长。</p>
+<p>微信对小程序包体积要求是总体积不得超过12M，主包及单个分包体积不得超过2M。支付宝的计算方式略有区别，不过大同小异，所以我们主要以微信为例介绍滴滴出行小程序在体积控制方面做的努力与沉淀。</p>
+<a id="more"></a>
+<p>滴滴出行包含了丰富多样的出行业务，除了网约车的快/专/出/豪四大业务线外，还有顺风车、代驾、两轮车、公交、车生活等众多业务线。整个滴滴出行小程序的结构大致可以分为首页与订单页。首页中承载了各个业务线的需求表达，个人中心和营销入口，各个业务线的订单页则承载了具体的出行订单展示逻辑。</p>
+<p>所有业务线的需求表达逻辑都在首页承载，为了良好的切换体验，我们在首页采用了单页顶导的方案进行业务线展示。即每个业务线在首页中提供一个需求表达组件，当用户切换顶导业务线后，切换出对应的业务线组件。</p>
+<p>在这种设计下，所有的业务线的需求表达逻辑都集中在首页这个单一页面中，导致我们在业务迭代过程中，承载首页的主包体积迅速增长，很快触碰了小程序平台的单包2M上限，对后续的业务迭代与发展带来巨大阻碍。因此，对于包体积的控制是我们在小程序开发过程中面临的一大难题。</p>
+<h2 id="体积控制"><a href="#体积控制" class="headerlink" title="体积控制"></a>体积控制</h2><p>下面我们将介绍滴滴出行小程序开发迭代过程中，我们对于小程序包体积进行的一系列优化控制实践。</p>
+<h3 id="框架包体积控制"><a href="#框架包体积控制" class="headerlink" title="框架包体积控制"></a>框架包体积控制</h3><p>滴滴出行小程序基于滴滴开源的Mpx小程序框架进行开发，Mpx框架本身在包体积控制上就做了很多优化工作。</p>
+<p>Mpx框架的编译构建完全基于webpack，能够直接利用webpack已提供的体积优化能力，如依赖分析、模块去重、代码压缩、tree shaking、side effects等。除此之外，框架还针对小程序做了很多包体积优化工作，包括页面/组件依赖分析，样式复用，静态资源处理和完善的分包支持等。</p>
+<p>在这些能力的支持下，我们可以不做任何配置，构建输出一个没有任何冗余重复代码并且经过压缩优化的小程序包。</p>
+<blockquote>
+<p>微信开发者工具选项里也有类似的”上传代码时自动压缩混淆”可勾选，但在开发者工具中上传代码时计算体积是直接计算的当前项目代码的体积，并不会依据压缩后的体积。因此，如果你使用原生小程序进行开发，你的source代码极有可能进行进一步的压缩以节省空间。</p>
+</blockquote>
+<h3 id="分析体积"><a href="#分析体积" class="headerlink" title="分析体积"></a>分析体积</h3><p>虽然框架已经提供了很多在体积控制方面的优化，但是随着业务迭代我们发现主包体积依然偏大。</p>
+<p>在遇到主包体积偏大后，我们需要弄明白，主包里有哪些东西？它们为什么这么大？</p>
+<p>使用原生小程序或者其他非基于webpack的框架进行开发的同学遇到这个问题后，可能只能去看硬盘上的文件大小。这样一来，各个模块的大小占比可能并不直观。而Mpx框架则可以借助 webpack-bundle-analyzer 这样一个webpack插件去做辅助分析。</p>
+<p>比如这是一个使用Mpx框架编写的demo，通过 <code>npm run build --report</code> 就可以看到这样一个界面：</p>
+<p><img src="https://dpubstatic.udache.com/static/dpubimg/0d3a813f-e7e2-482f-968b-86873acc68af.jpg" alt="体积分析图"></p>
+<p>可以看到它由 echarts / moment / lodash / socket-weapp / core-js 等第三方库组成。各个库的大小，相互依赖关系也能清晰地看出。</p>
+<p>对于滴滴出行小程序也是能看到类似的图，能看到整个项目到底是由哪些代码组成。</p>
+<p>对了，前情提要，滴滴出行前端开发一直是采用“源码编译”的，可以让整个项目里公共的依赖可以实现仅有一份，一起共用。简而言之，也有助于减少项目代码体积。<a href="https://github.com/DDFE/DDFE-blog/issues/23" target="_blank" rel="noopener">相关资料</a></p>
+<p>要完美发挥源码编译的效果，需要上下游一起建立整套源码编译生态，比如主项目的依赖方在声明公用依赖时，就应该用peerDep或者devDep来声明一些公有依赖，这些共有依赖应该在主项目中统一声明，避免因版本不同装出两份公共依赖，那样反而会增大体积。部分接入方可能并不知道这个事情，因此代码里实际时存在这种情况的，而依照分析图，我们顺利地发现了这种问题，并推动相关团队清除了这些重复依赖。</p>
+<p>然后我们也进行了一轮业务代码梳理和精简，删除了一些无用代码，精简了websocket的消息体描述文件等。</p>
+<h3 id="配置分包"><a href="#配置分包" class="headerlink" title="配置分包"></a>配置分包</h3><p>分包是小程序给出的类似web异步引入的一个方案，把一些上来不需要的页面可以放进分包里，跳转到对应页面时才去下载分包，将这些不是上来就需要用到的页面及其附属资源放到分包里可以有效减少主包体积。</p>
+<p>Mpx框架首先初步支持了分包输出，早期规则保持和微信一致，主要根据资源存放的目录判断应该输出到主包还是分包。有这个能力后，我们把行程页抽到了分包，大概抽出了200多K左右的空间。</p>
+<p>有了行程页的成功拆分后，我们开始对所有的非首页代码进行分包操作，比如起终点选择和个人中心。以及其他业务线的接入是通过npm+packages的方式接入，我们也尽可能将这些业务线的所有非首页的代码放到了分包。</p>
+<p>这里还有个题外话，得益于mpx早期设计了packages形式的业务组合方案，可以很方便地让业务独立开发，又能及其方便地整合。而后发现微信的分包的json配置设计和packages很像，就在这个基础上支持了微信的分包，用户侧仅需在原来的packages基础上加一个query标记这个分包的名字即可。</p>
+<p>拆除各个分包后，整个项目结构大概如图：</p>
+<p><img src="https://dpubstatic.udache.com/static/dpubimg/c8a9dfff-3feb-4b76-8284-b43081291a00.png" alt="分包一期结构图"></p>
+<p>初阶的分包工作进行完毕后，总计从主包里拆了差不多400K的空间到分包里。</p>
+<h3 id="分包资源精细化管理"><a href="#分包资源精细化管理" class="headerlink" title="分包资源精细化管理"></a>分包资源精细化管理</h3><p>上面提到，Mpx框架初期的分包处理规则是完全按照微信的方式，把在分包路径下的资源收集到分包里。而npm管理的资源因为都在node_modules目录下，不属于任何分包路径，则会被全部收集进主包。</p>
+<p>比如之前我们有行程页分包，行程页自有的状态管理store整个都在行程页分包的路径下，就会被收集到行程页分包中。而行程页还用到了封装好的didi-socket库，这个库是公共的npm包，即使它只在行程页分包里被使用，但由于它本身路径是在node_modules下的，那么就会将其收集进主包里。</p>
+<p>因为更早期的一些设计，行程页的资源和首页是分割开的，都比较独立地存在于各自的路径下，一期的分包处理的大头也主要是行程页，它刚好契合了Mpx初期对分包处理上的特点，因此能较好地收集进行程页分包里。</p>
+<p>随着业务迭代，后续大量业务线的接入都是通过npm进行的，就会有大量npm包资源，他们都在node_modules目录下，因此全部会被收集进主包。</p>
+<p>所以Mpx框架进行了一系列改造：</p>
+<ol>
+<li>在构建的依赖收集过程中，我们会对收集到的依赖打上标记，记录它是被哪些分包引入的。一旦它只有一个分包引入，它就会被输出到这个分包中。</li>
+<li>我们会根据用户定义的分包配置，自动在 SplitChunksPlugin 中生成各个分包的 cacheGroups ，把分包中的复用模块抽取到分包下的bundle中。</li>
+<li>对于组件和静态资源，如果他们被多个分包所引用且未在主包中引用，为了确保主包体积最优，这些资源将产生多份副本分别输出到对应分包中，而不会占用主包体积。</li>
+</ol>
+<p>这样一来，<strong><em>不管文件在哪个位置，只要它只被某个分包引用，它就仅会存在于这个分包中</em></strong>。</p>
+<p>这个改动完成后项目结构看似和之前一样，但得益于Mpx处理分包资源能力的升级，我们得以将主包里一些第三方业务线only的资源成功抽取到对应的分包，相当于更好更全面的<strong>让所有可以放进分包的资源都放进分包里去</strong>。</p>
+<h3 id="封面方案"><a href="#封面方案" class="headerlink" title="封面方案"></a>封面方案</h3><p>再后来滴滴出行小程序需要替换微信/支付宝里原有的webapp入口，小程序接入的业务线迅速增加，包体积迅速增长。</p>
+<p>这个部分体积增长的主要原因前面提到过，所有的业务线都要接入到主页来展示。这也是由于业务特点决定的，滴滴出行提供了丰富的出行产品线，网约车下的快专出豪拼，普惠的单车代驾跑腿等等产品，用户是可能需要反复切换挑选的。这个过程还要保留起终点车型之类的信息，必须是一个页面内切换组件加一整套非常复杂的大型状态管理才能比较流畅顺滑地实现。而不能像一些电商/信息平台，将不同的功能拆分到不同页面，让用户通过首页的菜单进入子页面再进行操作，首页只承载入口，只有较少的业务逻辑，分包处理起来就会容易很多。</p>
+<p>因此各个业务线都要提供首页组件进行接入。这个组件会在首页被用到，所以无论如何也拆不到分包里。最终，整个首页主包部分的体积可以分成两个部分：基础库和业务代码。两者的体积占比大概是公共依赖基础库占1M左右，业务代码占1M左右。</p>
+<p>这么庞大的基础库体积主要是由于滴滴出行的业务线及业务团队众多，各方均有一些自己的基础依赖。比如网约车依赖的长链接通信pb数据描述文件，地图会依赖的大数计算库，代驾依赖的CML框架运行时及通信网关，和各个业务线使用的基础组件库等。</p>
+<p>所以滴滴出行小程序面对的问题在当时已经无法用纯技术方案在短期内快速解决问题了，于是我们做了一个工程架构调整，可以叫封面页方案，解决了主包问题。</p>
+<p>封面方案简单讲，就是做一个空的首页，放一张logo图，页面一旦加载，立刻跳转另一个页面，这个页面真正承载业务，且它被放在分包里。</p>
+<p>这个操作的意义在于，主包里就只剩下了所有方都要依赖的基础框架/库等，而业务全被抽离到了分包里。</p>
+<p><img src="https://dpubstatic.udache.com/static/dpubimg/b93e7f3c-8a62-4a28-99ed-b1660391aec9.png" alt="封面方案结构图"></p>
+<p>这是封面方案完成后项目的结构图，之前很大块的首页业务逻辑被抽出到首页分包中了。</p>
+<p>这样一个挪移的操作的结果是我们可以有2M的主包空间来乘放基础的公共的库，有一个2M左右的分包来乘放前面提到的滴滴出行的集成了各种业务的“大主页”。而当时拆下来差不多有1.2M的主包，800K+的业务主分包。</p>
+<p>这个改造最优秀的一点在于，后续的业务迭代产生的体积增长几乎全是在业务主分包里，剩下的1.1M+空间留给业务迭代还是比较充裕的。而主包的体积在理想条件下是可以长久保持不变的，就不会因为业务需求的不断开发反复导致主包体积临近超标，不再需要为主包体积感到焦虑。</p>
+<p>当然，可以看到，这个方案本身是没有消减任何体积的，只是把位置变换了一下。除此之外，这个封面页方案其实也存在一些缺陷，比如首屏业务的展示会变慢，因为要加载的内容会变多，不过小程序本身有较好的缓存资源的能力，因此还算可以接受。</p>
+<p>相比于因体积问题卡住需求迭代以及产品线的接入，目前这个方案至少能解决有无问题。我们开发团队后续也会持续跟进关注体积问题，看是否会有产品方案变更或者小程序本身给出一些解决方案来进一步优化这个部分。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Mpx框架在包体积控制上做了大量工作，对于npm场景下的小程序分包进行了非常完善的支持。</p>
+<p>滴滴出行小程序团队在框架支持的基础上，通过梳理业务依赖，充分利用分包，调整交互方案等一系列手段，在不阻碍业务发展的前提下，将庞大复杂的滴滴出行小程序包体积控制在平台限制范围内。</p>
+<p>希望本文能给在包体积上遇到问题的小程序开发者们带来一些启发，欢迎留言交流。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/小程序/" rel="tag"># 小程序</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/前端/nginx-express做一个简易代理服务/" rel="next" title="nginx+express做一个简易代理服务">
+                <i class="fa fa-chevron-left"></i> nginx+express做一个简易代理服务
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="skyADMIN">
+          <p class="site-author-name" itemprop="name">skyADMIN</p>
+          <p class="site-description motion-element" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sky-admin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/wbskyadmin" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/marshall-lee/activities" target="_blank" title="ZhiHu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  ZhiHu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#体积控制"><span class="nav-number">2.</span> <span class="nav-text">体积控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#框架包体积控制"><span class="nav-number">2.1.</span> <span class="nav-text">框架包体积控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析体积"><span class="nav-number">2.2.</span> <span class="nav-text">分析体积</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置分包"><span class="nav-number">2.3.</span> <span class="nav-text">配置分包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分包资源精细化管理"><span class="nav-number">2.4.</span> <span class="nav-text">分包资源精细化管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#封面方案"><span class="nav-number">2.5.</span> <span class="nav-text">封面方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skyADMIN</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="powered-by">
+  <a rel="nofollow" target="_blank" href="http://beian.miit.gov.cn/">蜀ICP备15023364号</a>
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'skyadmin';
+      var disqus_identifier = '前端/滴滴出行小程序体积优化实践/';
+
+      var disqus_title = "滴滴出行小程序体积优化实践";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+<script>if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js?t=1592632750979')
+    .then(function () {console.log('ServiceWorker Register Successfully.')})
+    .catch(function (e) {console.error(e)});
+}
+</script></body>
+</html>
