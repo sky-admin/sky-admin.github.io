@@ -1,0 +1,781 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0"><link rel="manifest" href="/manifest.json">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="npm,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="为了更好的理解这个package-lock.json是干什么的，花了一点时间把npm官网这篇文档翻译了一下，第一次翻译英文文档，很多地方拿不准，用*标注了。">
+<meta name="keywords" content="npm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="package-lock.json[译]">
+<meta property="og:url" content="https://www.lihuanyu.com/前端/package-lock-json-译/index.html">
+<meta property="og:site_name" content="环宇的Blog">
+<meta property="og:description" content="为了更好的理解这个package-lock.json是干什么的，花了一点时间把npm官网这篇文档翻译了一下，第一次翻译英文文档，很多地方拿不准，用*标注了。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-20T05:56:53.447Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="package-lock.json[译]">
+<meta name="twitter:description" content="为了更好的理解这个package-lock.json是干什么的，花了一点时间把npm官网这篇文档翻译了一下，第一次翻译英文文档，很多地方拿不准，用*标注了。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.lihuanyu.com/前端/package-lock-json-译/">
+
+
+
+
+
+  <title> package-lock.json[译] | 环宇的Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?7e71dd8991a7f847af3a2afaf7898a38";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">环宇的Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">工程师的笔记</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/前端/package-lock-json-译/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="skyADMIN">
+    <meta itemprop="description" content>
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="环宇的Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="环宇的Blog" src>
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                package-lock.json[译]
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-10T02:40:03+00:00">
+                2017-08-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/前端/package-lock-json-译/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="前端/package-lock-json-译/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>为了更好的理解这个package-lock.json是干什么的，花了一点时间把<a href="https://docs.npmjs.com/files/package-lock.json" target="_blank" rel="noopener">npm官网这篇文档</a>翻译了一下，第一次翻译英文文档，很多地方拿不准，用<code>*</code>标注了。</p>
+<a id="more"></a>
+<h2 id="副标题"><a href="#副标题" class="headerlink" title="副标题"></a>副标题</h2><p><code>A manifestation of the manifest</code></p>
+<p>一份配置清单的说明文件。</p>
+<h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><p>package-lock.json 是一份在npm修改node_modules树或package.json时自动生成的文件。它精确地描述了这棵被生成的树（node_modules），这样后续的安装能生成完全一样的树，无论中间是否修改了依赖项。</p>
+<p>这个文件是希望被提交到源码仓库的，它主要用于以下几种目的：</p>
+<ul>
+<li>描述一份关系依赖树，以便队友开发、部署和持续集成时都能够精确地安装出完全相同的一个依赖树。</li>
+<li>为用户提供一个”穿越时间”去查看之前的node_modules而无需提交node_modules目录本身（该目录一般情况下可能很大）。</li>
+<li>让树的变化能通过代码控制的diff表现得更明显。</li>
+<li>为之前安装过的package跳过重复的元数据（metadata）优化安装过程。</li>
+</ul>
+<p>一个关键的细节是，不在项目顶层的package-lock.json文件将会被忽略，不能发表（应该是指在git里）。它和npm-shrinkwrap.json共享同个格式，在本质上它们其实是一样的，但是后者能够发表。除非使用一个部署的CLI工具或者使用发布流程制作线上包，否则是不推荐这样做的。</p>
+<p>如果package-lock.json和npm-shrinkwrap.json同时出现在一个项目的顶层，package-lock.json将会被忽略。</p>
+<h2 id="文件格式"><a href="#文件格式" class="headerlink" title="文件格式"></a>文件格式</h2><h3 id="name（名称）"><a href="#name（名称）" class="headerlink" title="name（名称）"></a>name（名称）</h3><p>这个package的名字，它必须和package.json里的一样。</p>
+<h3 id="version（版本）"><a href="#version（版本）" class="headerlink" title="version（版本）"></a>version（版本）</h3><p>这个package的版本，它必须和package.json中的版本相匹配。</p>
+<h3 id="lockfileVersion"><a href="#lockfileVersion" class="headerlink" title="*lockfileVersion"></a>*lockfileVersion</h3><p>一个整数版本，从1开始随着生成</p>
+<h3 id="packageIntegrity"><a href="#packageIntegrity" class="headerlink" title="*packageIntegrity"></a>*packageIntegrity</h3><p>这是一个<a href="subresource integrity">subresource integrity</a>值从package.json中创建来。*<code>No preprocessing of the package.json should be done</code>。这个字符串应该被类似于ssri这样的模块生成出来。</p>
+<h3 id="preserveSymlinks（保护的符号链接）"><a href="#preserveSymlinks（保护的符号链接）" class="headerlink" title="*preserveSymlinks（保护的符号链接）"></a>*preserveSymlinks（保护的符号链接）</h3><p>表明该安装完成且环境变量<code>NODE_PRESERVE_SYMLINKS</code>启用。安装程序一个使该属性和环境变量匹配。</p>
+<h3 id="dependencies（依赖）"><a href="#dependencies（依赖）" class="headerlink" title="dependencies（依赖）"></a>dependencies（依赖）</h3><p>一份包名（package name）到依赖对象（dependency object）的映射。依赖对象有以下属性：</p>
+<h4 id="version（版本）-1"><a href="#version（版本）-1" class="headerlink" title="version（版本）"></a>version（版本）</h4><p>这是一个说明符，来唯一标识一个包，且应该能通过此获取一份新的该包的副本。说明符有以下几种类别：</p>
+<ul>
+<li>打包好的依赖（bundle dependencies）：不管来源，这个版本号的目的是纯粹提供信息。</li>
+<li>registry资源：这是个版本号，如：1.2.3</li>
+<li>git资源：这是一个指示着git中某次提交的标记。（比如：<code>git+https://example.com/foo/bar#115311855adb0789a0466714ed48a1499ffea97e</code>）</li>
+<li>http的打包资源：这是一个指向压缩包的URL。（比如：<code>https://example.com/example-1.3.0.tgz</code>）</li>
+<li>本地的打包资源：这是一个指向本地压缩包的<code>文件URL</code>。（比如：<code>file:///opt/storage/example-1.3.0.tgz</code>）</li>
+<li>本地的链接源：这是一个指向本地<code>文件URL</code>的链接。（比如：<code>file:libs/our-module</code>）</li>
+</ul>
+<h4 id="integrity（完整性）"><a href="#integrity（完整性）" class="headerlink" title="integrity（完整性）"></a>integrity（完整性）</h4><p>这是一个关于该资源的标准的子资源完整性属性。</p>
+<ul>
+<li>如果是打包好的依赖将不会有该属性，不管其来源。</li>
+<li>如果是registry的资源，这个完整性（integrity）字段会由该registry来提供。<code>* or if one wasn&#39;t provided the SHA1 in shasum（不知道什么意思）</code></li>
+<li>如果是一个git资源，这将是我们克隆的那次提交的哈希值。</li>
+<li>如果是个远程压缩包，将是该文件的SHA512的值。</li>
+<li>如果是本地压缩包，也是文件的SHA512的值。</li>
+</ul>
+<h4 id="resolved（已解决的）"><a href="#resolved（已解决的）" class="headerlink" title="resolved（已解决的）"></a>resolved（已解决的）</h4><ul>
+<li>如果是打包好依赖，不会包含这个，不管来源。</li>
+<li>如果是registry资源，这将是该包的压缩包在registry的相对URL，如果压缩包的URL和registry的URL不同，将会是一个完整的URL。（比如百度自己的npm registry是<code>http://registry.npm.baidu.com/</code>，但安装包时从<code>http://pnpm.baidu.com拉取，就会是一个完整的URL</code>）</li>
+</ul>
+<h4 id="bundled（打包的）"><a href="#bundled（打包的）" class="headerlink" title="bundled（打包的）"></a>bundled（打包的）</h4><p>如果为<code>true</code>，这将是一个打包好的依赖，将从父模块安装。安装时该模块将在解压阶段直接从父模块提取，而不是像独立模块一样安装。</p>
+<h4 id="dev（开发，这个属性在我这里的项目中统统为ture，没理解是干嘛的）"><a href="#dev（开发，这个属性在我这里的项目中统统为ture，没理解是干嘛的）" class="headerlink" title="*dev（开发，这个属性在我这里的项目中统统为ture，没理解是干嘛的）"></a>*dev（开发，这个属性在我这里的项目中统统为ture，没理解是干嘛的）</h4><p>如果为true，那么这个依赖是顶层模块的开发依赖或者传递依赖。反之，则该依赖是一个顶层模块的开发依赖且是一个顶级的非开发模块的传递依赖。</p>
+<h4 id="optional（可选项）"><a href="#optional（可选项）" class="headerlink" title="*optional（可选项）"></a>*optional（可选项）</h4><p>如果是true，这个依赖是一个可选的依赖。</p>
+<h4 id="dependencies（依赖）-1"><a href="#dependencies（依赖）-1" class="headerlink" title="*dependencies（依赖）"></a>*dependencies（依赖）</h4><p>这个依赖的依赖，和顶级的属性一样。</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>该翻译仅供参考，很多地方把握不准，结合原文和实际操作对比能忽略文字更好地理解。实际操作中还发现很多和该文档说明不一致的地方，比如dependency的属性，还可能有一个叫<code>require</code>的属性，目测和dependencies一样。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/npm/" rel="tag"># npm</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/前端/webpack模板mock数据的方法/" rel="next" title="vue-cli webpack模板mock数据的方法">
+                <i class="fa fa-chevron-left"></i> vue-cli webpack模板mock数据的方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/工程化/使用Docker解决开发环境问题/" rel="prev" title="使用Docker解决开发环境问题">
+                使用Docker解决开发环境问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="skyADMIN">
+          <p class="site-author-name" itemprop="name">skyADMIN</p>
+          <p class="site-description motion-element" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/sky-admin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/wbskyadmin" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/marshall-lee/activities" target="_blank" title="ZhiHu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  ZhiHu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#副标题"><span class="nav-number">1.</span> <span class="nav-text">副标题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#描述"><span class="nav-number">2.</span> <span class="nav-text">描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件格式"><span class="nav-number">3.</span> <span class="nav-text">文件格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#name（名称）"><span class="nav-number">3.1.</span> <span class="nav-text">name（名称）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#version（版本）"><span class="nav-number">3.2.</span> <span class="nav-text">version（版本）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lockfileVersion"><span class="nav-number">3.3.</span> <span class="nav-text">*lockfileVersion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#packageIntegrity"><span class="nav-number">3.4.</span> <span class="nav-text">*packageIntegrity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#preserveSymlinks（保护的符号链接）"><span class="nav-number">3.5.</span> <span class="nav-text">*preserveSymlinks（保护的符号链接）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dependencies（依赖）"><span class="nav-number">3.6.</span> <span class="nav-text">dependencies（依赖）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#version（版本）-1"><span class="nav-number">3.6.1.</span> <span class="nav-text">version（版本）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#integrity（完整性）"><span class="nav-number">3.6.2.</span> <span class="nav-text">integrity（完整性）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#resolved（已解决的）"><span class="nav-number">3.6.3.</span> <span class="nav-text">resolved（已解决的）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bundled（打包的）"><span class="nav-number">3.6.4.</span> <span class="nav-text">bundled（打包的）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dev（开发，这个属性在我这里的项目中统统为ture，没理解是干嘛的）"><span class="nav-number">3.6.5.</span> <span class="nav-text">*dev（开发，这个属性在我这里的项目中统统为ture，没理解是干嘛的）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#optional（可选项）"><span class="nav-number">3.6.6.</span> <span class="nav-text">*optional（可选项）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dependencies（依赖）-1"><span class="nav-number">3.6.7.</span> <span class="nav-text">*dependencies（依赖）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写在最后"><span class="nav-number">4.</span> <span class="nav-text">写在最后</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skyADMIN</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="powered-by">
+  <a rel="nofollow" target="_blank" href="http://beian.miit.gov.cn/">蜀ICP备15023364号</a>
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'skyadmin';
+      var disqus_identifier = '前端/package-lock-json-译/';
+
+      var disqus_title = "package-lock.json[译]";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+<script>if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js?t=1592632627294')
+    .then(function () {console.log('ServiceWorker Register Successfully.')})
+    .catch(function (e) {console.error(e)});
+}
+</script></body>
+</html>
