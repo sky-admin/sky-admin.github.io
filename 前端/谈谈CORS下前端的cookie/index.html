@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="跨域有多种解决方案，包括JSONP，CORS，反向代理等等。CORS是我感觉最“优雅”的一种方案。但是这个方案下的cookie有一些不一样的表现，做相关尝试后做点记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="谈谈CORS下前端的cookie">
+<meta property="og:url" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E8%B0%88%E8%B0%88CORS%E4%B8%8B%E5%89%8D%E7%AB%AF%E7%9A%84cookie/index.html">
+<meta property="og:site_name" content="牧宇的Blog">
+<meta property="og:description" content="跨域有多种解决方案，包括JSONP，CORS，反向代理等等。CORS是我感觉最“优雅”的一种方案。但是这个方案下的cookie有一些不一样的表现，做相关尝试后做点记录。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E8%B0%88%E8%B0%88CORS%E4%B8%8B%E5%89%8D%E7%AB%AF%E7%9A%84cookie/frontend-example.png">
+<meta property="og:image" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E8%B0%88%E8%B0%88CORS%E4%B8%8B%E5%89%8D%E7%AB%AF%E7%9A%84cookie/cors-show1.png">
+<meta property="og:image" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E8%B0%88%E8%B0%88CORS%E4%B8%8B%E5%89%8D%E7%AB%AF%E7%9A%84cookie/cors-show2.png">
+<meta property="og:image" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E8%B0%88%E8%B0%88CORS%E4%B8%8B%E5%89%8D%E7%AB%AF%E7%9A%84cookie/cors-show3.png">
+<meta property="og:image" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E8%B0%88%E8%B0%88CORS%E4%B8%8B%E5%89%8D%E7%AB%AF%E7%9A%84cookie/cors-show5.png">
+<meta property="og:image" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E8%B0%88%E8%B0%88CORS%E4%B8%8B%E5%89%8D%E7%AB%AF%E7%9A%84cookie/cors-show4.png">
+<meta property="og:image" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E8%B0%88%E8%B0%88CORS%E4%B8%8B%E5%89%8D%E7%AB%AF%E7%9A%84cookie/cors-show6.png">
+<meta property="article:published_time" content="2017-09-02T07:51:39.000Z">
+<meta property="article:modified_time" content="2020-12-12T16:27:38.078Z">
+<meta property="article:author" content="skyADMIN">
+<meta property="article:tag" content="CORS, cookie, 前端">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E8%B0%88%E8%B0%88CORS%E4%B8%8B%E5%89%8D%E7%AB%AF%E7%9A%84cookie/frontend-example.png">
+
+<link rel="canonical" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E8%B0%88%E8%B0%88CORS%E4%B8%8B%E5%89%8D%E7%AB%AF%E7%9A%84cookie/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="manifest" href="/manifest.json" />
+  <title>谈谈CORS下前端的cookie | 牧宇的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">牧宇的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">工程师的笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E8%B0%88%E8%B0%88CORS%E4%B8%8B%E5%89%8D%E7%AB%AF%E7%9A%84cookie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          谈谈CORS下前端的cookie
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-09-02 15:51:39" itemprop="dateCreated datePublished" datetime="2017-09-02T15:51:39+08:00">2017-09-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-13 00:27:38" itemprop="dateModified" datetime="2020-12-13T00:27:38+08:00">2020-12-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>跨域有多种解决方案，包括JSONP，CORS，反向代理等等。CORS是我感觉最“优雅”的一种方案。但是这个方案下的cookie有一些不一样的表现，做相关尝试后做点记录。</p>
+<a id="more"></a>
+
+<h1 id="问题起源"><a href="#问题起源" class="headerlink" title="问题起源"></a>问题起源</h1><p>有人问我，为什么JS设定上的cookie，发出去后端收不到。用的是CORS解决跨域问题，JS设定的cookie在chrome的devtools里也能看到，但发出去后端收不到，请求头上都没有。</p>
+<p>不，不是没配<code>XMLHttpRequest.withCredentials</code>的问题，机智的我还是一秒想到了他问题的原因，cookie是分domain的，JS设的cookie当然是本域的cookie。</p>
+<p>是他的后端同学把要给他的cookie放到了response body里，要求他手工将这个cookie字段写入到document.cookie里，有点不能理解后端怎么想的，Set-Cookie不会用？</p>
+<p>那么，JS能不能操作别的域的cookie呢？如果不能，原因呢。有没有方法可以操作别的域的cookie呢，这些cookie我们能从哪里看到呢。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>为什么我要把解决方案放到这里，因为我最后没能非常好的解决问题，所以只能给出一些建议，后面则是对问题的表现进行的一些摸索。</p>
+<p>首先，Nginx做反向代理替代CORS来解决跨域，在开发个人小型应用时是个不错的方案我认为，除了配置Nginx一下，其它地方都和传统的WEB开发没什么区别。Cookie该怎么用怎么用，JS请求该怎么发怎么发，体验挺不错的。而且结合Docker来做这个事，在开发、集成、测试、部署整个流程下都是很方便的。</p>
+<p>其次，类似于豆瓣微博QQ开放平台等等提供API的平台，CORS是必要的，但这些API平台不用cookie、session来做身份校验，而是靠token。token的获取和发送对JS来说都是可操作的，就没有cookie什么事了，也是极好的，如果不是开放平台，JWT也是非常合适的方案。</p>
+<p>JSONP我从来没用过，感觉也像是一种注定要消失的方法，不谈。</p>
+<h1 id="尝试过程"><a href="#尝试过程" class="headerlink" title="尝试过程"></a>尝试过程</h1><p>代码：<a target="_blank" rel="noopener" href="https://github.com/sky-admin/skyADMIN/tree/master/cors-demo">https://github.com/sky-admin/skyADMIN/tree/master/cors-demo</a></p>
+<h2 id="服务器端准备"><a href="#服务器端准备" class="headerlink" title="服务器端准备"></a>服务器端准备</h2><ul>
+<li>express做服务器，3000端口</li>
+<li>setcookie和getcookie两个接口</li>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS">cors配置</a></li>
+</ul>
+<h2 id="前端页面准备"><a href="#前端页面准备" class="headerlink" title="前端页面准备"></a>前端页面准备</h2><ul>
+<li>纯HTML，IDEA作为临时服务器，63342端口</li>
+<li>jquery，封一下ajax，<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials">设置跨域带cookie</a></li>
+<li>两个button绑定事件，分别触发set和get接口</li>
+</ul>
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>前端页面：</p>
+<p><img src="frontend-example.png" alt="前端页面示例"></p>
+<p>后端代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> cookieParser = <span class="built_in">require</span>(<span class="string">&#x27;cookie-parser&#x27;</span>);</span><br><span class="line"><span class="keyword">let</span> app = express();</span><br><span class="line">app.all(<span class="string">&#x27;/*&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">    res.header(<span class="string">&quot;Access-Control-Allow-Origin&quot;</span>, <span class="string">&quot;http://localhost:63342&quot;</span>);</span><br><span class="line">    res.header(<span class="string">&quot;Access-Control-Allow-Headers&quot;</span>, <span class="string">&quot;X-Requested-With&quot;</span>);</span><br><span class="line">    res.header(<span class="string">&quot;Access-Control-Allow-Methods&quot;</span>, <span class="string">&quot;POST, GET, OPTIONS, DELETE&quot;</span>);</span><br><span class="line">    res.header(<span class="string">&quot;Access-Control-Max-Age&quot;</span>, <span class="string">&quot;3600&quot;</span>);</span><br><span class="line">    res.header(<span class="string">&quot;Access-Control-Allow-Credentials&quot;</span>,<span class="string">&quot;true&quot;</span>);</span><br><span class="line">    next();</span><br><span class="line">&#125;);</span><br><span class="line">app.use(cookieParser());</span><br><span class="line">app.get(<span class="string">&#x27;/setcookie&#x27;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">    res.cookie(<span class="string">&quot;testkey&quot;</span>, <span class="string">&quot;testvalue&quot;</span>);</span><br><span class="line">    res.send(<span class="string">&#x27;cookie set ok!&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line">app.get(<span class="string">&#x27;/getcookie&#x27;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">    res.send(<span class="string">&#x27;cookie is &#x27;</span> + req.cookies.testkey);</span><br><span class="line">&#125;);</span><br><span class="line">app.listen(<span class="number">3000</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;Example app listening on port 3000!&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试问题"><a href="#测试问题" class="headerlink" title="测试问题"></a>测试问题</h2><h3 id="CORS下cookie是否正常可用"><a href="#CORS下cookie是否正常可用" class="headerlink" title="CORS下cookie是否正常可用"></a>CORS下cookie是否正常可用</h3><p>先按按钮1，向服务器发起一个请求，在开发者工具中可以看到，拿到了正确的响应，response header里也有Set-Cookie字段：<br><img src="cors-show1.png" alt="CORS的response"></p>
+<p>再按按钮2，request header中有Cookie字段，服务器端返回了cookie的值为testvalue。说明OK，cookie正常且可用。一开始我用CORS也基本就这样用，没有问题，也就没有好奇。</p>
+<p>现在有了问题，我们再试试别的。</p>
+<h3 id="JS编辑Cookie后服务器端是否能收到"><a href="#JS编辑Cookie后服务器端是否能收到" class="headerlink" title="JS编辑Cookie后服务器端是否能收到"></a>JS编辑Cookie后服务器端是否能收到</h3><p>通过<code>document.cookie = &#39;testkey=newvalue&#39;</code>，编辑了cookie，再次点击按钮2，发现服务器端获取的cookie值没变化，看请求头也没有变化。</p>
+<p><img src="cors-show2.png" alt="JS编辑Cookie"></p>
+<p>这个问题的原因是cookie是分domain（域）的，不同domain的cookie不会乱发，简化一下这个问题：a.com向b.com发请求，b.com返回的Set-Cookie字段设置上的cookie，只会再下次向b.com发请求时才带上，向a.com发不会带。反过来，用JS直接设置的cookie是在本域的，即a.com上，向b.com发请求不会带上。</p>
+<p>对，这就是朋友一开始问我的问题，他的后端把cookie值放在response body里，让他手工将其设定到document.cookie里，发送出去却读不到，因为不是一个域的。</p>
+<h3 id="JS可以操作别的域的cookie吗"><a href="#JS可以操作别的域的cookie吗" class="headerlink" title="JS可以操作别的域的cookie吗"></a>JS可以操作别的域的cookie吗</h3><p>不可以，指定的domain不是本域的话，直接认为是非法的，设定不上去。</p>
+<h3 id="怎么看Cookie"><a href="#怎么看Cookie" class="headerlink" title="怎么看Cookie"></a>怎么看Cookie</h3><h4 id="本域的cookie"><a href="#本域的cookie" class="headerlink" title="本域的cookie"></a>本域的cookie</h4><ul>
+<li>document.cookie就可以看到，在控制台上打印出来是一个字符串，里面是key=value的形式，用分号分隔的。</li>
+<li>还可以用chrome浏览器的devtools，application栏下面有cookies可以显示。</li>
+</ul>
+<p><img src="cors-show3.png" alt="devtools查看cookie"></p>
+<p>这里有个奇怪的表现，testkey=testvalue这个cookie是属于localhost:3000的，这里应该看不见才对，应该是因为虽然端口不同，非同源，有跨域问题，但是domain相同。</p>
+<p>改一改代码，把请求发往<code>http://www.test1.com:3000</code>，修改本机的hosts文件，把这个域名指向127.0.0.1，即本机。则看不见testkey=testvalue了。</p>
+<p><img src="cors-show5.png" alt="devtools中没有跨域cookie"></p>
+<h4 id="跨域的cookie"><a href="#跨域的cookie" class="headerlink" title="跨域的cookie"></a>跨域的cookie</h4><p>首先，跨域的cookie也是真实存在的，第一次就证实了，它在request header上有。然而，上述两种方式都无法查看。还试过直接去目标域名查看，也没有。我甚至一度以为它根本就无法被查看。</p>
+<p>最后发现可以在这里找到它：</p>
+<p><img src="cors-show4.png" alt="查看跨域cookie"></p>
+<p><img src="cors-show6.png" alt="查看跨域cookie"></p>
+<h3 id="跨域的cookie能被清理掉吗"><a href="#跨域的cookie能被清理掉吗" class="headerlink" title="跨域的cookie能被清理掉吗"></a>跨域的cookie能被清理掉吗</h3><p>能，在devtools里，虽然看不见它，但是一旦清除所有cookie，跨域cookie也没了。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li>跨域cookie存在且有效，使用起来和正常的没有区别</li>
+<li>跨域cookie无法修改，无法被document.cookie和devtools看到</li>
+<li>跨域cookie只提交到目标域，除非两者的domain相同，只有端口的区别</li>
+<li>本域的cookie不会提交到目标域</li>
+<li>跨域的cookie可以在devtools里清除掉</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CORS-cookie-%E5%89%8D%E7%AB%AF/" rel="tag"># CORS, cookie, 前端</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E5%B7%A5%E7%A8%8B%E5%8C%96/%E4%BD%BF%E7%94%A8Docker%E8%A7%A3%E5%86%B3%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%97%AE%E9%A2%98/" rel="prev" title="使用Docker解决开发环境问题">
+      <i class="fa fa-chevron-left"></i> 使用Docker解决开发环境问题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E5%B7%A5%E7%A8%8B%E5%8C%96%E5%AE%9E%E8%B7%B5/" rel="next" title="前端项目工程化实践">
+      前端项目工程化实践 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%B5%B7%E6%BA%90"><span class="nav-number">1.</span> <span class="nav-text">问题起源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">2.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%9D%E8%AF%95%E8%BF%87%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">尝试过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E5%87%86%E5%A4%87"><span class="nav-number">3.1.</span> <span class="nav-text">服务器端准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2%E5%87%86%E5%A4%87"><span class="nav-number">3.2.</span> <span class="nav-text">前端页面准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%88%E6%9E%9C"><span class="nav-number">3.3.</span> <span class="nav-text">效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E9%97%AE%E9%A2%98"><span class="nav-number">3.4.</span> <span class="nav-text">测试问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CORS%E4%B8%8Bcookie%E6%98%AF%E5%90%A6%E6%AD%A3%E5%B8%B8%E5%8F%AF%E7%94%A8"><span class="nav-number">3.4.1.</span> <span class="nav-text">CORS下cookie是否正常可用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JS%E7%BC%96%E8%BE%91Cookie%E5%90%8E%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E6%98%AF%E5%90%A6%E8%83%BD%E6%94%B6%E5%88%B0"><span class="nav-number">3.4.2.</span> <span class="nav-text">JS编辑Cookie后服务器端是否能收到</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JS%E5%8F%AF%E4%BB%A5%E6%93%8D%E4%BD%9C%E5%88%AB%E7%9A%84%E5%9F%9F%E7%9A%84cookie%E5%90%97"><span class="nav-number">3.4.3.</span> <span class="nav-text">JS可以操作别的域的cookie吗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E7%9C%8BCookie"><span class="nav-number">3.4.4.</span> <span class="nav-text">怎么看Cookie</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%AC%E5%9F%9F%E7%9A%84cookie"><span class="nav-number">3.4.4.1.</span> <span class="nav-text">本域的cookie</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B7%A8%E5%9F%9F%E7%9A%84cookie"><span class="nav-number">3.4.4.2.</span> <span class="nav-text">跨域的cookie</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%A8%E5%9F%9F%E7%9A%84cookie%E8%83%BD%E8%A2%AB%E6%B8%85%E7%90%86%E6%8E%89%E5%90%97"><span class="nav-number">3.4.5.</span> <span class="nav-text">跨域的cookie能被清理掉吗</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">skyADMIN</p>
+  <div class="site-description" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sky-admin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sky-admin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skyADMIN</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+</script>
+
+</body>
+</html>

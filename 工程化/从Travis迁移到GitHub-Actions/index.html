@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="背景最近将blog和mpx-template都从Travis迁移成GitHub-Actions了，两者都是持续集成工具。 为什么迁移原因也比较简单，Travis不够稳定，经常挂掉。而GitHub Actions有着更好的稳定性&#x2F;性能，且整合集成得也更好。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从Travis迁移到GitHub-Actions">
+<meta property="og:url" content="https://www.lihuanyu.com/%E5%B7%A5%E7%A8%8B%E5%8C%96/%E4%BB%8ETravis%E8%BF%81%E7%A7%BB%E5%88%B0GitHub-Actions/index.html">
+<meta property="og:site_name" content="牧宇的Blog">
+<meta property="og:description" content="背景最近将blog和mpx-template都从Travis迁移成GitHub-Actions了，两者都是持续集成工具。 为什么迁移原因也比较简单，Travis不够稳定，经常挂掉。而GitHub Actions有着更好的稳定性&#x2F;性能，且整合集成得也更好。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.lihuanyu.com/%E5%B7%A5%E7%A8%8B%E5%8C%96/%E4%BB%8ETravis%E8%BF%81%E7%A7%BB%E5%88%B0GitHub-Actions/template-test-job.png">
+<meta property="article:published_time" content="2020-06-21T10:27:47.000Z">
+<meta property="article:modified_time" content="2020-12-12T16:27:38.074Z">
+<meta property="article:author" content="skyADMIN">
+<meta property="article:tag" content="持续集成">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.lihuanyu.com/%E5%B7%A5%E7%A8%8B%E5%8C%96/%E4%BB%8ETravis%E8%BF%81%E7%A7%BB%E5%88%B0GitHub-Actions/template-test-job.png">
+
+<link rel="canonical" href="https://www.lihuanyu.com/%E5%B7%A5%E7%A8%8B%E5%8C%96/%E4%BB%8ETravis%E8%BF%81%E7%A7%BB%E5%88%B0GitHub-Actions/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="manifest" href="/manifest.json" />
+  <title>从Travis迁移到GitHub-Actions | 牧宇的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">牧宇的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">工程师的笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E5%B7%A5%E7%A8%8B%E5%8C%96/%E4%BB%8ETravis%E8%BF%81%E7%A7%BB%E5%88%B0GitHub-Actions/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从Travis迁移到GitHub-Actions
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-21 18:27:47" itemprop="dateCreated datePublished" datetime="2020-06-21T18:27:47+08:00">2020-06-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-13 00:27:38" itemprop="dateModified" datetime="2020-12-13T00:27:38+08:00">2020-12-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">工程化</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近将blog和mpx-template都从Travis迁移成GitHub-Actions了，两者都是持续集成工具。</p>
+<p>为什么迁移原因也比较简单，Travis不够稳定，经常挂掉。而GitHub Actions有着更好的稳定性/性能，且整合集成得也更好。</p>
+<a id="more"></a>
+<p>此外Travis没有免费版提供给私有仓库使用，而GitHub在卖身给巨硬后明显财大气粗，宣布了私有仓库也免费使用了。</p>
+<p>且GitHub Actions支持私有仓库。于是我的blog，本来是全开源的，终于可以藏起一些东西，只部署最终的结果。</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>Actions刚出来时候就有了解过它，当时感觉用起来好像比Travis要麻烦很多。虽然已经淘汰了Travis，但不得不夸赞一下Travis配置的简洁，入门极其友好。如果和jenkins一样，说不定一开始我就不会对持续集成感兴趣。</p>
+<p>但它比较有意思的一点是，提供了持续集成过程中各种“action”的复用的可能，并且在此基础上允许用户进行各种“action”的组合。</p>
+<p>一直以来，CI/CD中的能力复用就是个有点尴尬的问题。比如要做lint-test-build-deploy这样一个流程，在一个项目中搭建完成后，要迁移到另一个项目，需要复制流水线的配置文件过去。</p>
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>本Blog就是一个很好的示例，源码仓库已经被隐藏起来了，每次提交都会通过GitHub Action同步部署到GitHub Pages服务和自维护的服务器上。</p>
+<p>并不方便以本blog来举例讲解GitHub Action的使用，不过我这里还有一些开源项目上的应用示例：</p>
+<h3 id="Mpx"><a href="#Mpx" class="headerlink" title="Mpx"></a>Mpx</h3><p>这个是滴滴出行网约车前端团队出品的应用层小程序框架，<a target="_blank" rel="noopener" href="https://github.com/didi/mpx">Github地址</a> 。</p>
+<p>一共配置了 测试/发包/文档 三种 GitHub Actions ，详情可见仓库里的 <code>.github文件夹</code> 。</p>
+<p>这里讲讲它的发包和文档两块，看看 Github Actions 为一个开源项目带来了什么改变呢。</p>
+<h4 id="测试和发包"><a href="#测试和发包" class="headerlink" title="测试和发包"></a>测试和发包</h4><p>首先是部署发包，作为一个规范的开源项目，发包得是个标准的流程，不能随便乱发版本，不能发出有问题的包是个基本要求。</p>
+<p>因此需要在发包前走一遍lint/unit，当然这个事情可以靠脚本达成，只要要求大家都通过脚本发包就可以了。但是我在编程这个事情上一直一来有一个思路，就是不要相信人，所有靠规章制度来约束人来操作的事情，都有出错的可能性，而且不人道，谁愿意被约束呢。</p>
+<p>再加上大家环境不一，发包还需要权限，给每个人都加又太麻烦，只给一个人加这个人岂不是成发包工程师了？</p>
+<p>因此提交代码后在云端做是最好的，工程师只需要关注编码并提交就好了。</p>
+<p>代码提交后，先通过lint和unit，确认代码没有明显的低级错误。这个部分的配置见代码：<a target="_blank" rel="noopener" href="https://github.com/didi/mpx/blob/master/.github/workflows/test.yml">https://github.com/didi/mpx/blob/master/.github/workflows/test.yml</a></p>
+<p>核心就是指定个操作系统，安装依赖，执行相应的npm script。</p>
+<p>然后发包，任何有这个仓库的github权限的同学都可以在本地执行 npm run release，会询问你打算发major/minor/patch类型的包来确定版本号，会确认你要发的包（mpx是一个mono repo，里面有很多包，每次发布只会发布有改动的包）和版本。</p>
+<p>配置的内容在这里：<a target="_blank" rel="noopener" href="https://github.com/didi/mpx/blob/master/.github/workflows/publish.yml">https://github.com/didi/mpx/blob/master/.github/workflows/publish.yml</a></p>
+<p>这个部分写得比较早，还是自己撸的发布相关的脚本/配置，好处是可控性极高，干了什么一目了然。坏处是居然需要自己写，而且后来人的维护也不方便，谁没事琢磨咋配置发包。如果现在再让我配这种东西，我一定会直接去GitHub action的市场里搜别人配置好的工具，直接使用。</p>
+<h4 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h4><p>一个开源项目很重要的部分就是它的文档了，早期的文档是用gitbook编写的，然后自动部署到GitHub Pages上面。</p>
+<p>现在重构成使用vuepress编写，不过用什么写不是重点，重点是要自动部署，最大程度降低文档的编写成本，让所有人都可以方便地帮助我们一起维护文档。</p>
+<p>Github Action 在云端生成文档很简单，和上面的lint/unit没什么区别，但是自动部署这里就很舒服了：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">docs</span></span><br><span class="line"></span><br><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">branches:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">master</span></span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">deploy:</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">macos-latest</span></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/checkout@v2</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Use</span> <span class="string">node</span> <span class="string">v12</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">actions/setup-node@v1</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">node-version:</span> <span class="string">&#x27;10.21.0&#x27;</span> <span class="comment"># 指定了node版本用于解决一个gitbook的bug</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">generate</span> <span class="string">static</span> <span class="string">file</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line">          <span class="string">cd</span> <span class="string">docs</span></span><br><span class="line">          <span class="string">npx</span> <span class="string">gitbook-cli</span> <span class="string">install</span></span><br><span class="line">          <span class="string">npx</span> <span class="string">gitbook-cli</span> <span class="string">build</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Deploy</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">peaceiris/actions-gh-pages@v3</span> <span class="comment"># 注意看这里</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">publish_dir:</span> <span class="string">./docs/_book</span></span><br><span class="line">          <span class="attr">force_orphan:</span> <span class="literal">true</span></span><br><span class="line">          <span class="attr">personal_token:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.GH_PAGES_TOKEN</span> <span class="string">&#125;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意看 steps 的最后一项“Deploy”，是直接 uses peaceiris/actions-gh-pages@v3，通过with来传递一些参数，声明要部署的文件在哪里，部署用的personal token是什么，这个token是需要保密的，要在项目的 <code>Settings -   Secrets</code> 里设置，设后没有人可以看，后面要修改也只能是直接填新的，看不到之前填的老的。</p>
+<h3 id="Mpx-template"><a href="#Mpx-template" class="headerlink" title="Mpx-template"></a>Mpx-template</h3><p>这个是 <a target="_blank" rel="noopener" href="https://github.com/didi/mpx">Mpx 小程序框架</a> 所配套的脚手架模板项目，<a target="_blank" rel="noopener" href="https://github.com/mpx-ecology/mpx-template">Github地址</a> 。</p>
+<p>这个项目在对Github Action的应用上略微有一点特别。</p>
+<p>模板需要关注的是，稳定可靠，不要生成出来的项目上来就无法运行。早期没有保障，人虽然很谨慎了，还是容易写出bug，这种东西一旦出bug，会导致新用户上来就遭遇失败，好心的可能跟你说一声，大部分可能直接就把这个框架拉黑了。</p>
+<p>因此后来给项目补充了一些相关的自动化测试脚本，主要是测试在不同的场景下生成的对应项目是否都能做最基础的构建打包，打包后一些基础的文件是否有生成。</p>
+<p>效果很好的，拦截了不少失误的场景。但是后来还是出过问题，因为它在Linux下没问题，但是在Windows下就出错了。</p>
+<p>然后发现 GitHub 现在真是财大气粗，Travis 完全没法比较，Travis也可以选mac环境，Windows至少我当时没法选，而且会很慢。</p>
+<p>直接看配置吧：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="attr">name:</span> <span class="string">test</span></span><br><span class="line"></span><br><span class="line"><span class="attr">on:</span> [<span class="string">push</span>]</span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">build:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">Test</span> <span class="string">on</span> <span class="string">node</span> <span class="string">$&#123;&#123;</span> <span class="string">matrix.node</span> <span class="string">&#125;&#125;</span> <span class="string">and</span> <span class="string">$&#123;&#123;</span> <span class="string">matrix.os</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">$&#123;&#123;</span> <span class="string">matrix.os</span> <span class="string">&#125;&#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">strategy:</span></span><br><span class="line">      <span class="attr">matrix:</span></span><br><span class="line">        <span class="attr">os:</span> [<span class="string">macos-latest</span>, <span class="string">windows-latest</span>, <span class="string">ubuntu-latest</span>]</span><br><span class="line">        <span class="attr">node:</span> [<span class="number">10</span>, <span class="number">12</span>, <span class="number">14</span>]</span><br><span class="line"></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/checkout@v1</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/setup-node@v1</span></span><br><span class="line"><span class="comment"># 后续省略</span></span><br></pre></td></tr></table></figure>
+
+<p>strategy下面的matrix，我指定了三种平台，三种node版本，GitHub Actions 在执行的时候，就会两两组合把九种场景全部验一遍。</p>
+<p><img src="./template-test-job.png" alt="模板测试任务"></p>
+<p>以上就是我对公网开源项目在持续集成方面，将原有的 Travis 迁移为 Github Actions 的一些实践。希望对读者有一些启发，也欢迎交流。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/" rel="tag"># 持续集成</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E5%89%8D%E7%AB%AF/%E6%BB%B4%E6%BB%B4%E5%87%BA%E8%A1%8C%E5%B0%8F%E7%A8%8B%E5%BA%8F%E4%BD%93%E7%A7%AF%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5/" rel="prev" title="滴滴出行小程序体积优化实践">
+      <i class="fa fa-chevron-left"></i> 滴滴出行小程序体积优化实践
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/%E5%89%8D%E7%AB%AF/%E6%BB%B4%E6%BB%B4%E5%87%BA%E8%A1%8C%E5%B0%8F%E7%A8%8B%E5%BA%8FI18n%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" rel="next" title="滴滴出行小程序I18n最佳实践">
+      滴滴出行小程序I18n最佳实践 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%88%E6%9E%9C"><span class="nav-number">3.</span> <span class="nav-text">效果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mpx"><span class="nav-number">3.1.</span> <span class="nav-text">Mpx</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E5%92%8C%E5%8F%91%E5%8C%85"><span class="nav-number">3.1.1.</span> <span class="nav-text">测试和发包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E6%A1%A3"><span class="nav-number">3.1.2.</span> <span class="nav-text">文档</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mpx-template"><span class="nav-number">3.2.</span> <span class="nav-text">Mpx-template</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">skyADMIN</p>
+  <div class="site-description" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sky-admin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sky-admin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skyADMIN</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+</script>
+
+</body>
+</html>

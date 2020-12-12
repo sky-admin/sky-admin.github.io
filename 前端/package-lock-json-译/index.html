@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="为了更好的理解这个package-lock.json是干什么的，花了一点时间把npm官网这篇文档翻译了一下，第一次翻译英文文档，很多地方拿不准，用*标注了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="package-lock.json[译]">
+<meta property="og:url" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/package-lock-json-%E8%AF%91/index.html">
+<meta property="og:site_name" content="牧宇的Blog">
+<meta property="og:description" content="为了更好的理解这个package-lock.json是干什么的，花了一点时间把npm官网这篇文档翻译了一下，第一次翻译英文文档，很多地方拿不准，用*标注了。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-08-10T02:40:03.000Z">
+<meta property="article:modified_time" content="2020-12-12T16:27:38.074Z">
+<meta property="article:author" content="skyADMIN">
+<meta property="article:tag" content="npm">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/package-lock-json-%E8%AF%91/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="manifest" href="/manifest.json" />
+  <title>package-lock.json[译] | 牧宇的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">牧宇的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">工程师的笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/package-lock-json-%E8%AF%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          package-lock.json[译]
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-08-10 10:40:03" itemprop="dateCreated datePublished" datetime="2017-08-10T10:40:03+08:00">2017-08-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-13 00:27:38" itemprop="dateModified" datetime="2020-12-13T00:27:38+08:00">2020-12-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>为了更好的理解这个package-lock.json是干什么的，花了一点时间把<a target="_blank" rel="noopener" href="https://docs.npmjs.com/files/package-lock.json">npm官网这篇文档</a>翻译了一下，第一次翻译英文文档，很多地方拿不准，用<code>*</code>标注了。</p>
+<a id="more"></a>
+
+<h2 id="副标题"><a href="#副标题" class="headerlink" title="副标题"></a>副标题</h2><p><code>A manifestation of the manifest</code></p>
+<p>一份配置清单的说明文件。</p>
+<h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><p>package-lock.json 是一份在npm修改node_modules树或package.json时自动生成的文件。它精确地描述了这棵被生成的树（node_modules），这样后续的安装能生成完全一样的树，无论中间是否修改了依赖项。</p>
+<p>这个文件是希望被提交到源码仓库的，它主要用于以下几种目的：</p>
+<ul>
+<li>描述一份关系依赖树，以便队友开发、部署和持续集成时都能够精确地安装出完全相同的一个依赖树。</li>
+<li>为用户提供一个”穿越时间”去查看之前的node_modules而无需提交node_modules目录本身（该目录一般情况下可能很大）。</li>
+<li>让树的变化能通过代码控制的diff表现得更明显。</li>
+<li>为之前安装过的package跳过重复的元数据（metadata）优化安装过程。</li>
+</ul>
+<p>一个关键的细节是，不在项目顶层的package-lock.json文件将会被忽略，不能发表（应该是指在git里）。它和npm-shrinkwrap.json共享同个格式，在本质上它们其实是一样的，但是后者能够发表。除非使用一个部署的CLI工具或者使用发布流程制作线上包，否则是不推荐这样做的。</p>
+<p>如果package-lock.json和npm-shrinkwrap.json同时出现在一个项目的顶层，package-lock.json将会被忽略。</p>
+<h2 id="文件格式"><a href="#文件格式" class="headerlink" title="文件格式"></a>文件格式</h2><h3 id="name（名称）"><a href="#name（名称）" class="headerlink" title="name（名称）"></a>name（名称）</h3><p>这个package的名字，它必须和package.json里的一样。</p>
+<h3 id="version（版本）"><a href="#version（版本）" class="headerlink" title="version（版本）"></a>version（版本）</h3><p>这个package的版本，它必须和package.json中的版本相匹配。</p>
+<h3 id="lockfileVersion"><a href="#lockfileVersion" class="headerlink" title="*lockfileVersion"></a>*lockfileVersion</h3><p>一个整数版本，从1开始随着生成</p>
+<h3 id="packageIntegrity"><a href="#packageIntegrity" class="headerlink" title="*packageIntegrity"></a>*packageIntegrity</h3><p>这是一个[subresource integrity](subresource integrity)值从package.json中创建来。*<code>No preprocessing of the package.json should be done</code>。这个字符串应该被类似于ssri这样的模块生成出来。</p>
+<h3 id="preserveSymlinks（保护的符号链接）"><a href="#preserveSymlinks（保护的符号链接）" class="headerlink" title="*preserveSymlinks（保护的符号链接）"></a>*preserveSymlinks（保护的符号链接）</h3><p>表明该安装完成且环境变量<code>NODE_PRESERVE_SYMLINKS</code>启用。安装程序一个使该属性和环境变量匹配。</p>
+<h3 id="dependencies（依赖）"><a href="#dependencies（依赖）" class="headerlink" title="dependencies（依赖）"></a>dependencies（依赖）</h3><p>一份包名（package name）到依赖对象（dependency object）的映射。依赖对象有以下属性：</p>
+<h4 id="version（版本）-1"><a href="#version（版本）-1" class="headerlink" title="version（版本）"></a>version（版本）</h4><p>这是一个说明符，来唯一标识一个包，且应该能通过此获取一份新的该包的副本。说明符有以下几种类别：</p>
+<ul>
+<li>打包好的依赖（bundle dependencies）：不管来源，这个版本号的目的是纯粹提供信息。</li>
+<li>registry资源：这是个版本号，如：1.2.3</li>
+<li>git资源：这是一个指示着git中某次提交的标记。（比如：<code>git+https://example.com/foo/bar#115311855adb0789a0466714ed48a1499ffea97e</code>）</li>
+<li>http的打包资源：这是一个指向压缩包的URL。（比如：<code>https://example.com/example-1.3.0.tgz</code>）</li>
+<li>本地的打包资源：这是一个指向本地压缩包的<code>文件URL</code>。（比如：<code>file:///opt/storage/example-1.3.0.tgz</code>）</li>
+<li>本地的链接源：这是一个指向本地<code>文件URL</code>的链接。（比如：<code>file:libs/our-module</code>）</li>
+</ul>
+<h4 id="integrity（完整性）"><a href="#integrity（完整性）" class="headerlink" title="integrity（完整性）"></a>integrity（完整性）</h4><p>这是一个关于该资源的标准的子资源完整性属性。</p>
+<ul>
+<li>如果是打包好的依赖将不会有该属性，不管其来源。</li>
+<li>如果是registry的资源，这个完整性（integrity）字段会由该registry来提供。<code>* or if one wasn&#39;t provided the SHA1 in shasum（不知道什么意思）</code></li>
+<li>如果是一个git资源，这将是我们克隆的那次提交的哈希值。</li>
+<li>如果是个远程压缩包，将是该文件的SHA512的值。</li>
+<li>如果是本地压缩包，也是文件的SHA512的值。</li>
+</ul>
+<h4 id="resolved（已解决的）"><a href="#resolved（已解决的）" class="headerlink" title="resolved（已解决的）"></a>resolved（已解决的）</h4><ul>
+<li>如果是打包好依赖，不会包含这个，不管来源。</li>
+<li>如果是registry资源，这将是该包的压缩包在registry的相对URL，如果压缩包的URL和registry的URL不同，将会是一个完整的URL。（比如百度自己的npm registry是<code>http://registry.npm.baidu.com/</code>，但安装包时从<code>http://pnpm.baidu.com拉取，就会是一个完整的URL</code>）</li>
+</ul>
+<h4 id="bundled（打包的）"><a href="#bundled（打包的）" class="headerlink" title="bundled（打包的）"></a>bundled（打包的）</h4><p>如果为<code>true</code>，这将是一个打包好的依赖，将从父模块安装。安装时该模块将在解压阶段直接从父模块提取，而不是像独立模块一样安装。</p>
+<h4 id="dev（开发，这个属性在我这里的项目中统统为ture，没理解是干嘛的）"><a href="#dev（开发，这个属性在我这里的项目中统统为ture，没理解是干嘛的）" class="headerlink" title="*dev（开发，这个属性在我这里的项目中统统为ture，没理解是干嘛的）"></a>*dev（开发，这个属性在我这里的项目中统统为ture，没理解是干嘛的）</h4><p>如果为true，那么这个依赖是顶层模块的开发依赖或者传递依赖。反之，则该依赖是一个顶层模块的开发依赖且是一个顶级的非开发模块的传递依赖。</p>
+<h4 id="optional（可选项）"><a href="#optional（可选项）" class="headerlink" title="*optional（可选项）"></a>*optional（可选项）</h4><p>如果是true，这个依赖是一个可选的依赖。</p>
+<h4 id="dependencies（依赖）-1"><a href="#dependencies（依赖）-1" class="headerlink" title="*dependencies（依赖）"></a>*dependencies（依赖）</h4><p>这个依赖的依赖，和顶级的属性一样。</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>该翻译仅供参考，很多地方把握不准，结合原文和实际操作对比能忽略文字更好地理解。实际操作中还发现很多和该文档说明不一致的地方，比如dependency的属性，还可能有一个叫<code>require</code>的属性，目测和dependencies一样。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/npm/" rel="tag"># npm</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E5%89%8D%E7%AB%AF/webpack%E6%A8%A1%E6%9D%BFmock%E6%95%B0%E6%8D%AE%E7%9A%84%E6%96%B9%E6%B3%95/" rel="prev" title="vue-cli webpack模板mock数据的方法">
+      <i class="fa fa-chevron-left"></i> vue-cli webpack模板mock数据的方法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/%E5%B7%A5%E7%A8%8B%E5%8C%96/%E4%BD%BF%E7%94%A8Docker%E8%A7%A3%E5%86%B3%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%97%AE%E9%A2%98/" rel="next" title="使用Docker解决开发环境问题">
+      使用Docker解决开发环境问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%AF%E6%A0%87%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">副标题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0"><span class="nav-number">2.</span> <span class="nav-text">描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">文件格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#name%EF%BC%88%E5%90%8D%E7%A7%B0%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">name（名称）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#version%EF%BC%88%E7%89%88%E6%9C%AC%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">version（版本）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lockfileVersion"><span class="nav-number">3.3.</span> <span class="nav-text">*lockfileVersion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#packageIntegrity"><span class="nav-number">3.4.</span> <span class="nav-text">*packageIntegrity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#preserveSymlinks%EF%BC%88%E4%BF%9D%E6%8A%A4%E7%9A%84%E7%AC%A6%E5%8F%B7%E9%93%BE%E6%8E%A5%EF%BC%89"><span class="nav-number">3.5.</span> <span class="nav-text">*preserveSymlinks（保护的符号链接）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dependencies%EF%BC%88%E4%BE%9D%E8%B5%96%EF%BC%89"><span class="nav-number">3.6.</span> <span class="nav-text">dependencies（依赖）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#version%EF%BC%88%E7%89%88%E6%9C%AC%EF%BC%89-1"><span class="nav-number">3.6.1.</span> <span class="nav-text">version（版本）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#integrity%EF%BC%88%E5%AE%8C%E6%95%B4%E6%80%A7%EF%BC%89"><span class="nav-number">3.6.2.</span> <span class="nav-text">integrity（完整性）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#resolved%EF%BC%88%E5%B7%B2%E8%A7%A3%E5%86%B3%E7%9A%84%EF%BC%89"><span class="nav-number">3.6.3.</span> <span class="nav-text">resolved（已解决的）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bundled%EF%BC%88%E6%89%93%E5%8C%85%E7%9A%84%EF%BC%89"><span class="nav-number">3.6.4.</span> <span class="nav-text">bundled（打包的）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dev%EF%BC%88%E5%BC%80%E5%8F%91%EF%BC%8C%E8%BF%99%E4%B8%AA%E5%B1%9E%E6%80%A7%E5%9C%A8%E6%88%91%E8%BF%99%E9%87%8C%E7%9A%84%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%BB%9F%E7%BB%9F%E4%B8%BAture%EF%BC%8C%E6%B2%A1%E7%90%86%E8%A7%A3%E6%98%AF%E5%B9%B2%E5%98%9B%E7%9A%84%EF%BC%89"><span class="nav-number">3.6.5.</span> <span class="nav-text">*dev（开发，这个属性在我这里的项目中统统为ture，没理解是干嘛的）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#optional%EF%BC%88%E5%8F%AF%E9%80%89%E9%A1%B9%EF%BC%89"><span class="nav-number">3.6.6.</span> <span class="nav-text">*optional（可选项）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dependencies%EF%BC%88%E4%BE%9D%E8%B5%96%EF%BC%89-1"><span class="nav-number">3.6.7.</span> <span class="nav-text">*dependencies（依赖）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="nav-number">4.</span> <span class="nav-text">写在最后</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">skyADMIN</p>
+  <div class="site-description" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sky-admin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sky-admin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skyADMIN</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+</script>
+
+</body>
+</html>

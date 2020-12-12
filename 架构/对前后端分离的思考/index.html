@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="结合在学校做易班轻应用时候的一些思考，记录下我为什么要做前后端分离的历史&#x2F;原因&#x2F;意义&#x2F;效果。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对前后端分离的思考">
+<meta property="og:url" content="https://www.lihuanyu.com/%E6%9E%B6%E6%9E%84/%E5%AF%B9%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E7%9A%84%E6%80%9D%E8%80%83/index.html">
+<meta property="og:site_name" content="牧宇的Blog">
+<meta property="og:description" content="结合在学校做易班轻应用时候的一些思考，记录下我为什么要做前后端分离的历史&#x2F;原因&#x2F;意义&#x2F;效果。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-07-23T05:29:38.000Z">
+<meta property="article:modified_time" content="2020-12-12T16:27:38.074Z">
+<meta property="article:author" content="skyADMIN">
+<meta property="article:tag" content="skyADMIN,环宇,牧宇,环宇的博客,牧宇的博客">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.lihuanyu.com/%E6%9E%B6%E6%9E%84/%E5%AF%B9%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E7%9A%84%E6%80%9D%E8%80%83/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="manifest" href="/manifest.json" />
+  <title>对前后端分离的思考 | 牧宇的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">牧宇的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">工程师的笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E6%9E%B6%E6%9E%84/%E5%AF%B9%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E7%9A%84%E6%80%9D%E8%80%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          对前后端分离的思考
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-07-23 13:29:38" itemprop="dateCreated datePublished" datetime="2016-07-23T13:29:38+08:00">2016-07-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-13 00:27:38" itemprop="dateModified" datetime="2020-12-13T00:27:38+08:00">2020-12-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>结合在学校做易班轻应用时候的一些思考，记录下我为什么要做前后端分离的历史/原因/意义/效果。</p>
+<a id="more"></a>
+
+<h2 id="历史背景"><a href="#历史背景" class="headerlink" title="历史背景"></a>历史背景</h2><p>一开始说要给易班做轻应用的时候是懵逼的，什么叫轻应用。于是分三个阶段循序渐进地来做这个事。</p>
+<h3 id="静态网页"><a href="#静态网页" class="headerlink" title="静态网页"></a>静态网页</h3><p>首先，琢磨了一下发现，所谓轻应用，好像其实就是个网页嘛。OK，最简单的就是静态网页。</p>
+<p>做了一些诸如大物实验数据辅助处理系统，就是拿js算一些加减乘除、生活查询，就是根据客户端时间判断水房是否开门等等。</p>
+<p>找个服务器配置下LNMP（linux + nginx + mysql + php 是个服务器环境配置一键脚本），静态页面和资源丢上去，完工。</p>
+<h3 id="动态网页"><a href="#动态网页" class="headerlink" title="动态网页"></a>动态网页</h3><p>接下来难度升级，做个带后端服务的真正的应用了。因为是给易班做，目标是吸引用户到易班上，这些轻应用我基本没有考虑过自己做用户表，就是用户信息都是直接从易班开放平台获取。</p>
+<p>这个地方涉及到Oauth2.0协议拿数据，易班开放平台做的这一个呢有一些让我觉得不舒服的限制，比如回调地址和应用地址必须是同一个，精确到完整的url，还有必须是点对点调用，就是不能回调到多个位置。（注意这是一个问题）</p>
+<p>之后技术选型，选的是springboot框架，一个神奇Java的框架，特点是开发速度特别快，让人觉得，这还是Java web框架么？它为很多东西提供缺省配置，省去编写复杂的xml文件的时间。</p>
+<p>部署上也极其方便，内嵌了tomcat，最后build出来的是一个jar包。在一台安装了jdk的电脑上输入java -jar xxxx.jar即可运行，不需要考虑tomcat的配置。（就是这一点让我放弃了PHP的laravel）</p>
+<p>拿springboot写了3、4个应用吧。比如抽奖、查询、签到等，都是这个框架，配上模板引擎thymeleaf做的。</p>
+<p>在完成了3、4个应用后，我发现了这种模式的一些问题，为了解决这些问题：</p>
+<h3 id="前后端分离"><a href="#前后端分离" class="headerlink" title="前后端分离"></a>前后端分离</h3><p>这个阶段里，我希望前端和后端独立部署，后端砍掉View层，把Controller层暴露出来，以API形式提供服务。</p>
+<p>前端是一种类似于Client的模式，向后端发起请求。后端吐json格式的数据。前端拿到数据后自己去渲染数据到页面上。（前端渲染，参考 <a href="/%E5%89%8D%E7%AB%AF/%E5%86%99%E4%BA%86%E4%B8%AA%E5%89%8D%E7%AB%AF%E6%B8%B2%E6%9F%93%E7%9A%84%E6%95%99%E7%A8%8B/" title="写了个前端渲染的教程">写了个前端渲染的教程</a>）</p>
+<p>截至到离开组织，该架构初步实现，完成了一个demo级别的应用。其中后端以springboot作为框架，运行在服务器的8086还是多少端口来着有点记不清了。</p>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><h3 id="前端方面"><a href="#前端方面" class="headerlink" title="前端方面"></a>前端方面</h3><p>为什么后端的View层要被砍掉？因为后端不会专业的前端技能。</p>
+<p>前端上我希望向工程化、组件化、模块化看齐（好像并没有做到QAQ），要求前端工程要使用一些脚手架/脚本/node工具，进行诸如资源压缩合并混淆的工作，也就是前端其实是单独的工程。需要单独打包。</p>
+<p>那么这样的前端生成的结果如果作为V层放到后端，后端同学需要在一堆乱码中找到需要替换的变量用模板语法改写。当然我们也可以让前端同学学习下thymeleaf直接以模板语法来写。</p>
+<p>但是问题还是存在的。</p>
+<p>这将导致，应用的升级无比麻烦。仅仅只是前端样式上的一个小变化，就需要前端先修改，再打包，给后端，后端打包，再部署。必须要求前后端在一起工作，频繁交流，才可以。但这对学生开发团队太难了，都有课的人。</p>
+<h3 id="后端方面"><a href="#后端方面" class="headerlink" title="后端方面"></a>后端方面</h3><p>除了前后端必须联调导致修改不便之外，还有一旦部署，再想修改很难这个问题。因为用户信息没有存自己的表，必须走易班授权，上线的产品修改地址要审核，要本地测试得把回调地址指回本地，改好后又要指回去，又要审核一次。我怎么给用户解释应用不见了这个问题……？卒……</p>
+<p>还有一个问题是，我前面说为什么选springboot框架时说过，是因为这个框架简单，开发简单，上手简单，部署简单。部署简单是有代价的！</p>
+<p>没在服务器上配置tomcat，打包又是jar包，相当于每个应用，都是独立的，跑在独立的tomcat容器里，运行3个应用就等于开了三个tomcat，5个应用就是5个tomcat，tomcat本来就比较重，再这么开下去，服务器很快就受不了。（虽然按微服务架构的思路来说就应该把应用划分得足够细粒度，但是确实穷，又不想优化它的部署方式，以一个简单的方式部署有利于后面做持续集成、持续部署，而且我没有充足的服务器资源）</p>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>前后端分离，把所有的应用都写在一起，整合应用，只用一个tomcat装。前端请求不同的接口获得数据。还有把一些config信息从代码里转移到了yml文件里。因为生产环境和开发环境的配置文件不同，再也不用像以前那样手工反复修改代码了。</p>
+<h3 id="具体做法"><a href="#具体做法" class="headerlink" title="具体做法"></a>具体做法</h3><p>springboot的controller用@RestController注解，提供json格式的输出，方便快捷变成一个RESTful微服务后端。</p>
+<p>前端项目直接部署到nginx服务器，阅读后端文档，自己请求API拿数据，展示。前端可以自由选择框架，angular1/2，react，vue，ember等等，反正接口在那。</p>
+<p>遇到的问题就是跨域，用CORS解决了。这里还有个坑，就是CORS这种跨域资源共享一般是结合ajax请求来使用，ajax是默认不带cookie的，通过查资料修改CORS的配置解决掉了。暂时没别的问题了。</p>
+<p>后面看时间如果有空可能拿出一个例子讲一下。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/%E5%B7%A5%E7%A8%8B%E5%8C%96/%E4%BD%BF%E7%94%A8travis%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90-%E6%8C%81%E7%BB%AD%E9%83%A8%E7%BD%B2/" rel="next" title="使用travis CI持续集成/持续部署">
+      使用travis CI持续集成/持续部署 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%86%E5%8F%B2%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">历史背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E7%BD%91%E9%A1%B5"><span class="nav-number">1.1.</span> <span class="nav-text">静态网页</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E7%BD%91%E9%A1%B5"><span class="nav-number">1.2.</span> <span class="nav-text">动态网页</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB"><span class="nav-number">1.3.</span> <span class="nav-text">前后端分离</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.</span> <span class="nav-text">原因</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E6%96%B9%E9%9D%A2"><span class="nav-number">2.1.</span> <span class="nav-text">前端方面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E6%96%B9%E9%9D%A2"><span class="nav-number">2.2.</span> <span class="nav-text">后端方面</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C"><span class="nav-number">3.</span> <span class="nav-text">结果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%81%9A%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">具体做法</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">skyADMIN</p>
+  <div class="site-description" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sky-admin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sky-admin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skyADMIN</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+</script>
+
+</body>
+</html>

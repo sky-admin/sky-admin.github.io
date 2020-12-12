@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="工程师最重要的不是炫技，而是解决问题。能结合最好最新的技术解决问题，才是最吼的！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解决问题之道">
+<meta property="og:url" content="https://www.lihuanyu.com/%E9%9A%8F%E7%AC%94/%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98%E4%B9%8B%E9%81%93/index.html">
+<meta property="og:site_name" content="牧宇的Blog">
+<meta property="og:description" content="工程师最重要的不是炫技，而是解决问题。能结合最好最新的技术解决问题，才是最吼的！">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-04-08T13:18:52.000Z">
+<meta property="article:modified_time" content="2020-12-12T16:27:38.078Z">
+<meta property="article:author" content="skyADMIN">
+<meta property="article:tag" content="skyADMIN,环宇,牧宇,环宇的博客,牧宇的博客">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.lihuanyu.com/%E9%9A%8F%E7%AC%94/%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98%E4%B9%8B%E9%81%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="manifest" href="/manifest.json" />
+  <title>解决问题之道 | 牧宇的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">牧宇的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">工程师的笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E9%9A%8F%E7%AC%94/%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98%E4%B9%8B%E9%81%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          解决问题之道
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-04-08 21:18:52" itemprop="dateCreated datePublished" datetime="2017-04-08T21:18:52+08:00">2017-04-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-13 00:27:38" itemprop="dateModified" datetime="2020-12-13T00:27:38+08:00">2020-12-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9A%8F%E7%AC%94/" itemprop="url" rel="index"><span itemprop="name">随笔</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>工程师最重要的不是炫技，而是解决问题。能结合最好最新的技术解决问题，才是最吼的！</p>
+<a id="more"></a>
+
+<p>上周五遇上了一个问题，浪费了一天时间，简单记录下。用的是Vue框架，所提到的所有组件均指Vue组件。</p>
+<h4 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h4><p>问题产生的原因是这样的：</p>
+<p>前一天封好的一个组件，在一个页面上已经正常了，第二天在另一个页面上再次调用却出现了问题。移动端的二级菜单，要求能左右滑动，能点击。</p>
+<p>因为PM想要统一的效果，iOS上原生HTML/CSS拉到头就是有回弹效果的，而Android没有。（作为一只想做全沾工程师的程序猿，希望早日打通一个产品所需的全部技能栈，以更科学合理的角度和PM讨论问题，而不是跟PM说这个没问题，能做，就是麻烦点。事实上，麻烦程度可能比想象的高，关键是收益不划算，后人维护成本高破天际）</p>
+<p>于是放弃了原生实现，改用iscroll的一个变形的库bscroll，然后因为用了别人的轮子，比较难弄明白别人到底干了什么。（事实上应该是经验不足，多看点别人的轮子的实现，再自己造几个，估计就能比较容易地看清楚他人大概的套路）</p>
+<p>然后就是，第二个页面上组件失效了，查了一下，发现第二个页面上已经使用了iscroll库做纵向滚动，先入为主的认为了scroll库在事件方面搞了一些事情，外层元素上绑定的一些事件拦截了事件的向下传递。</p>
+<p>然后就在这个事件上倒腾了一下午。先后把周边的同事都骚扰遍了，发现问题定位错了……</p>
+<h4 id="具体问题"><a href="#具体问题" class="headerlink" title="具体问题"></a>具体问题</h4><p>最后定位到了真正的问题，组件用的id选择器，上一个页面只有一个这个组件，新页面用了两个这个组件，id选择器是独一无二的，重复的话，因为HTML/JS的宽容性，会选取到第一个。</p>
+<p>而出问题的页面，第一个组件因为样式的问题一直是隐藏状态，我都忘了这个页面有两个组件这件事了。所以一直在一个看不到的组件上绑定事件，在另一个没绑上事件的组件上疯狂调试。</p>
+<p>事实上，事件流没那么复杂，JS高程上就简单介绍了下事件捕获和事件冒泡，事件捕获从顶层document到具体的元素，事件冒泡从具体的元素一层层往上到document。</p>
+<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><p>有时我们需要用id选择器去唯一定位一个元素，但在组件中又不能用id，因为组件在一个页面多次使用会出问题。</p>
+<p>Vue作者应该是考虑到了这个所以提供了ref，可以索引子组件，也可以直接索引元素。能在组件内部起到类似于id选择器的作用，但在全局上却不会冲突。这个东西之前没用过，感谢同事指点，同事表示，Vue嘛，就不该用命令式的语法和思路，比如document.getElement……这种。嗯，道理我也懂，只是之前没考虑过元素选择上也有这种注意事项。</p>
+<h4 id="其它收获"><a href="#其它收获" class="headerlink" title="其它收获"></a>其它收获</h4><p>技术上的收获是在事件方面，事件的调试方法，事件的几个方法。</p>
+<p>preventDefault方法：取消默认事件的行为，比如复选框点击后就会勾选，如果为复选框绑定点击事件，在处理该事件的方法里调该方法，可以取消这个勾选复选框的默认事件。而不是阻止事件的继续冒泡。对了，有的事件是不可以被取消的，不要无脑调用该方法……</p>
+<p>stopPropagation方法：这个才是阻止事件冒泡/捕获的。</p>
+<p>哦对了，怎么调试事件。打断点大家都很熟悉，但是怎么对事件打断点呢，比如有个元素上，有多个库在上面绑定了事件，那么事件触发后，是哪段JS执行了？</p>
+<p>chrome开发者工具 - sources - 右侧面板 - Event Listener Breakpoints 里列出了所有的事件，勾选想调试的事件，比如click，再去页面上点击（触发click事件），就进入到对应的代码断点了。</p>
+<h4 id="我想说的"><a href="#我想说的" class="headerlink" title="我想说的"></a>我想说的</h4><p>排查问题的时候最基本的方法就是控制变量，把做得绝对正确的地方都排开，问题很容易看出来。这句话说起来容易，做起来嘛……如何确定你以为正确的地方是正确的。</p>
+<p>只能尽可能多学东西，把东西掌握得全面一点，就会更有底气去说，这里是绝对没问题的。</p>
+<p>还有就是，版本控制非常重要，当时也是没反应过来，我有版本控制啊，我为啥怕改老代码，iscroll库全干掉试试啊。</p>
+<p>哦对了，还要感谢同事——刚入行的应届生，不要去小公司小团队。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E5%85%B6%E5%AE%83/hello-world/" rel="prev" title="Hello World">
+      <i class="fa fa-chevron-left"></i> Hello World
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/%E5%89%8D%E7%AB%AF/webpack%E6%A8%A1%E6%9D%BFmock%E6%95%B0%E6%8D%AE%E7%9A%84%E6%96%B9%E6%B3%95/" rel="next" title="vue-cli webpack模板mock数据的方法">
+      vue-cli webpack模板mock数据的方法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前情提要</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">具体问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E6%94%B6%E8%8E%B7"><span class="nav-number">4.</span> <span class="nav-text">其它收获</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%88%91%E6%83%B3%E8%AF%B4%E7%9A%84"><span class="nav-number">5.</span> <span class="nav-text">我想说的</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">skyADMIN</p>
+  <div class="site-description" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sky-admin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sky-admin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skyADMIN</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+</script>
+
+</body>
+</html>

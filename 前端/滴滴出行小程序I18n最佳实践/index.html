@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="背景 I18n &#x3D; Internationalization，国际化，因为单词由首末字符i&#x2F;n和中间18个字母组成，简称i18n。对程序来说，就是要在不修改内部代码的情况下，能根据不同语言及地区显示相应的界面，以支持不同语言的人顺利使用程序。  业务背景互联网行业进入下半场，精细化运营是关键。多语言支持能让产品更好地服务境内的其他语言用户，也为产品出海打下基础，随着 WeChat&#x2F;Alipay 的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="滴滴出行小程序I18n最佳实践">
+<meta property="og:url" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E6%BB%B4%E6%BB%B4%E5%87%BA%E8%A1%8C%E5%B0%8F%E7%A8%8B%E5%BA%8FI18n%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/index.html">
+<meta property="og:site_name" content="牧宇的Blog">
+<meta property="og:description" content="背景 I18n &#x3D; Internationalization，国际化，因为单词由首末字符i&#x2F;n和中间18个字母组成，简称i18n。对程序来说，就是要在不修改内部代码的情况下，能根据不同语言及地区显示相应的界面，以支持不同语言的人顺利使用程序。  业务背景互联网行业进入下半场，精细化运营是关键。多语言支持能让产品更好地服务境内的其他语言用户，也为产品出海打下基础，随着 WeChat&#x2F;Alipay 的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dpubstatic.udache.com/static/dpubimg/F3Ev6M08X7/clipboard_image_1599113935176.png">
+<meta property="og:image" content="https://dpubstatic.udache.com/static/dpubimg/f626347f-7501-46e8-9e98-5c961a5b2b3e.png">
+<meta property="article:published_time" content="2020-08-31T07:20:40.000Z">
+<meta property="article:modified_time" content="2020-12-12T16:27:38.078Z">
+<meta property="article:author" content="skyADMIN">
+<meta property="article:tag" content="小程序">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://dpubstatic.udache.com/static/dpubimg/F3Ev6M08X7/clipboard_image_1599113935176.png">
+
+<link rel="canonical" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E6%BB%B4%E6%BB%B4%E5%87%BA%E8%A1%8C%E5%B0%8F%E7%A8%8B%E5%BA%8FI18n%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="manifest" href="/manifest.json" />
+  <title>滴滴出行小程序I18n最佳实践 | 牧宇的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">牧宇的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">工程师的笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E6%BB%B4%E6%BB%B4%E5%87%BA%E8%A1%8C%E5%B0%8F%E7%A8%8B%E5%BA%8FI18n%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          滴滴出行小程序I18n最佳实践
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-31 15:20:40" itemprop="dateCreated datePublished" datetime="2020-08-31T15:20:40+08:00">2020-08-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-13 00:27:38" itemprop="dateModified" datetime="2020-12-13T00:27:38+08:00">2020-12-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><blockquote>
+<p>I18n = Internationalization，国际化，因为单词由首末字符i/n和中间18个字母组成，简称i18n。对程序来说，就是要在不修改内部代码的情况下，能根据不同语言及地区显示相应的界面，以支持不同语言的人顺利使用程序。</p>
+</blockquote>
+<h3 id="业务背景"><a href="#业务背景" class="headerlink" title="业务背景"></a>业务背景</h3><p>互联网行业进入下半场，精细化运营是关键。多语言支持能让产品更好地服务境内的其他语言用户，也为产品出海打下基础，随着 WeChat/Alipay 的全球化，你的小程序是否做好准备了呢？</p>
+<a id="more"></a>
+
+<p>4月初，滴滴出行小程序团队接到支持英文版的需求，预计上线时间为6月上旬。当前滴滴出行小程序集成的众多业务线和各种公共库，展示给用户的有前端硬编码的静态文本和服务端下发的文案，都要同步接入多语言。考虑到小程序当前的体量，光文本收集、语料翻译、npm package 支持，联调，测试，沟通成本等等，并且前端开发只投入1.5人力的情况下，时间是蛮紧迫的，但是我们抗住了压力，最终英文版滴滴出行小程序如期上线，截止目前运行稳定，用户反馈良好，得到了超出预期的收益。</p>
+<p>当然这一切得益于各团队同学的高效工作，和各团队的通力配合，更得益于部门技术团队 Mpx框架优雅的多语言能力支持。划重点来咯，所谓工欲善其事必先利其器，如果你的公司业务需要开发小程序，也需要接入多语言，那么请搬好小板凳，我们来看一下小程序框架 Mpx 是如何优雅支持多语言能力。相信看完这篇，可以帮助你认识 Mpx(<a target="_blank" rel="noopener" href="https://github.com/didi/mpx">https://github.com/didi/mpx</a>) ，加深对框架的理解，最终利用 Mpx 框架高效迭代小程序，年终奖多出那部分可以打赏一下作者，买杯咖啡哈（偷笑.jpg）</p>
+<p>以下是滴滴出行小程序的中英文版本对比： </p>
+<p><img src="https://dpubstatic.udache.com/static/dpubimg/F3Ev6M08X7/clipboard_image_1599113935176.png" alt="滴滴出行微信小程序i18n"></p>
+<p>也欢迎大家在微信/支付宝里搜索滴滴出行小程序，实际使用感受下。PS：切换语言的方法是，打开小程序，点击左上角用户头像，进入侧边栏设置页面，点击切换中英文即可体验。</p>
+<h3 id="技术背景"><a href="#技术背景" class="headerlink" title="技术背景"></a>技术背景</h3><p>在上述业务背景下，Mpx 框架——滴滴自研的专注提升小程序开发体验的增强型小程序框架，内建 i18n 能力便提上日程。</p>
+<p>与 WEB 不同，小程序（本文以微信小程序为例）运行环境采用双线程架构设计，渲染层的界面使用 WebView 进行渲染，逻辑层采用 JSCore 线程运行 JS脚本。逻辑层数据改变，通过 setData 将数据转发到 Native（微信客户端），Native 再将数据转发到渲染层，以此更新页面。由于线程间通信成本较高，实际项目开发时需要控制频次和数量。另外小程序的渲染层不支持运行 JS ，一些如事件处理等操作无法在渲染层实现，因此微信官方提供了一套脚本语言 WXS ，结合 WXML ，可以构建出页面的结构（不了解 WXS ？戳这里）。</p>
+<p>基于小程序的双线程架构设计，实现 i18n 存在一些技术上的难点与挑战，由于 Mpx 框架早期构建起来的强大基础，最终得以优雅支持多语言能力，实现了和vue-i18n 基本一致的使用体验。</p>
+<p>##使用</p>
+<p>在使用上，Mpx 支持 i18n 能力提供的 API 与 vue-i18n 大体对齐，用法上也基本一致。</p>
+<h3 id="模板中使用-i18n"><a href="#模板中使用-i18n" class="headerlink" title="模板中使用 i18n"></a>模板中使用 i18n</h3><p>编译阶段通过用户配置的 i18n 字典，结合框架内建的翻译函数通过 wxs-i18n-loader 合成为可执行的 WXS 翻译函数，并自动注入到有翻译函数调用的模板中，具体调用方式如下图。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// mpx文件</span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span>&gt;</span>&#123;&#123; $t(&#x27;message.hello&#x27;, &#123; msg: &#x27;hello&#x27; &#125;）&#125;&#125;<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- formattedDatetime计算属性，可基于locale变更响应刷新 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span>&gt;</span>&#123;&#123;formattedDatetime&#125;&#125;<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="JS-中使用-i18n"><a href="#JS-中使用-i18n" class="headerlink" title="JS 中使用 i18n"></a>JS 中使用 i18n</h3><p>通过框架提供的 wxs2js 能力，将 WXS 翻译函数转换为 JS 模块注入到 JS 运行时，使运行时环境中也能够调用翻译函数。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// mpx文件</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">import</span> mpx, &#123; createComponent &#125; <span class="keyword">from</span> <span class="string">&#x27;@mpxjs/core&#x27;</span></span></span><br><span class="line">  createComponent(&#123;</span><br><span class="line">    ready () &#123;</span><br><span class="line"><span class="javascript">      <span class="comment">// js中使用</span></span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="built_in">this</span>.$t(<span class="string">&#x27;message.hello&#x27;</span>, &#123; <span class="attr">msg</span>: <span class="string">&#x27;hello&#x27;</span> &#125;))</span></span><br><span class="line"><span class="javascript">      <span class="comment">// 局部locale变更，生效范围为当前组件内</span></span></span><br><span class="line"><span class="javascript">      <span class="built_in">this</span>.$i18n.locale = <span class="string">&#x27;en-US&#x27;</span></span></span><br><span class="line"><span class="javascript">      <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 全局locale变更，生效范围为项目全局</span></span></span><br><span class="line"><span class="javascript">        mpx.i18n.locale = <span class="string">&#x27;zh-CN&#x27;</span></span></span><br><span class="line">      &#125;, 10000)</span><br><span class="line">    &#125;,</span><br><span class="line">    computed: &#123;</span><br><span class="line">      formattedDatetime () &#123;</span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> <span class="built_in">this</span>.$d(<span class="keyword">new</span> <span class="built_in">Date</span>(), <span class="string">&#x27;long&#x27;</span>)</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="定义-i18n-字典"><a href="#定义-i18n-字典" class="headerlink" title="定义 i18n 字典"></a>定义 i18n 字典</h3><p>项目构建时传入 i18n 配置对象，主要包括语言字典和默认语言类型。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> MpxWebpackPlugin(&#123;</span><br><span class="line">  i18n: &#123;</span><br><span class="line">    locale: <span class="string">&#x27;en-US&#x27;</span>,</span><br><span class="line">    <span class="comment">// messages既可以通过对象字面量传入，也可以通过messagesPath指定一个js模块路径，在该模块中定义配置并导出，dateTimeFormats/dateTimeFormatsPath和numberFormats/numberFormatsPath同理</span></span><br><span class="line">    messages: &#123;</span><br><span class="line">      <span class="string">&#x27;en-US&#x27;</span>: &#123;</span><br><span class="line">        message: &#123;</span><br><span class="line">          hello: <span class="string">&#x27;&#123;msg&#125; world&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">&#x27;zh-CN&#x27;</span>: &#123;</span><br><span class="line">        message: &#123;</span><br><span class="line">          hello: <span class="string">&#x27;&#123;msg&#125; 世界&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// messagesPath: path.resolve(__dirname, &#x27;../src/i18n.js&#x27;)</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>如果是通过 Mpx 提供的 cli 工具生成的项目，这部分配置会在 mpx.conf.js 文件中，不光可以直接内联写在该文件中，也可以指定语言包的路径。</p>
+<p>以上，Mpx 的 i18n 方案接入成本低，使用优雅，体验优秀。直观感受可参考下面 mpx i18n demo ：<a target="_blank" rel="noopener" href="https://github.com/didi/mpx/tree/master/examples/mpx-i18n">https://github.com/didi/mpx/tree/master/examples/mpx-i18n</a></p>
+<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><p>Mpx框架的 i18n 支持几乎完全实现了 vue-i18n 的全部能力，下面我们来详细说明 Mpx 框架 i18n 能力的具体实现。</p>
+<h3 id="方案探索"><a href="#方案探索" class="headerlink" title="方案探索"></a>方案探索</h3><p>基于小程序运行环境的双线程架构，我们尝试了不同方案，具体探索过程如下：</p>
+<p>方案一：基于 Mpx 框架已提供的数据增强能力 computed 计算属性，来支持 i18n 。该方案与 uniapp 的实现思路相似（后文会进行对比分析），存在一定不足，包括线程通信带来的性能开销和for循环场景下的处理较复杂等，最终放弃。<br>方案二：基于 WXS + JS 支持 i18n 适配。通过视图层注入 WXS，将 WXS 语法转换为 JS 后注入到逻辑层，这样视图层和逻辑层均可实现 i18n 适配，并且在一定程度上有效减少两个线程间的通信耗时，提高性能。</p>
+<p>从性能和合理性上考虑，我们最终采用了方案二进行 Mpx 的 i18n 方案实现。</p>
+<p><img src="https://dpubstatic.udache.com/static/dpubimg/f626347f-7501-46e8-9e98-5c961a5b2b3e.png" alt="mpx-i18n内部流程示意图"></p>
+<p><em>Mpx i18n 架构设计图</em></p>
+<p>由于各大小程序平台上，WXS 语法和使用均存在较大差异，因此该方案实现过程中也存在一些技术上的难点，这些难点基于 Mpx 框架的早期构建起来的跨平台能力也一一得以攻克，具体如下。</p>
+<h3 id="实现难点"><a href="#实现难点" class="headerlink" title="实现难点"></a>实现难点</h3><h4 id="WXS-在模板中运行的跨平台处理"><a href="#WXS-在模板中运行的跨平台处理" class="headerlink" title="WXS 在模板中运行的跨平台处理"></a>WXS 在模板中运行的跨平台处理</h4><p>WXS 是运行在视图层中的 JS，可以减少与逻辑层通信耗时，提高性能。因此 Mpx 框架在迭代初期便已支持在模板和 JS 运行环境使用 WXS 语言，并且针对小程序跨平台 WXS 语法进行抹平。<br>在模板中，Mpx 自定义一个 webpack chunk template，以微信 WXS 作为 DSL，利用 babylon 将注入的 WXS 转化成 ast，然后遍历 ast 节点，抹平各大平台对 WXS 语法的处理差异，输出各平台可以识别的类 WXS 文件。目前主要支持微信(WXS)、支付宝(sjs)、百度(filter)、QQ(qs)、头条(sjs)等小程序平台。</p>
+<h4 id="WXS-在逻辑层运行的跨平台处理"><a href="#WXS-在逻辑层运行的跨平台处理" class="headerlink" title="WXS 在逻辑层运行的跨平台处理"></a>WXS 在逻辑层运行的跨平台处理</h4><p>WXS 与 JavaScript 是不同的语言，有自己的语法，并不和 JavaScript 一致。并且 WXS 的运行环境和其他 JavaScript 代码是隔离的，WXS 中不能调用其他 JavaScript 文件中定义的函数，也不能调用小程序提供的API。<br>因此在逻辑层，Mpx 将注入的 WXS 语法转化为 JS，通过 webpack 注入到当前模块。例如 WXS 全局方法 getRegExp/getDate 在 JS 中是无法调用的，Mpx将它们分别转化成 JS 模块，再通过 webpack addVariable 将模块注入到 bundle.js 中。<br>同理，Mpx 会将编译时注入的 i18n wxs 翻译函数和 i18n 配置对象挂载到全局 global 对象上，利用 mixin 混入到页面组件，并监听 i18n 配置对象，这样JS和模板中即可直接调用 i18n 翻译函数，实现数据响应。</p>
+<p>以上便是 Mpx 框架在小程序中支持 i18n 能力的技术细节，由于 WXS 是可以在视图层执行的类 JS 语法的一门语言，这样就减少了小程序逻辑层和视图层的通信耗时，提升性能。但是由于实现依赖类 WXS 能力，以及 WXS 执行环境的限制，目前模板上可直接使用的翻译函数包括 <code>$t/$tc/$te</code> ，如果需要格式化数字或日期可以使用对应的翻译函数在 JS 中 Mpx 提供的计算属性中实现。</p>
+<h3 id="输出-web-时使用-i18n"><a href="#输出-web-时使用-i18n" class="headerlink" title="输出 web 时使用 i18n"></a>输出 web 时使用 i18n</h3><p>Mpx同时还支持转换产出H5，而 Mpx 提供的 i18n 能力在使用上与 vue-i18n 基本一致，输出 web 时框架会自动引入 vue-i18n，并使用当前的 Mpx i18n 配置信息对其进行初始化，用户无需进行任何更改，即可输出和小程序表现完全一致的 i18n web 项目。</p>
+<h2 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h2><p>上面分析了 Mpx 框架的 i18n 方案的技术细节，我们来看下和其他方案的对比，主要是和 uniapp - 基于 Vue 编写小程序的方案，和微信官方的方案，两者提供的 i18n 支持与Mpx的对比有何优劣。</p>
+<h3 id="uniapp的方案"><a href="#uniapp的方案" class="headerlink" title="uniapp的方案"></a>uniapp的方案</h3><p>uniapp 提供了对 i18n 能力的支持，是直接引入vue-i18n。但小程序中无法在模板上调用 JS 方法，本质上是利用计算属性 Computed 转换好语言，然后利用模板插值在小程序模板中使用。</p>
+<p>模板中：<br><code>&lt;view&gt;&#123;&#123; message.hello &#125;&#125;&lt;/view&gt;</code></p>
+<p>JS里需要写：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">computed: &#123;  </span><br><span class="line">  message () &#123;  </span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">hello</span>: <span class="built_in">this</span>.$t(<span class="string">&#x27;message.hello&#x27;</span>) &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因此该方案存在一个性能问题，最终的渲染层所看到的文本还是通过 setData 跨线程通信完成，这样就会导致线程间通信增多，性能开销较大。</p>
+<p>并且，早期这种形式使用成本较高，后来 uniapp 也针对其做过优化，实现了可以在模板上写 $t() 的能力，使用上方便了不少。</p>
+<p>这个 $t() 的实现是在编译时候识别到 $t 就自动替换，帮你替换成一个 uniapp 的 computed 数据，因此数据部分还是和之前一样要维护两份。尤其是模板上的for循环，即使 for 里只有一个数据要被转换，整个列表都要被替换成一个计算属性，在线程间通信时进一步加大了性能开销。</p>
+<h3 id="微信官方的方案"><a href="#微信官方的方案" class="headerlink" title="微信官方的方案"></a>微信官方的方案</h3><p>微信小程序本身也提供了一个 i18n 的方案，仓库地址是：wechat-miniprogram/miniprogram-i18n 。</p>
+<p>这个方案从 i18n 本身的实现来讲和Mpx框架的设计是类似的，也是基于 WXS 实现（英雄所见略同啊）。但因为周边配套上没有完整的体系，整体使用体验上就也略逊于基于Mpx框架来开发支持 i18n 的国际化小程序了。</p>
+<p>主要的点就是，官方提供的方案，要基于 gulp 工具进行一次额外构建，同时在JS中使用时候还要额外引入一个 behavior 去让JS中也可以使用翻译能力。</p>
+<p>而Mpx框架通过一次统一的Webpack构建产出完整的内容，用户无需担心语言包更新后忘记重新构建，在JS中使用的时候不光更方便，而且语言信息还是个响应式的，任何组件都可以很方便地监听语言值的变化去做一些其他的事情。</p>
+<p>最后，Mpx的 i18n 方案对比微信官方的方案还有个巨大的优点，结合Mpx的跨平台能力，能实现均以这个方案，一套代码产出支持微信/支付宝/百度/QQ/头条多个平台的支持 i18n 的小程序。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Mpx 框架专注小程序开发，期望为开发者提供最舒适的开发体验，有众多优秀的功能特性，帮助开发者提效。本文介绍的是其内置的 i18n 能力，通过对比分析得出相比其他框架方案在使用成本和性能等方面有明显的优势，欢迎各位有相关需求的同学进行体验尝试。</p>
+<p>未来 Mpx 还会持续迭代优化，提供更多更好的能力帮助小程序开发者提效。在使用过程中遇到任何问题，欢迎大家在 Git 上提 issue，团队成员会及时响应。同时也鼓励大家一起为开源社区做贡献，参与到 Mpx 共建中来，为小程序技术发展添砖加瓦。</p>
+<p>Git地址 [<a target="_blank" rel="noopener" href="https://github.com/didi/mpx]">https://github.com/didi/mpx]</a><br>Mpx文档 [<a target="_blank" rel="noopener" href="https://mpxjs.cn/]">https://mpxjs.cn/]</a></p>
+<p>欢迎技术交流与反馈，顺便star一下鼓励开源项目贡献者，我们将持续发力贡献社区。</p>
+<p>附：以往Mpx文章链接<br>滴滴开源小程序框架Mpx - <a target="_blank" rel="noopener" href="https://mpxjs.cn/articles/1.0.html">https://mpxjs.cn/articles/1.0.html</a><br>滴滴小程序框架Mpx发布2.0，支持小程序跨平台开发，可直接转换已有微信小程序 - <a target="_blank" rel="noopener" href="https://mpxjs.cn/articles/2.0.html">https://mpxjs.cn/articles/2.0.html</a><br>小程序开发者，为什么你应该尝试下MPX - <a target="_blank" rel="noopener" href="https://mpxjs.cn/articles/mpx1.html">https://mpxjs.cn/articles/mpx1.html</a><br>Mpx 小程序框架技术揭秘 - <a target="_blank" rel="noopener" href="https://mpxjs.cn/articles/mpx2.html">https://mpxjs.cn/articles/mpx2.html</a><br>滴滴出行小程序体积优化实践 - <a target="_blank" rel="noopener" href="https://mpxjs.cn/articles/size-control.html">https://mpxjs.cn/articles/size-control.html</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag"># 小程序</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E5%B7%A5%E7%A8%8B%E5%8C%96/%E4%BB%8ETravis%E8%BF%81%E7%A7%BB%E5%88%B0GitHub-Actions/" rel="prev" title="从Travis迁移到GitHub-Actions">
+      <i class="fa fa-chevron-left"></i> 从Travis迁移到GitHub-Actions
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E8%83%8C%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">业务背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E8%83%8C%E6%99%AF"><span class="nav-number">1.2.</span> <span class="nav-text">技术背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E6%9D%BF%E4%B8%AD%E4%BD%BF%E7%94%A8-i18n"><span class="nav-number">1.3.</span> <span class="nav-text">模板中使用 i18n</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JS-%E4%B8%AD%E4%BD%BF%E7%94%A8-i18n"><span class="nav-number">1.4.</span> <span class="nav-text">JS 中使用 i18n</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-i18n-%E5%AD%97%E5%85%B8"><span class="nav-number">1.5.</span> <span class="nav-text">定义 i18n 字典</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%88"><span class="nav-number">2.</span> <span class="nav-text">方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88%E6%8E%A2%E7%B4%A2"><span class="nav-number">2.1.</span> <span class="nav-text">方案探索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E9%9A%BE%E7%82%B9"><span class="nav-number">2.2.</span> <span class="nav-text">实现难点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#WXS-%E5%9C%A8%E6%A8%A1%E6%9D%BF%E4%B8%AD%E8%BF%90%E8%A1%8C%E7%9A%84%E8%B7%A8%E5%B9%B3%E5%8F%B0%E5%A4%84%E7%90%86"><span class="nav-number">2.2.1.</span> <span class="nav-text">WXS 在模板中运行的跨平台处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WXS-%E5%9C%A8%E9%80%BB%E8%BE%91%E5%B1%82%E8%BF%90%E8%A1%8C%E7%9A%84%E8%B7%A8%E5%B9%B3%E5%8F%B0%E5%A4%84%E7%90%86"><span class="nav-number">2.2.2.</span> <span class="nav-text">WXS 在逻辑层运行的跨平台处理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%87%BA-web-%E6%97%B6%E4%BD%BF%E7%94%A8-i18n"><span class="nav-number">2.3.</span> <span class="nav-text">输出 web 时使用 i18n</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94"><span class="nav-number">3.</span> <span class="nav-text">对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#uniapp%E7%9A%84%E6%96%B9%E6%A1%88"><span class="nav-number">3.1.</span> <span class="nav-text">uniapp的方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AE%E4%BF%A1%E5%AE%98%E6%96%B9%E7%9A%84%E6%96%B9%E6%A1%88"><span class="nav-number">3.2.</span> <span class="nav-text">微信官方的方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">skyADMIN</p>
+  <div class="site-description" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sky-admin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sky-admin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skyADMIN</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+</script>
+
+</body>
+</html>

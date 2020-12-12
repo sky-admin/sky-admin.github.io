@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="17年9月起和朋友合作了一个项目，一套组件库Antue，好听点说叫造轮子。主要是把蚂蚁金服的Ant Design给“翻译”成Vue可用的组件库。这是一个蛮正式的项目，规模也挺大，所以给了我一个实践工程化的好场景。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端项目工程化实践">
+<meta property="og:url" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E5%B7%A5%E7%A8%8B%E5%8C%96%E5%AE%9E%E8%B7%B5/index.html">
+<meta property="og:site_name" content="牧宇的Blog">
+<meta property="og:description" content="17年9月起和朋友合作了一个项目，一套组件库Antue，好听点说叫造轮子。主要是把蚂蚁金服的Ant Design给“翻译”成Vue可用的组件库。这是一个蛮正式的项目，规模也挺大，所以给了我一个实践工程化的好场景。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-11-30T03:25:39.000Z">
+<meta property="article:modified_time" content="2020-12-12T16:27:38.074Z">
+<meta property="article:author" content="skyADMIN">
+<meta property="article:tag" content="skyADMIN,环宇,牧宇,环宇的博客,牧宇的博客">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E5%B7%A5%E7%A8%8B%E5%8C%96%E5%AE%9E%E8%B7%B5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="manifest" href="/manifest.json" />
+  <title>前端项目工程化实践 | 牧宇的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">牧宇的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">工程师的笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E5%B7%A5%E7%A8%8B%E5%8C%96%E5%AE%9E%E8%B7%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          前端项目工程化实践
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-11-30 11:25:39" itemprop="dateCreated datePublished" datetime="2017-11-30T11:25:39+08:00">2017-11-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-13 00:27:38" itemprop="dateModified" datetime="2020-12-13T00:27:38+08:00">2020-12-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>17年9月起和朋友合作了一个项目，<a target="_blank" rel="noopener" href="https://github.com/zzuu666/antue">一套组件库Antue</a>，好听点说叫造轮子。主要是把蚂蚁金服的Ant Design给“翻译”成Vue可用的组件库。这是一个蛮正式的项目，规模也挺大，所以给了我一个实践工程化的好场景。</p>
+<a id="more"></a>
+
+<h2 id="什么是前端工程化"><a href="#什么是前端工程化" class="headerlink" title="什么是前端工程化"></a>什么是前端工程化</h2><p><a target="_blank" rel="noopener" href="https://github.com/ruanyf/jstraining/blob/master/docs/engineering.md">阮一峰 - 前端工程简介</a></p>
+<p>我认为应该是包含包管理、代码构建、代码lint、单元测试、持续集成等等的一个合集。</p>
+<p>包管理、代码构建、lint、单测在目前的前端项目中已经是标配了，用vue-cli生成的模板天然地为大家处理好了这些问题。所以我的实践主要是最后一步，持续集成。</p>
+<p>持续集成的流程、概念、好处等等在上面的阮一峰的文章中说得很明确了。</p>
+<h2 id="为什么需要"><a href="#为什么需要" class="headerlink" title="为什么需要"></a>为什么需要</h2><p>很多朋友在业务项目中很少使用持续集成，我也是，主要是业务上使用持续集成需要考虑成本是否划算，可能是做的业务都不太好吧，如果是一个公司的主航道业务，需要一直一直持续迭代持续开发，持续集成会是一个非常好的助手我猜。</p>
+<p>而开源的，让别人使用的lib级别的东西，再怎么严谨都是不为过的，更何况，一个优秀的持续集成工作流，能保证项目的质量，让迭代成本、维护成本变低，是一件双赢的好事。</p>
+<p>有了持续集成机制，我们可以保证每次对主干的合并后，能检查以下项：</p>
+<ul>
+<li>开发者提交的代码是否遵循了eslint的规则，保证风格一致，无低级错误</li>
+<li>开发者提交的代码是否能够通过单元测试，避免改动或重构影响其他相关的地方</li>
+<li>开发者提交的代码是否能够正常build，给出一个正确的压缩包</li>
+</ul>
+<h2 id="如何做"><a href="#如何做" class="headerlink" title="如何做"></a>如何做</h2><p>因为这是一个github开源项目，Travis是一个非常优秀、非常方便的选择。</p>
+<p>仅需要项目owner用github账户登录一下Travis，勾选需要启用的对应的项目。然后编写Travis的配置文件：.travis.yml即可。</p>
+<p>配置内容也比较简单，如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">language:</span> <span class="string">node_js</span></span><br><span class="line"><span class="attr">node_js:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">8.5</span><span class="number">.0</span></span><br><span class="line"><span class="attr">before_install:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">npm</span> <span class="string">install</span></span><br><span class="line"><span class="attr">script:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">npm</span> <span class="string">run</span> <span class="string">lint</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">npm</span> <span class="string">test</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">npm</span> <span class="string">run</span> <span class="string">build</span></span><br><span class="line"><span class="attr">before_deploy:</span> </span><br><span class="line">  <span class="bullet">-</span> <span class="string">node</span> <span class="string">scripts/generate.js</span> <span class="string">-a</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">node</span> <span class="string">scripts/generate.js</span> <span class="string">-r</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">npm</span> <span class="string">run</span> <span class="string">build:site</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">provider:</span> <span class="string">pages</span></span><br><span class="line">  <span class="attr">skip_cleanup:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">github_token:</span> <span class="string">$GH_TOKEN</span></span><br><span class="line">  <span class="attr">local_dir:</span> <span class="string">site/dist</span></span><br><span class="line">  <span class="attr">on:</span></span><br><span class="line">    <span class="attr">branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
+
+<p>可以理解成生命周期的各个钩子吧，先<code>npm install</code>安装依赖，再运行正式的script：先lint，再跑单测，最后试试构建。</p>
+<p>任一环节出错就会发邮件告知项目相关人员，可以通过查看CI的log信息来检查到底是什么问题，在本地复现、修复。</p>
+<p>这里有一个关键问题是，如何保证大家认可Travis的结果，有很多开源项目都使用了Travis，但是我也见过不少Travis报着错，还在继续merge到master分支的项目。</p>
+<p>其实也很好解决，只是个理念的问题，相信制度、流程，而不是人的自觉，github对项目的设定中提供了保护分支的选项，通过把master设为保护分支，可以要求pull request必须通过CI才可以合入，我们的项目还更进一步，加了一条必须有合作者的code review。</p>
+<h2 id="效果如何？"><a href="#效果如何？" class="headerlink" title="效果如何？"></a>效果如何？</h2><p>首先，antue的master分支的component文件夹下的组件代码，绝对没有不符合standard规范的JS代码。</p>
+<p>其次，未来的重构中，不会有因重构导致有完善单元测试的组件出bug（很惭愧，我写的组件还没写单元测试）。</p>
+<p>最后，任何一台安装了合适版本node的能联网的电脑，都可以完美编译该项目（也许不能，毕竟目前的开发者使用的都是mac，可能会有平台兼容性问题，吹个牛逼也不犯法不是？）。很多人的Travis配置中可能只有跑了一个单元测试，但构建这一点其实蛮重要的，给人一个能编译（构建）过的项目，有问题比不能编译过的项目会好查太多太多。</p>
+<p>同时，有了Travis的构建通过邮件，大家能很开心很自信地往下写。</p>
+<p>所以有兴趣的同学，欢迎参与开发这个组件库，我们一点也不担心不同开发人员的不同风格是否会导致项目变得奇怪。</p>
+<h2 id="还可以做什么？"><a href="#还可以做什么？" class="headerlink" title="还可以做什么？"></a>还可以做什么？</h2><p>看上面的配置文件，最下面的<code>deploy</code>说明我们用Travis进行的自动部署。</p>
+<p>这个需求主要是这样的，主owner希望对antd进行像素级复制，所以文档网站也是用类似于andt的手法，通过markdown生成的（没有antd的毕昇系统那么叼，但也显得很专业嘿嘿）。</p>
+<p>发布的方式是手工执行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">node scripts/generate.js -a</span><br><span class="line">node scripts/generate.js -r</span><br><span class="line">npm run build:site</span><br><span class="line">git checkout gh-pages</span><br><span class="line">cp ./site/dist/* ./</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&#x27;第XX次 update doc&#x27;</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
+
+<p>可以看出这个部署到github pages的操作是非常的固定的，且我们又知道我们的master分支是随时处于一个待发布的OK的状态的，那么我们为什么不让每次merge到master后就自动部署到pages上去呢？</p>
+<p>一开始我想的是通过自己编写一个bash脚本，让Travis每次来执行这个脚本，其实这个方案也是可以的，只是不好调试，费了半天劲没有解决只master版本才部署这个问题，就很伤。</p>
+<p>查了半天Travis的文档后发现它内置的部署provider里本身就有pages这种方案（Travis文档做得挺好，就是搜索功能非常不好用），就改成目前的这样。</p>
+<p>自动部署的效果很好，每完成一个新组件，合并master后，就可以立即看到效果，想参与github开源项目的同学走过路过不要错过，提交就可以拿着<a target="_blank" rel="noopener" href="https://zzuu666.github.io/antue/">这个网页</a>找到自己写的组件去和人吹牛逼啦！</p>
+<p>本项目在持续集成上的实践就酱紫啦，要是还有什么需要做的好点子欢迎和我分享。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E5%89%8D%E7%AB%AF/%E8%B0%88%E8%B0%88CORS%E4%B8%8B%E5%89%8D%E7%AB%AF%E7%9A%84cookie/" rel="prev" title="谈谈CORS下前端的cookie">
+      <i class="fa fa-chevron-left"></i> 谈谈CORS下前端的cookie
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/docker/docker-for-windows%E4%B8%8D%E5%93%8D%E5%BA%94react%E9%A1%B9%E7%9B%AE%E6%94%B9%E5%8F%98%E5%90%8E%E7%9A%84%E9%87%8D%E7%BC%96%E8%AF%91/" rel="next" title="docker for windows不响应react项目改变后的重编译">
+      docker for windows不响应react项目改变后的重编译 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96"><span class="nav-number">1.</span> <span class="nav-text">什么是前端工程化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81"><span class="nav-number">2.</span> <span class="nav-text">为什么需要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%81%9A"><span class="nav-number">3.</span> <span class="nav-text">如何做</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E5%A6%82%E4%BD%95%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">效果如何？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%98%E5%8F%AF%E4%BB%A5%E5%81%9A%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">还可以做什么？</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">skyADMIN</p>
+  <div class="site-description" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sky-admin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sky-admin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skyADMIN</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+</script>
+
+</body>
+</html>
