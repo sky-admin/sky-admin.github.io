@@ -20,20 +20,23 @@
     var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="写了个前端渲染的教程。 Github地址 打滚求星星。">
+  <meta name="description" content="背景前端使用npm来作为包管理工具，它的使用门槛&#x2F;发包门槛低到惊人，好处是培养了非常丰富的社区和庞大的第三方包，包的数量远超第二名maven。 但所有东西都会有代价，坏处是npm的包质量方面良莠不齐，依赖链非常深，很简单的小工具方法都可能去使用包。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="写了个前端渲染的教程">
-<meta property="og:url" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E5%86%99%E4%BA%86%E4%B8%AA%E5%89%8D%E7%AB%AF%E6%B8%B2%E6%9F%93%E7%9A%84%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:title" content="前端依赖与可信构建">
+<meta property="og:url" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E4%BE%9D%E8%B5%96%E4%B8%8E%E4%BF%A1%E4%BB%BB/index.html">
 <meta property="og:site_name" content="牧宇的Blog">
-<meta property="og:description" content="写了个前端渲染的教程。 Github地址 打滚求星星。">
+<meta property="og:description" content="背景前端使用npm来作为包管理工具，它的使用门槛&#x2F;发包门槛低到惊人，好处是培养了非常丰富的社区和庞大的第三方包，包的数量远超第二名maven。 但所有东西都会有代价，坏处是npm的包质量方面良莠不齐，依赖链非常深，很简单的小工具方法都可能去使用包。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2016-12-18T13:16:13.000Z">
+<meta property="og:image" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E4%BE%9D%E8%B5%96%E4%B8%8E%E4%BF%A1%E4%BB%BB/node_modules-blck-hole.jpg">
+<meta property="og:image" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E4%BE%9D%E8%B5%96%E4%B8%8E%E4%BF%A1%E4%BB%BB/deps-example.png">
+<meta property="article:published_time" content="2022-01-11T01:07:48.000Z">
 <meta property="article:modified_time" content="2022-03-01T13:38:32.990Z">
 <meta property="article:author" content="skyADMIN">
-<meta property="article:tag" content="skyADMIN,环宇,牧宇,环宇的博客,牧宇的博客">
+<meta property="article:tag" content="前端,js,npm">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E4%BE%9D%E8%B5%96%E4%B8%8E%E4%BF%A1%E4%BB%BB/node_modules-blck-hole.jpg">
 
-<link rel="canonical" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E5%86%99%E4%BA%86%E4%B8%AA%E5%89%8D%E7%AB%AF%E6%B8%B2%E6%9F%93%E7%9A%84%E6%95%99%E7%A8%8B/">
+<link rel="canonical" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E4%BE%9D%E8%B5%96%E4%B8%8E%E4%BF%A1%E4%BB%BB/">
 
 
 <script id="page-configurations">
@@ -46,7 +49,7 @@
   };
 </script>
 <link rel="manifest" href="/manifest.json" />
-  <title>写了个前端渲染的教程 | 牧宇的Blog</title>
+  <title>前端依赖与可信构建 | 牧宇的Blog</title>
   
 
 
@@ -162,7 +165,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E5%86%99%E4%BA%86%E4%B8%AA%E5%89%8D%E7%AB%AF%E6%B8%B2%E6%9F%93%E7%9A%84%E6%95%99%E7%A8%8B/">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E4%BE%9D%E8%B5%96%E4%B8%8E%E4%BF%A1%E4%BB%BB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -175,7 +178,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          写了个前端渲染的教程
+          前端依赖与可信构建
         </h1>
 
         <div class="post-meta">
@@ -185,7 +188,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2016-12-18 21:16:13" itemprop="dateCreated datePublished" datetime="2016-12-18T21:16:13+08:00">2016-12-18</time>
+              <time title="创建时间：2022-01-11 09:07:48" itemprop="dateCreated datePublished" datetime="2022-01-11T09:07:48+08:00">2022-01-11</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -215,44 +218,41 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>写了个前端渲染的教程。</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/sky-admin/FE-tutorial">Github地址</a></p>
-<p>打滚求星星。</p>
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>前端使用npm来作为包管理工具，它的使用门槛/发包门槛低到惊人，好处是培养了非常丰富的社区和庞大的第三方包，包的数量远超第二名maven。</p>
+<p>但所有东西都会有代价，坏处是npm的包质量方面良莠不齐，依赖链非常深，很简单的小工具方法都可能去使用包。</p>
 <span id="more"></span>
 
-<h4 id="后端渲染是什么？"><a href="#后端渲染是什么？" class="headerlink" title="后端渲染是什么？"></a>后端渲染是什么？</h4><p>首先说说以前的后端渲染的方式:</p>
-<ol>
-<li>用户向服务器发起请求</li>
-<li>服务器拦截用户请求，根据 路由/表单 确定用户的动作</li>
-<li>服务器根据用户动作执行相应操作（对数据库的增删查改吧一般是）</li>
-<li>完成操作后整理要展示给用户看的数据</li>
-<li>找到网页模板，用数据替换模板中要被替换的部分</li>
-<li>输出替换完成的html文档</li>
-</ol>
-<p>看上去好像没啥不好。</p>
-<h4 id="后端渲染的问题："><a href="#后端渲染的问题：" class="headerlink" title="后端渲染的问题："></a>后端渲染的问题：</h4><ol>
-<li>和原生应用的操作体验没法比，因为渲染是在服务器完成的，想看到新的内容必须从服务器端获取新的html文档，就会造成刷新，一个全白的页面闪现后再换成新的页面，给人的操作一种断层的感觉。</li>
-<li>对服务器的压力较大，如果有很多个用户同时请求服务器，服务器在同时要渲染N多页面，会崩溃的……</li>
-<li>如果开发多个平台的，需要额外写提供给 Native APP 的API，明明数据差不多的，再加上后面的维护，浪费人力。</li>
-</ol>
-<h4 id="前端渲染是什么？"><a href="#前端渲染是什么？" class="headerlink" title="前端渲染是什么？"></a>前端渲染是什么？</h4><p>和刚刚的后端渲染相比，前端渲染把 <code>用数据去替换模板</code> 这个工作放在了前端来进行。</p>
-<p>就是让JS脚本来通过AJAX向服务器获取数据，然后替换HTML内容。为什么要这样做呢？</p>
-<h4 id="前端渲染如何解决这些问题？"><a href="#前端渲染如何解决这些问题？" class="headerlink" title="前端渲染如何解决这些问题？"></a>前端渲染如何解决这些问题？</h4><p>前端渲染一开始也需要服务器向用户浏览器发送一个文档，这个文档可能是空的，什么内容也没有，但是引入了js。</p>
-<p>当js加载完毕后，js会向服务器发起异步请求获取数据。然后js来把数据显示到页面上。</p>
-<p><code>就我的理解来说，web前端工程师主要做的事情，就是把这个部分捋清楚，编写合理的逻辑，让程序按顺序执行，让数据和交互更合理的发生。</code></p>
-<p>这个过程发生在用户的浏览器上，所以是前端完成的渲染（把数据/内容/样式填充到浏览器上让用户看到）过程。请求数据是异步的，页面不需要刷新，给人一种很流畅的感觉。</p>
-<p>顺序大概是：</p>
-<ol>
-<li>JS加载完成</li>
-<li>JS请求初始化接口获取初始化数据</li>
-<li>JS用数据生成HTML，展示给用户</li>
-<li>用户操作，JS根据用户操作请求对应的接口</li>
-<li>服务器根据请求的接口（路由/表单）确认用户的操作</li>
-<li>服务器执行相应逻辑，从数据库获取数据并返回</li>
-<li>JS根据接口返回的数据修改HTML，给用户看结果</li>
-</ol>
-<p>相比之下，前端的事变多了，后端的事变少了。但是解决了之前提到的一些痛点问题。</p>
-<p>所以，还没试过这种新玩法的同学们，赶紧上车啦。</p>
+<p>因此所有的现代化前端项目，都会有一个非常庞大的依赖，就有了下面这个笑话：</p>
+<p><img src="node_modules-blck-hole.jpg" alt="比黑洞还重的是node_module"></p>
+<p>事实上，在日常的开发工作中，很少有开发者会去关注自己的项目使用了哪些依赖。</p>
+<h2 id="依赖与信任"><a href="#依赖与信任" class="headerlink" title="依赖与信任"></a>依赖与信任</h2><p>前端项目往往会通过npm包管理器去安装丰富的社区贡献的功能模块包，这些模块包对于自己的项目就叫依赖。使用依赖会带来极大的便利性，大量的功能不需要自己去亲自实现，但是也会有安全性问题，我们如何信任一个依赖包？</p>
+<p>一个依赖包，是有它的版本的，版本号都是 <code>X.Y.Z</code> 的形式。X是Major位，或者叫主版本，Y是Minor位，中文次要版本，Z是Patch位，中文修订版本。为什么要这样设计呢。</p>
+<p>简单讲，一个包发布以后，还会有持续的维护，会不停的修改迭代。修改又可以分为这几种：修复包里的bug；新增功能；大的架构升级优化。</p>
+<p>可以看出来，修bug的升级，最好每个用户都升级。新增功能，一般也不会导致之前的功能出问题，大部分用户也都可以升级。而一旦到了架构升级优化，一般就会伴随着breaking change，就是存在不能向前兼容的变化，这种升级就需要用户明确感知，谨慎操作了。</p>
+<p>因此我们在前端项目中，package.json文件里记录依赖版本的时候，一般会用 <code>^</code> 开头，这个意思就是指安装的时候会尝试安装这个主版本下的最新次要版本和修订版本。比如声明了 <code>&quot;mpxjs&quot;: &quot;^2.0.0&quot;</code> ，实际执行npm安装的时候，就会去看2这个主版本下最新的次版本和修订版，假设最新的是2.3.3，就会安装2.3.3。</p>
+<p>关于版本号语义化，详情见 <a target="_blank" rel="noopener" href="https://semver.org/lang/zh-CN/">此链接</a> 。</p>
+<p>OK那么到这里，能看到一些问题吗？</p>
+<p>版本号的语义化规定是这样的，但是包的开发者一定就会遵守吗？君子协定，大部分时候都是没问题的，但是面对这么大规模的生态系统，难免部分包的维护者因为失误、因为能力有限、甚至故意的情况下，往依赖包里投毒，就会导致悲剧的结果。</p>
+<p>这种case并不少见，比如最近有知名开源库 colorjs ，就是作者自己突然 <a target="_blank" rel="noopener" href="https://github.com/Marak/colors.js/issues/285">加入破坏性代码</a> 然后发布一个小的修订版本，所有依赖这个包的项目都遇到了问题。</p>
+<p>怎么避免这个问题呢？一般来说，商业项目的正常需求迭代，都会有测试同学测试后才会进行发布上线，测试同学的存在能很大程度避免依赖包造成的bug带来项目的bug。</p>
+<p>但是当我们只是改一个局部的小需求的时候，测试同学也只会关注局部的变化，这时如果有依赖发生变化导致其他地方产生非预期的变化，就非常容易造成故障。所以纯靠测试同学基本是无法面对依赖变化带来的故障的。</p>
+<h2 id="锁定依赖"><a href="#锁定依赖" class="headerlink" title="锁定依赖"></a>锁定依赖</h2><p>那我们可以锁住依赖吗？毕竟外部的依赖太未知了，没有人可以保证依赖不会出问题。那么如果我们无视前面说的语义化版本，哪怕patch位一般是用来修bug，我们也统统无视，直接在我们的项目描述文件 <code>package.json</code> 中声明一个固定的版本号，是否就可以规避外部依赖的变化所带来的问题了呢？</p>
+<p>很遗憾也不行。目前的前端包，有非常深层次的各种依赖。比如随便打开一个项目的依赖文件夹，里面真的像是一个迷宫，充斥着各种你听说过没听说过的包，一个包里又镶嵌着几个属于它的依赖，如图：</p>
+<p><img src="deps-example.png" alt="乱七八糟的深层依赖"></p>
+<p>即使你声明了你的项目的依赖都是固定版本号，不带^也不带~，你控制不了你依赖的依赖，控制不了依赖的依赖的依赖……</p>
+<h2 id="可靠构建"><a href="#可靠构建" class="headerlink" title="可靠构建"></a>可靠构建</h2><p>这个问题如此明显，因此很快就有 yarn 提出了 lock 方案， npm 也很快做了跟随，两者实现可能有所区别，但是原理基本是一样的，记录下安装那一次的整颗依赖树，在 lock 文件里。</p>
+<p>因此我们只要能按照 lock 文件里记录的完整依赖树去原封不动的安装依赖，问题就解决了。</p>
+<p>这个命令在 npm 这个工具下叫 <code>npm ci</code>。它不会去按版本语义化的规定去看符合规则的最新版本是多少，而是只关注lock文件里记录的，上次安装的版本是什么，这次就安装什么。</p>
+<p>这个行为太符合持续集成场景下的需要了，本地开发完成提交代码后，云端去构建，使用lock文件来安装依赖，保证和你本地的依赖完全一致。反复执行构建部署，出来的产物完全一致。</p>
+<p><strong>因此给使用 lock 文件来进行构建的这个过程叫可靠构建。</strong></p>
+<p>OK那么问题就完美解决了吗？并没有。再考虑下这个问题，你本地开发时应该执行 <code>npm i</code> 还是 <code>npm ci</code> 来安装依赖呢？</p>
+<p>如果执行 <code>npm ci</code> ，依赖始终不变，所有包都停止升级，那么包自生的一些后发现的缺陷就得不到修复，一些新能力也无法使用。</p>
+<p>如果执行 <code>npm i</code> ，依赖一变化，lock文件会发生大变的，这时候也很难去仔细review每一个依赖包的变化，就和没有lock时候没什么区别了？</p>
+<p>好的不卖关子了，世界不是非黑即白的，如果我们结合这两者来用，就可以取得很好的效果。</p>
+<h2 id="具体实践"><a href="#具体实践" class="headerlink" title="具体实践"></a>具体实践</h2><p>对于一个前端项目，使用足够新的npm，如果是使用某些脚手架工具生成的项目，第一次可以直接执行 <code>npm i</code> ，安装依赖的同时会生成一个 <code>package-lock.json</code> 的文件（后简称lock文件）。在 <code>git-ignore</code> 文件里忽略 node_modules 目录，但不要忽略lock文件，即我们需要把lock文件提交到 git 里（这个在npm的文档里也可以看到是推荐的行为）。</p>
+<p>接下来可以正常的开发提交代码。然后，当还有其他的合作同学跟你共同开发，或是你换了一台电脑或者你因为某些原因需要重新安装依赖时，使用 <code>npm ci</code> 而不是 <code>npm i</code> 来安装依赖。</p>
+<p>这样就可以使前后都是完全相同的依赖。</p>
+<p>// 未完待续</p>
 
     </div>
 
@@ -261,6 +261,9 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%89%8D%E7%AB%AF-js-npm/" rel="tag"># 前端,js,npm</a>
+          </div>
 
         
 
@@ -268,13 +271,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/%E5%B7%A5%E7%A8%8B%E5%8C%96/%E4%BD%BF%E7%94%A8travis%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90-%E6%8C%81%E7%BB%AD%E9%83%A8%E7%BD%B2/" rel="prev" title="使用travis CI持续集成/持续部署">
-      <i class="fa fa-chevron-left"></i> 使用travis CI持续集成/持续部署
+    <a href="/%E9%9A%8F%E7%AC%94/21%E5%B9%B4%E9%9A%8F%E7%AC%94/" rel="prev" title="21年随笔">
+      <i class="fa fa-chevron-left"></i> 21年随笔
     </a></div>
-      <div class="post-nav-item">
-    <a href="/%E5%85%B6%E5%AE%83/hello-world/" rel="next" title="Hello World">
-      Hello World <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -333,7 +333,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E6%B8%B2%E6%9F%93%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">后端渲染是什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E6%B8%B2%E6%9F%93%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">后端渲染的问题：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E6%B8%B2%E6%9F%93%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">前端渲染是什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E6%B8%B2%E6%9F%93%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%BF%99%E4%BA%9B%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">前端渲染如何解决这些问题？</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E4%B8%8E%E4%BF%A1%E4%BB%BB"><span class="nav-number">2.</span> <span class="nav-text">依赖与信任</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%81%E5%AE%9A%E4%BE%9D%E8%B5%96"><span class="nav-number">3.</span> <span class="nav-text">锁定依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E9%9D%A0%E6%9E%84%E5%BB%BA"><span class="nav-number">4.</span> <span class="nav-text">可靠构建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E8%B7%B5"><span class="nav-number">5.</span> <span class="nav-text">具体实践</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
