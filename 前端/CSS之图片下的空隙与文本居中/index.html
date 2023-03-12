@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/android-chrome-192x192.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前端工程师应该都有遇到过，使用图片时会在下方有个小空隙。这个小空隙很难找到它是如何形成的，但是还好我们有搜索引擎，因此很容易会知道解决办法：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSS之图片下的空隙与文本居中">
+<meta property="og:url" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/CSS%E4%B9%8B%E5%9B%BE%E7%89%87%E4%B8%8B%E7%9A%84%E7%A9%BA%E9%9A%99%E4%B8%8E%E6%96%87%E6%9C%AC%E5%B1%85%E4%B8%AD/index.html">
+<meta property="og:site_name" content="牧宇的Blog">
+<meta property="og:description" content="前端工程师应该都有遇到过，使用图片时会在下方有个小空隙。这个小空隙很难找到它是如何形成的，但是还好我们有搜索引擎，因此很容易会知道解决办法：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/CSS%E4%B9%8B%E5%9B%BE%E7%89%87%E4%B8%8B%E7%9A%84%E7%A9%BA%E9%9A%99%E4%B8%8E%E6%96%87%E6%9C%AC%E5%B1%85%E4%B8%AD/search-in-google.png">
+<meta property="og:image" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/CSS%E4%B9%8B%E5%9B%BE%E7%89%87%E4%B8%8B%E7%9A%84%E7%A9%BA%E9%9A%99%E4%B8%8E%E6%96%87%E6%9C%AC%E5%B1%85%E4%B8%AD/what-is-base-line.png">
+<meta property="og:image" content="https://cfr2.lihuanyu.com/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-03-12%20155733.png">
+<meta property="og:image" content="https://cfr2.lihuanyu.com/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-03-12%20160029.png">
+<meta property="article:published_time" content="2022-03-06T07:04:09.000Z">
+<meta property="article:modified_time" content="2023-03-12T08:15:39.162Z">
+<meta property="article:author" content="skyADMIN">
+<meta property="article:tag" content="CSS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/CSS%E4%B9%8B%E5%9B%BE%E7%89%87%E4%B8%8B%E7%9A%84%E7%A9%BA%E9%9A%99%E4%B8%8E%E6%96%87%E6%9C%AC%E5%B1%85%E4%B8%AD/search-in-google.png">
+
+<link rel="canonical" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/CSS%E4%B9%8B%E5%9B%BE%E7%89%87%E4%B8%8B%E7%9A%84%E7%A9%BA%E9%9A%99%E4%B8%8E%E6%96%87%E6%9C%AC%E5%B1%85%E4%B8%AD/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="manifest" href="/manifest.json" />
+  <title>CSS之图片下的空隙与文本居中 | 牧宇的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">牧宇的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">工程师的笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/CSS%E4%B9%8B%E5%9B%BE%E7%89%87%E4%B8%8B%E7%9A%84%E7%A9%BA%E9%9A%99%E4%B8%8E%E6%96%87%E6%9C%AC%E5%B1%85%E4%B8%AD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CSS之图片下的空隙与文本居中
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-06 15:04:09" itemprop="dateCreated datePublished" datetime="2022-03-06T15:04:09+08:00">2022-03-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-03-12 16:15:39" itemprop="dateModified" datetime="2023-03-12T16:15:39+08:00">2023-03-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>前端工程师应该都有遇到过，使用图片时会在下方有个小空隙。这个小空隙很难找到它是如何形成的，但是还好我们有搜索引擎，因此很容易会知道解决办法：</p>
+<span id="more"></span>
+
+<p><img src="search-in-google.png" alt="搜索解决图片下空隙"></p>
+<p>其中一种技巧非常简单有效：把字体设为0。很多时候可能就到此为止了。</p>
+<h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>一直没有思考过，为什么图片下面会有一个空隙。直到逛知乎刷到尤雨溪的一篇回答，关于这个空隙的，非常通俗易懂，再进入到 <a target="_blank" rel="noopener" href="https://www.zhihu.com/question/21558138">对应的知乎问题</a> 看到各种大佬们的分析，很有意思，做个分享。</p>
+<p>里面有一篇译文，非常全面剖析了行内元素，CSS里文字的度量、行高（line-height）。如果想深入学习细节，建议<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/25808995">直接前往</a> 。(PS: 这篇文章我最认可的点是结论的第一条😀)</p>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>本文的原因部分可以认为是我对这些大佬回答的理解，如果没看懂我写的，可以直接去原问题浏览更多解决方案及解释。</p>
+<p>图片作为行内元素，默认的对其方式的基线对其，基线是西文字体的概念，如图：</p>
+<p><img src="what-is-base-line.png" alt="什么是基线"></p>
+<p>红线所示即为基线（baseline），注意看，文字的底线（bottom）和基线之间是有一段距离的，这个就是图片下有空隙的原因。</p>
+<p>再通俗一点：</p>
+<p><code>图片底部是基于文字基线的，而容器 div 的底部是低于基线的</code></p>
+<p>中文文字虽然没有基线的概念，但是也有留白区域，所以中文也有类似的问题。</p>
+<p>下面会有动手环节，提供相应代码方便有兴趣的同学可以快速自行验证。</p>
+<h2 id="解决方式"><a href="#解决方式" class="headerlink" title="解决方式"></a>解决方式</h2><p>可以看到，既然问题是出现在文本的基线问题上。那么就围绕这一点来解决：</p>
+<p>img 设置 display:block<br>vertical-align:top/bottom/middle<br>font-size设为 0 （注意对文本不能这么操作，手动狗头……）</p>
+<h2 id="衍生问题"><a href="#衍生问题" class="headerlink" title="衍生问题"></a>衍生问题</h2><p>难怪在移动端开发时，设计同学给出的设计稿，在还原后验收时，经常受到设计同学的灵魂拷问，这里怎么没居中。</p>
+<p>设计同学不知道的是，前端同学自己也很懵逼，我明明设置了line-height和高度一样，为什么就偏上偏下了？很可能就是系统下字体本身的问题。</p>
+<p>在比较小的按钮上效果会比较明显，考虑到大家的眼睛健康和视力问题，真诚地建议设计师不要追求一些“高级感”而把文字、按钮设计得过小。再结合这个问题，一定要小的话，别用边框了，也就不容易看出来。</p>
+<h2 id="动手试试"><a href="#动手试试" class="headerlink" title="动手试试"></a>动手试试</h2><blockquote>
+<p>以下case使用codepen演示，无法加载的话可能需要科学上网。考虑到科学的门槛和速度，贴个图替代下。</p>
+</blockquote>
+<p>原始case：</p>
+<p><img src="https://cfr2.lihuanyu.com/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-03-12%20155733.png" alt="图片的有缝、无缝情况"></p>
+<p class="codepen" data-height="300" data-default-tab="html,result" data-slug-hash="KKRVaWm" data-user="sky-admin" style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
+  <span>See the Pen <a target="_blank" rel="noopener" href="https://codepen.io/sky-admin/pen/KKRVaWm">
+  图片下的小空隙</a> by Huanyu Li (<a target="_blank" rel="noopener" href="https://codepen.io/sky-admin">@sky-admin</a>)
+  on <a target="_blank" rel="noopener" href="https://codepen.io">CodePen</a>.</span>
+</p>
+<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
+
+<p>文字case：</p>
+<p><img src="https://cfr2.lihuanyu.com/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-03-12%20160029.png" alt="文字与边框间的缝隙"></p>
+<p class="codepen" data-height="300" data-default-tab="html,result" data-slug-hash="qBYbRze" data-user="sky-admin" style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
+  <span>See the Pen <a target="_blank" rel="noopener" href="https://codepen.io/sky-admin/pen/qBYbRze">
+  Untitled</a> by Huanyu Li (<a target="_blank" rel="noopener" href="https://codepen.io/sky-admin">@sky-admin</a>)
+  on <a target="_blank" rel="noopener" href="https://codepen.io">CodePen</a>.</span>
+</p>
+<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
+
+<p>做业务时不求甚解也许不是坏事，但是钻研深一分总有收获。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>img元素为什么默认是个行内元素呢？</p>
+<p>img元素是个比较早的元素，然后它本质上不是那张图，而是那个链接的占位符。于是作为占位符它默认就是个inline元素。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CSS/" rel="tag"># CSS</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E4%BE%9D%E8%B5%96%E4%B8%8E%E4%BF%A1%E4%BB%BB/" rel="prev" title="前端依赖与可信构建">
+      <i class="fa fa-chevron-left"></i> 前端依赖与可信构建
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/%E9%9A%8F%E7%AC%94/3%E6%9C%88%E9%9A%8F%E7%AC%94/" rel="next" title="3月随笔">
+      3月随笔 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%AD%90"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.</span> <span class="nav-text">原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">解决方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%8D%E7%94%9F%E9%97%AE%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">衍生问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%89%8B%E8%AF%95%E8%AF%95"><span class="nav-number">5.</span> <span class="nav-text">动手试试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">6.</span> <span class="nav-text">其他</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">skyADMIN</p>
+  <div class="site-description" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sky-admin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sky-admin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">蜀ICP备15023364号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skyADMIN</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+</script>
+
+</body>
+</html>
