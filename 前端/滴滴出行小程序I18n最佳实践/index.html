@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.4.0">
+<meta name="generator" content="Hexo 7.0.0-rc2">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/android-chrome-192x192.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/android-chrome-192x192.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/android-chrome-192x192.png">
@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://dpubstatic.udache.com/static/dpubimg/F3Ev6M08X7/clipboard_image_1599113935176.png">
 <meta property="og:image" content="https://dpubstatic.udache.com/static/dpubimg/f626347f-7501-46e8-9e98-5c961a5b2b3e.png">
 <meta property="article:published_time" content="2020-08-31T07:20:40.000Z">
-<meta property="article:modified_time" content="2023-03-14T15:44:03.322Z">
+<meta property="article:modified_time" content="2023-09-03T14:03:57.970Z">
 <meta property="article:author" content="skyADMIN">
 <meta property="article:tag" content="小程序">
 <meta name="twitter:card" content="summary">
@@ -47,7 +47,7 @@
     lang   : 'zh-CN'
   };
 </script>
-<link rel="manifest" href="/manifest.json" />
+
   <title>滴滴出行小程序I18n最佳实践 | 牧宇的Blog</title>
   
 
@@ -194,7 +194,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-14 23:44:03" itemprop="dateModified" datetime="2023-03-14T23:44:03+08:00">2023-03-14</time>
+                <time title="修改时间：2023-09-03 22:03:57" itemprop="dateModified" datetime="2023-09-03T22:03:57+08:00">2023-09-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -237,10 +237,10 @@
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// mpx文件</span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span>&gt;</span>&#123;&#123; $t(&#x27;message.hello&#x27;, &#123; msg: &#x27;hello&#x27; &#125;）&#125;&#125;<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- formattedDatetime计算属性，可基于locale变更响应刷新 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span>&gt;</span>&#123;&#123;formattedDatetime&#125;&#125;<span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="JS-中使用-i18n"><a href="#JS-中使用-i18n" class="headerlink" title="JS 中使用 i18n"></a>JS 中使用 i18n</h3><p>通过框架提供的 wxs2js 能力，将 WXS 翻译函数转换为 JS 模块注入到 JS 运行时，使运行时环境中也能够调用翻译函数。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// mpx文件</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">  <span class="keyword">import</span> mpx, &#123; createComponent &#125; <span class="keyword">from</span> <span class="string">&#x27;@mpxjs/core&#x27;</span></span></span><br><span class="line"><span class="javascript">  createComponent(&#123;</span></span><br><span class="line"><span class="javascript">    ready () &#123;</span></span><br><span class="line"><span class="javascript">      <span class="comment">// js中使用</span></span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="built_in">this</span>.$t(<span class="string">&#x27;message.hello&#x27;</span>, &#123; <span class="attr">msg</span>: <span class="string">&#x27;hello&#x27;</span> &#125;))</span></span><br><span class="line"><span class="javascript">      <span class="comment">// 局部locale变更，生效范围为当前组件内</span></span></span><br><span class="line"><span class="javascript">      <span class="built_in">this</span>.$i18n.locale = <span class="string">&#x27;en-US&#x27;</span></span></span><br><span class="line"><span class="javascript">      <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 全局locale变更，生效范围为项目全局</span></span></span><br><span class="line"><span class="javascript">        mpx.i18n.locale = <span class="string">&#x27;zh-CN&#x27;</span></span></span><br><span class="line"><span class="javascript">      &#125;, <span class="number">10000</span>)</span></span><br><span class="line"><span class="javascript">    &#125;,</span></span><br><span class="line"><span class="javascript">    <span class="attr">computed</span>: &#123;</span></span><br><span class="line"><span class="javascript">      formattedDatetime () &#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> <span class="built_in">this</span>.$d(<span class="keyword">new</span> <span class="built_in">Date</span>(), <span class="string">&#x27;long&#x27;</span>)</span></span><br><span class="line"><span class="javascript">      &#125;</span></span><br><span class="line"><span class="javascript">    &#125;</span></span><br><span class="line"><span class="javascript">  &#125;)</span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// mpx文件</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">import</span> mpx, &#123; createComponent &#125; <span class="keyword">from</span> <span class="string">&#x27;@mpxjs/core&#x27;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="title function_">createComponent</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">    ready () &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// js中使用</span></span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.$t(<span class="string">&#x27;message.hello&#x27;</span>, &#123; <span class="attr">msg</span>: <span class="string">&#x27;hello&#x27;</span> &#125;))</span></span><br><span class="line"><span class="language-javascript">      <span class="comment">// 局部locale变更，生效范围为当前组件内</span></span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="property">$i18n</span>.<span class="property">locale</span> = <span class="string">&#x27;en-US&#x27;</span></span></span><br><span class="line"><span class="language-javascript">      <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 全局locale变更，生效范围为项目全局</span></span></span><br><span class="line"><span class="language-javascript">        mpx.<span class="property">i18n</span>.<span class="property">locale</span> = <span class="string">&#x27;zh-CN&#x27;</span></span></span><br><span class="line"><span class="language-javascript">      &#125;, <span class="number">10000</span>)</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">computed</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">      formattedDatetime () &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> <span class="variable language_">this</span>.$d(<span class="keyword">new</span> <span class="title class_">Date</span>(), <span class="string">&#x27;long&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">  &#125;)</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="定义-i18n-字典"><a href="#定义-i18n-字典" class="headerlink" title="定义 i18n 字典"></a>定义 i18n 字典</h3><p>项目构建时传入 i18n 配置对象，主要包括语言字典和默认语言类型。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> MpxWebpackPlugin(&#123;</span><br><span class="line">  <span class="attr">i18n</span>: &#123;</span><br><span class="line">    <span class="attr">locale</span>: <span class="string">&#x27;en-US&#x27;</span>,</span><br><span class="line">    <span class="comment">// messages既可以通过对象字面量传入，也可以通过messagesPath指定一个js模块路径，在该模块中定义配置并导出，dateTimeFormats/dateTimeFormatsPath和numberFormats/numberFormatsPath同理</span></span><br><span class="line">    <span class="attr">messages</span>: &#123;</span><br><span class="line">      <span class="string">&#x27;en-US&#x27;</span>: &#123;</span><br><span class="line">        <span class="attr">message</span>: &#123;</span><br><span class="line">          <span class="attr">hello</span>: <span class="string">&#x27;&#123;msg&#125; world&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">&#x27;zh-CN&#x27;</span>: &#123;</span><br><span class="line">        <span class="attr">message</span>: &#123;</span><br><span class="line">          <span class="attr">hello</span>: <span class="string">&#x27;&#123;msg&#125; 世界&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// messagesPath: path.resolve(__dirname, &#x27;../src/i18n.js&#x27;)</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">MpxWebpackPlugin</span>(&#123;</span><br><span class="line">  <span class="attr">i18n</span>: &#123;</span><br><span class="line">    <span class="attr">locale</span>: <span class="string">&#x27;en-US&#x27;</span>,</span><br><span class="line">    <span class="comment">// messages既可以通过对象字面量传入，也可以通过messagesPath指定一个js模块路径，在该模块中定义配置并导出，dateTimeFormats/dateTimeFormatsPath和numberFormats/numberFormatsPath同理</span></span><br><span class="line">    <span class="attr">messages</span>: &#123;</span><br><span class="line">      <span class="string">&#x27;en-US&#x27;</span>: &#123;</span><br><span class="line">        <span class="attr">message</span>: &#123;</span><br><span class="line">          <span class="attr">hello</span>: <span class="string">&#x27;&#123;msg&#125; world&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">&#x27;zh-CN&#x27;</span>: &#123;</span><br><span class="line">        <span class="attr">message</span>: &#123;</span><br><span class="line">          <span class="attr">hello</span>: <span class="string">&#x27;&#123;msg&#125; 世界&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// messagesPath: path.resolve(__dirname, &#x27;../src/i18n.js&#x27;)</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>如果是通过 Mpx 提供的 cli 工具生成的项目，这部分配置会在 mpx.conf.js 文件中，不光可以直接内联写在该文件中，也可以指定语言包的路径。</p>
 <p>以上，Mpx 的 i18n 方案接入成本低，使用优雅，体验优秀。直观感受可参考下面 mpx i18n demo ：<a target="_blank" rel="noopener" href="https://github.com/didi/mpx/tree/master/examples/mpx-i18n">https://github.com/didi/mpx/tree/master/examples/mpx-i18n</a></p>
@@ -259,7 +259,7 @@
 <h3 id="uniapp的方案"><a href="#uniapp的方案" class="headerlink" title="uniapp的方案"></a>uniapp的方案</h3><p>uniapp 提供了对 i18n 能力的支持，是直接引入vue-i18n。但小程序中无法在模板上调用 JS 方法，本质上是利用计算属性 Computed 转换好语言，然后利用模板插值在小程序模板中使用。</p>
 <p>模板中：<br><code>&lt;view&gt;&#123;&#123; message.hello &#125;&#125;&lt;/view&gt;</code></p>
 <p>JS里需要写：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">computed: &#123;  </span><br><span class="line">  message () &#123;  </span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">hello</span>: <span class="built_in">this</span>.$t(<span class="string">&#x27;message.hello&#x27;</span>) &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">computed</span>: &#123;  </span><br><span class="line">  message () &#123;  </span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">hello</span>: <span class="variable language_">this</span>.$t(<span class="string">&#x27;message.hello&#x27;</span>) &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>因此该方案存在一个性能问题，最终的渲染层所看到的文本还是通过 setData 跨线程通信完成，这样就会导致线程间通信增多，性能开销较大。</p>
 <p>并且，早期这种形式使用成本较高，后来 uniapp 也针对其做过优化，实现了可以在模板上写 $t() 的能力，使用上方便了不少。</p>
@@ -371,18 +371,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-count">27</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -475,14 +475,6 @@
   
 
   
-
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js');
-  });
-}
-</script>
 
 </body>
 </html>

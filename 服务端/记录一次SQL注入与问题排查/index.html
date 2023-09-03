@@ -19,18 +19,25 @@
     var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="牧宇的Blog">
-<meta property="og:url" content="https://www.lihuanyu.com/archives/index.html">
+  <meta name="description" content="最近做了一个小程序，用 nestJS 做的服务端，数据库是 MySQL 。然后被SQL注入攻击了，第一次遇到，感觉还很有意思，记录一下。 其实是微信平台做的模拟攻击，所以也并没有任何实际破坏，仅仅是数据库里被塞入了多条不符合预期的数据。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记录一次SQL注入与问题排查">
+<meta property="og:url" content="https://www.lihuanyu.com/%E6%9C%8D%E5%8A%A1%E7%AB%AF/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1SQL%E6%B3%A8%E5%85%A5%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/index.html">
 <meta property="og:site_name" content="牧宇的Blog">
-<meta property="og:description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+<meta property="og:description" content="最近做了一个小程序，用 nestJS 做的服务端，数据库是 MySQL 。然后被SQL注入攻击了，第一次遇到，感觉还很有意思，记录一下。 其实是微信平台做的模拟攻击，所以也并没有任何实际破坏，仅仅是数据库里被塞入了多条不符合预期的数据。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cfr2.lihuanyu.com/66dca5b4a7937737a9bb6d68a1e29ff.png">
+<meta property="og:image" content="https://cfr2.lihuanyu.com/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A2%AB%E6%B3%A8%E5%85%A5%E5%90%8E%E7%9A%84%E5%BC%82%E5%B8%B8%E6%95%B0%E6%8D%AE.png">
+<meta property="og:image" content="https://cfr2.lihuanyu.com/sql%E6%B3%A8%E5%85%A5%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90.png">
+<meta property="article:published_time" content="2023-08-20T09:51:58.000Z">
+<meta property="article:modified_time" content="2023-09-03T14:03:57.974Z">
 <meta property="article:author" content="skyADMIN">
-<meta property="article:tag" content="skyADMIN,环宇,牧宇,环宇的博客,牧宇的博客">
+<meta property="article:tag" content="SQL注入">
+<meta property="article:tag" content="PM2日志阅读">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cfr2.lihuanyu.com/66dca5b4a7937737a9bb6d68a1e29ff.png">
 
-<link rel="canonical" href="https://www.lihuanyu.com/archives/">
+<link rel="canonical" href="https://www.lihuanyu.com/%E6%9C%8D%E5%8A%A1%E7%AB%AF/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1SQL%E6%B3%A8%E5%85%A5%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">
 
 
 <script id="page-configurations">
@@ -38,12 +45,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>归档 | 牧宇的Blog</title>
+  <title>记录一次SQL注入与问题排查 | 牧宇的Blog</title>
   
 
 
@@ -152,240 +159,112 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 27 篇日志。 继续努力。</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E6%9C%8D%E5%8A%A1%E7%AB%AF/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1SQL%E6%B3%A8%E5%85%A5%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          记录一次SQL注入与问题排查
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-20 17:51:58" itemprop="dateCreated datePublished" datetime="2023-08-20T17:51:58+08:00">2023-08-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-03 22:03:57" itemprop="dateModified" datetime="2023-09-03T22:03:57+08:00">2023-09-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%8D%E5%8A%A1%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">服务端</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2023</span>
-    </div>
+        <p>最近做了一个小程序，用 nestJS 做的服务端，数据库是 MySQL 。然后被SQL注入攻击了，第一次遇到，感觉还很有意思，记录一下。</p>
+<p>其实是微信平台做的模拟攻击，所以也并没有任何实际破坏，仅仅是数据库里被塞入了多条不符合预期的数据。</p>
+<span id="more"></span>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-08-20T17:51:58+08:00"
-              content="2023-08-20">
-          08-20
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/%E6%9C%8D%E5%8A%A1%E7%AB%AF/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1SQL%E6%B3%A8%E5%85%A5%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" itemprop="url">
-            <span itemprop="name">记录一次SQL注入与问题排查</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-03-12T16:17:18+08:00"
-              content="2023-03-12">
-          03-12
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/%E8%BF%90%E7%BB%B4/%E4%BD%BF%E7%94%A8cloudflare-R2%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%9B%BE%E5%BA%8A/" itemprop="url">
-            <span itemprop="name">使用cloudflare R2搭建个人图床</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-02-19T10:27:56+08:00"
-              content="2023-02-19">
-          02-19
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/%E5%89%8D%E7%AB%AF/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E9%A1%B5%E9%9D%A2%E9%A1%B6%E9%83%A8%E7%9A%84%E7%A9%BA%E9%9A%99/" itemprop="url">
-            <span itemprop="name">小程序页面顶部的空隙</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-    <div class="collection-year">
-      <span class="collection-header">2022</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-09-26T16:32:55+08:00"
-              content="2022-09-26">
-          09-26
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/%E5%89%8D%E7%AB%AF/%E7%94%BB%E5%9B%BE%E5%B7%A5%E5%85%B7-excalidraw/" itemprop="url">
-            <span itemprop="name">画图工具-excalidraw</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-09-25T22:24:16+08:00"
-              content="2022-09-25">
-          09-25
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/%E9%9A%8F%E7%AC%94/%E4%BA%A4%E4%BA%92%E7%9A%84%E6%84%8F%E4%B9%89/" itemprop="url">
-            <span itemprop="name">交互的意义</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-05-19T14:31:00+08:00"
-              content="2022-05-19">
-          05-19
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/%E5%89%8D%E7%AB%AF/codespace%E5%88%9D%E4%BD%93%E9%AA%8C/" itemprop="url">
-            <span itemprop="name">codespace初体验</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-03-10T23:04:44+08:00"
-              content="2022-03-10">
-          03-10
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/%E9%9A%8F%E7%AC%94/3%E6%9C%88%E9%9A%8F%E7%AC%94/" itemprop="url">
-            <span itemprop="name">3月随笔</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-03-06T15:04:09+08:00"
-              content="2022-03-06">
-          03-06
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/%E5%89%8D%E7%AB%AF/CSS%E4%B9%8B%E5%9B%BE%E7%89%87%E4%B8%8B%E7%9A%84%E7%A9%BA%E9%9A%99%E4%B8%8E%E6%96%87%E6%9C%AC%E5%B1%85%E4%B8%AD/" itemprop="url">
-            <span itemprop="name">CSS之图片下的空隙与文本居中</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-01-11T09:07:48+08:00"
-              content="2022-01-11">
-          01-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E4%BE%9D%E8%B5%96%E4%B8%8E%E4%BF%A1%E4%BB%BB/" itemprop="url">
-            <span itemprop="name">前端依赖与可信构建</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-12-30T21:38:26+08:00"
-              content="2021-12-30">
-          12-30
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/%E9%9A%8F%E7%AC%94/21%E5%B9%B4%E9%9A%8F%E7%AC%94/" itemprop="url">
-            <span itemprop="name">21年随笔</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+<p>背景是微信小程序在提审的时候提示了这个：</p>
+<p><img src="https://cfr2.lihuanyu.com/66dca5b4a7937737a9bb6d68a1e29ff.png" alt="微信接口安全测试"></p>
+<p>“安全测试”，模拟用户发送请求。有点意思，虽然比较少接触服务端内容，但是对于一些常见的网络攻击手段也有一定了解。比如ssh弱密码爆破，struts2，log4j2，redis，pg漏洞利用之类的，一般以为只有使用一些大的系统时因为系统本身的漏洞比较容易被攻破，我这是手写的程序，出入参都有校验，数据库只准本机链接，还是比较自信应该没有问题。</p>
+<p>点击同意后，后台的日志系统就看到了密密麻麻的请求，基本没有看到有报错，觉得还可以啊，一切正常。<br>然后就翻车了。在后台查看历史记录时发现40多条空白记录，进数据库一看就觉得不太对。</p>
+<p><img src="https://cfr2.lihuanyu.com/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A2%AB%E6%B3%A8%E5%85%A5%E5%90%8E%E7%9A%84%E5%BC%82%E5%B8%B8%E6%95%B0%E6%8D%AE.png" alt="微信接口安全测试"></p>
+<p>那就修问题吧，仔细想了想涉及到写这张表的接口，想了半天没头绪，那就查日志看看。应用是使用 NestJS 编写的，用 PM2 部署的。</p>
+<p>PM2 的日志查询是用 pm2 log 进行查看，但是这个命令只能查看最近的日志和实时的日志，之前的日志在 <code>.pm2/logs</code> 目录下，通过scp命令下载下来。</p>
+<p>读日志时候遇到一点小问题，里面有很多乱码一样的东西：</p>
+<p><img src="https://cfr2.lihuanyu.com/sql%E6%B3%A8%E5%85%A5%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90.png" alt="微信接口安全测试"></p>
+<p>这个不是编码问题，而是终端控制字符，用来让日志在终端里有颜色，查了下说是可以安装VT100什么的插件解决，但是最终效果也不是很好，不影响阅读，就算了，也许有专门用于读日志的软件？</p>
+<p>从日志里可以很明显看到微信的模拟攻击是如何注入数据库的：<code>用户1676请求历史绘图列表第1&quot; union select 1,2-- 页</code> ，是在分页查询中加入的，查看代码发现这里确实没做好，赶紧补上一个parseInt和isNaN判断。</p>
+<p>这种模拟攻击检查还挺好的，能有效帮助个人开发者检查一些漏洞，不知道微信的实现原理是什么，是靠静态分析小程序代码里请求相关的逻辑？如果把请求发送从字符串变成变量的形式，岂不是可以规避微信的检查？</p>
 
     </div>
-  </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/SQL%E6%B3%A8%E5%85%A5/" rel="tag"># SQL注入</a>
+              <a href="/tags/PM2%E6%97%A5%E5%BF%97%E9%98%85%E8%AF%BB/" rel="tag"># PM2日志阅读</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E8%BF%90%E7%BB%B4/%E4%BD%BF%E7%94%A8cloudflare-R2%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%9B%BE%E5%BA%8A/" rel="prev" title="使用cloudflare R2搭建个人图床">
+      <i class="fa fa-chevron-left"></i> 使用cloudflare R2搭建个人图床
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
   
   
   
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
 
 
 

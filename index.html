@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.4.0">
+<meta name="generator" content="Hexo 7.0.0-rc2">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/android-chrome-192x192.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/android-chrome-192x192.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/android-chrome-192x192.png">
@@ -42,7 +42,7 @@
     lang   : 'zh-CN'
   };
 </script>
-<link rel="manifest" href="/manifest.json" />
+
   <title>牧宇的Blog</title>
   
 
@@ -158,6 +158,88 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E6%9C%8D%E5%8A%A1%E7%AB%AF/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1SQL%E6%B3%A8%E5%85%A5%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/%E6%9C%8D%E5%8A%A1%E7%AB%AF/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1SQL%E6%B3%A8%E5%85%A5%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" class="post-title-link" itemprop="url">记录一次SQL注入与问题排查</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-20 17:51:58" itemprop="dateCreated datePublished" datetime="2023-08-20T17:51:58+08:00">2023-08-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-03 22:03:57" itemprop="dateModified" datetime="2023-09-03T22:03:57+08:00">2023-09-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%8D%E5%8A%A1%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">服务端</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近做了一个小程序，用 nestJS 做的服务端，数据库是 MySQL 。然后被SQL注入攻击了，第一次遇到，感觉还很有意思，记录一下。</p>
+<p>其实是微信平台做的模拟攻击，所以也并没有任何实际破坏，仅仅是数据库里被塞入了多条不符合预期的数据。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/%E6%9C%8D%E5%8A%A1%E7%AB%AF/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1SQL%E6%B3%A8%E5%85%A5%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E8%BF%90%E7%BB%B4/%E4%BD%BF%E7%94%A8cloudflare-R2%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%9B%BE%E5%BA%8A/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -189,7 +271,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-14 23:44:03" itemprop="dateModified" datetime="2023-03-14T23:44:03+08:00">2023-03-14</time>
+                <time title="修改时间：2023-09-03 22:03:57" itemprop="dateModified" datetime="2023-09-03T22:03:57+08:00">2023-09-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -271,7 +353,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-14 23:44:03" itemprop="dateModified" datetime="2023-03-14T23:44:03+08:00">2023-03-14</time>
+                <time title="修改时间：2023-09-03 22:03:57" itemprop="dateModified" datetime="2023-09-03T22:03:57+08:00">2023-09-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -355,7 +437,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-14 23:44:03" itemprop="dateModified" datetime="2023-03-14T23:44:03+08:00">2023-03-14</time>
+                <time title="修改时间：2023-09-03 22:03:57" itemprop="dateModified" datetime="2023-09-03T22:03:57+08:00">2023-09-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -437,7 +519,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-14 23:44:03" itemprop="dateModified" datetime="2023-03-14T23:44:03+08:00">2023-03-14</time>
+                <time title="修改时间：2023-09-03 22:03:57" itemprop="dateModified" datetime="2023-09-03T22:03:57+08:00">2023-09-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -521,7 +603,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-14 23:44:03" itemprop="dateModified" datetime="2023-03-14T23:44:03+08:00">2023-03-14</time>
+                <time title="修改时间：2023-09-03 22:03:57" itemprop="dateModified" datetime="2023-09-03T22:03:57+08:00">2023-09-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -605,7 +687,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-14 23:44:03" itemprop="dateModified" datetime="2023-03-14T23:44:03+08:00">2023-03-14</time>
+                <time title="修改时间：2023-09-03 22:03:57" itemprop="dateModified" datetime="2023-09-03T22:03:57+08:00">2023-09-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -687,7 +769,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-14 23:44:03" itemprop="dateModified" datetime="2023-03-14T23:44:03+08:00">2023-03-14</time>
+                <time title="修改时间：2023-09-03 22:03:57" itemprop="dateModified" datetime="2023-09-03T22:03:57+08:00">2023-09-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -768,7 +850,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-14 23:44:03" itemprop="dateModified" datetime="2023-03-14T23:44:03+08:00">2023-03-14</time>
+                <time title="修改时间：2023-09-03 22:03:57" itemprop="dateModified" datetime="2023-09-03T22:03:57+08:00">2023-09-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -850,7 +932,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-14 23:44:03" itemprop="dateModified" datetime="2023-03-14T23:44:03+08:00">2023-03-14</time>
+                <time title="修改时间：2023-09-03 22:03:57" itemprop="dateModified" datetime="2023-09-03T22:03:57+08:00">2023-09-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -879,90 +961,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/%E9%9A%8F%E7%AC%94/21%E5%B9%B4%E9%9A%8F%E7%AC%94/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E6%BB%B4%E6%BB%B4%E5%87%BA%E8%A1%8C%E5%B0%8F%E7%A8%8B%E5%BA%8FI18n%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="skyADMIN">
-      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="牧宇的Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/%E5%89%8D%E7%AB%AF/%E6%BB%B4%E6%BB%B4%E5%87%BA%E8%A1%8C%E5%B0%8F%E7%A8%8B%E5%BA%8FI18n%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" class="post-title-link" itemprop="url">滴滴出行小程序I18n最佳实践</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-08-31 15:20:40" itemprop="dateCreated datePublished" datetime="2020-08-31T15:20:40+08:00">2020-08-31</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-14 23:44:03" itemprop="dateModified" datetime="2023-03-14T23:44:03+08:00">2023-03-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><blockquote>
-<p>I18n = Internationalization，国际化，因为单词由首末字符i/n和中间18个字母组成，简称i18n。对程序来说，就是要在不修改内部代码的情况下，能根据不同语言及地区显示相应的界面，以支持不同语言的人顺利使用程序。</p>
-</blockquote>
-<h3 id="业务背景"><a href="#业务背景" class="headerlink" title="业务背景"></a>业务背景</h3><p>互联网行业进入下半场，精细化运营是关键。多语言支持能让产品更好地服务境内的其他语言用户，也为产品出海打下基础，随着 WeChat/Alipay 的全球化，你的小程序是否做好准备了呢？</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/%E5%89%8D%E7%AB%AF/%E6%BB%B4%E6%BB%B4%E5%87%BA%E8%A1%8C%E5%B0%8F%E7%A8%8B%E5%BA%8FI18n%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1051,18 +1049,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-count">27</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -1155,14 +1153,6 @@
   
 
   
-
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js');
-  });
-}
-</script>
 
 </body>
 </html>
