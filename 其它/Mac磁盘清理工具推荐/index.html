@@ -19,20 +19,27 @@
     var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="docker一般用于部署，但也可以用于统一开发环境，解决诸如前后端分离后单边开发者无法获得一个完整的开发环境的问题。所以我写了这个项目简单实践一下用docker来简化开发环境。其中遇到了一个docker在windows下表现不正常的问题及其解决方案。">
+  <meta name="description" content="Mac 电脑性能不错，但是内存和硬盘都是大坑，又贵又小。虽然 mac 软件不多并不像 Windows 一样占用硬盘过大，但是长期使用下来，磁盘空间也是一个问题。今天推荐一个 mac 磁盘清理工具，或者说磁盘体积分析工具，方便找到磁盘空间被占用的原因。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="docker for windows不响应react项目改变后的重编译">
-<meta property="og:url" content="https://www.lihuanyu.com/docker/docker-for-windows%E4%B8%8D%E5%93%8D%E5%BA%94react%E9%A1%B9%E7%9B%AE%E6%94%B9%E5%8F%98%E5%90%8E%E7%9A%84%E9%87%8D%E7%BC%96%E8%AF%91/index.html">
+<meta property="og:title" content="Mac磁盘清理工具推荐">
+<meta property="og:url" content="https://www.lihuanyu.com/%E5%85%B6%E5%AE%83/Mac%E7%A3%81%E7%9B%98%E6%B8%85%E7%90%86%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/index.html">
 <meta property="og:site_name" content="牧宇的Blog">
-<meta property="og:description" content="docker一般用于部署，但也可以用于统一开发环境，解决诸如前后端分离后单边开发者无法获得一个完整的开发环境的问题。所以我写了这个项目简单实践一下用docker来简化开发环境。其中遇到了一个docker在windows下表现不正常的问题及其解决方案。">
+<meta property="og:description" content="Mac 电脑性能不错，但是内存和硬盘都是大坑，又贵又小。虽然 mac 软件不多并不像 Windows 一样占用硬盘过大，但是长期使用下来，磁盘空间也是一个问题。今天推荐一个 mac 磁盘清理工具，或者说磁盘体积分析工具，方便找到磁盘空间被占用的原因。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2017-12-05T13:16:38.000Z">
-<meta property="article:modified_time" content="2023-09-24T07:26:27.559Z">
+<meta property="og:image" content="https://cfr2.lihuanyu.com/mac%E7%A1%AC%E7%9B%98%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5.png">
+<meta property="og:image" content="https://cfr2.lihuanyu.com/Omnisweeper%E7%95%8C%E9%9D%A2.png">
+<meta property="og:image" content="https://cfr2.lihuanyu.com/omni%E5%9B%9B%E5%85%84%E5%BC%9F.png">
+<meta property="article:published_time" content="2023-09-16T02:11:56.000Z">
+<meta property="article:modified_time" content="2023-10-05T14:49:35.574Z">
 <meta property="article:author" content="skyADMIN">
-<meta property="article:tag" content="skyADMIN,环宇,牧宇,环宇的博客,牧宇的博客">
+<meta property="article:tag" content="mac">
+<meta property="article:tag" content="工具">
+<meta property="article:tag" content="磁盘清理">
+<meta property="article:tag" content="mac磁盘清理">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cfr2.lihuanyu.com/mac%E7%A1%AC%E7%9B%98%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5.png">
 
-<link rel="canonical" href="https://www.lihuanyu.com/docker/docker-for-windows%E4%B8%8D%E5%93%8D%E5%BA%94react%E9%A1%B9%E7%9B%AE%E6%94%B9%E5%8F%98%E5%90%8E%E7%9A%84%E9%87%8D%E7%BC%96%E8%AF%91/">
+<link rel="canonical" href="https://www.lihuanyu.com/%E5%85%B6%E5%AE%83/Mac%E7%A3%81%E7%9B%98%E6%B8%85%E7%90%86%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/">
 
 
 <script id="page-configurations">
@@ -45,7 +52,7 @@
   };
 </script>
 
-  <title>docker for windows不响应react项目改变后的重编译 | 牧宇的Blog</title>
+  <title>Mac磁盘清理工具推荐 | 牧宇的Blog</title>
   
 
 
@@ -161,7 +168,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/docker/docker-for-windows%E4%B8%8D%E5%93%8D%E5%BA%94react%E9%A1%B9%E7%9B%AE%E6%94%B9%E5%8F%98%E5%90%8E%E7%9A%84%E9%87%8D%E7%BC%96%E8%AF%91/">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E5%85%B6%E5%AE%83/Mac%E7%A3%81%E7%9B%98%E6%B8%85%E7%90%86%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -174,7 +181,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          docker for windows不响应react项目改变后的重编译
+          Mac磁盘清理工具推荐
         </h1>
 
         <div class="post-meta">
@@ -184,14 +191,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2017-12-05 21:16:38" itemprop="dateCreated datePublished" datetime="2017-12-05T21:16:38+08:00">2017-12-05</time>
+              <time title="创建时间：2023-09-16 10:11:56" itemprop="dateCreated datePublished" datetime="2023-09-16T10:11:56+08:00">2023-09-16</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-24 15:26:27" itemprop="dateModified" datetime="2023-09-24T15:26:27+08:00">2023-09-24</time>
+                <time title="修改时间：2023-10-05 22:49:35" itemprop="dateModified" datetime="2023-10-05T22:49:35+08:00">2023-10-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -199,7 +206,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
+                  <a href="/categories/%E5%85%B6%E5%AE%83/" itemprop="url" rel="index"><span itemprop="name">其它</span></a>
                 </span>
             </span>
 
@@ -214,36 +221,27 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>docker一般用于部署，但也可以用于统一开发环境，解决诸如前后端分离后单边开发者无法获得一个完整的开发环境的问题。所以我写了<a target="_blank" rel="noopener" href="https://github.com/sky-admin/react-blog">这个项目</a>简单实践一下用docker来简化开发环境。其中遇到了一个docker在windows下表现不正常的问题及其解决方案。</p>
+        <p>Mac 电脑性能不错，但是内存和硬盘都是大坑，又贵又小。虽然 mac 软件不多并不像 Windows 一样占用硬盘过大，但是长期使用下来，磁盘空间也是一个问题。今天推荐一个 mac 磁盘清理工具，或者说磁盘体积分析工具，方便找到磁盘空间被占用的原因。</p>
 <span id="more"></span>
 
-<h2 id="项目概述"><a href="#项目概述" class="headerlink" title="项目概述"></a>项目概述</h2><p>项目主要是用react编写一个blog的用户界面，blog项目就要求有一个后端（类似于hexo这种静态网页生成器模式的blog不算），能提供诸如注册、登录、发表文章、编辑文章、删除文章之类的功能。</p>
-<p>这种简单的CRUD后端还是非常简单的，之前就写过，但是如何让前端项目能愉快地调用后端呢？</p>
-<p>一种方案是后端先部署上线运行着，配置好CORS，前端项目直接调线上接口，这种方式其实蛮好，而我现所在的公司也是使用这种方式进行开发的（在此吐槽一下老东家，使用的是前端自行mock数据的方式，当然，技术选型有多方面的考虑）。</p>
-<p>但这种方式在个人小项目中有个问题，很有可能后端也只是个demo级的东西，非常不完善，服务器资源又有限，指不定哪天就挂掉了。换而言之，很难让一个项目能在任何人的电脑上都愉快地运行。</p>
-<p>另一种方案就是后端一起给出，CORS也不用配了，用个nginx来代理，session\cookie都能用，好不好哇？</p>
-<p>你问我好不好我当然说好啦，但一个正常的前端会配置jdk，运行mvn，安装启动数据库，配置nginx的概率有多大呢？不知道。</p>
-<p>这个时候就是Docker出场的时间了，配置好四个docker镜像，用docker-compose编排好容器，一个up就启动了全套的开发环境。</p>
-<p>仔细去数了一下，从0启动整套开发环境只需要打4行命令，当然，等待docker从hub拉image的时间会取决于你的网速，所以第一次会慢一些，后续只需要 <code>docker-compose up</code> 一条命令即可啦。</p>
-<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>在mac上表现一切正常，up之后访问 <code>localhost:8080</code> 即可看到效果，用IDE或者编辑器打开项目，编辑内容，保存。在短暂的等待后就能看到改动后的网页啦（使用的create-react-app生成项目模板，live reload之类的都是配置好的）。</p>
-<p>然而Windows上的表现却不正常，启动是能启动，看网页也能看到。就是编辑文件保存以后，不会触发webpack的重新编译，看不到网页新的效果。要想看新的效果呢……就重新来一遍 <code>docker-compose up</code> ，哇，这就很难受了。</p>
-<p>只是想改个小地方看看，还得等整套容器编排重新启动一遍，这是不可接受的。</p>
-<p>问题的表现就是，docker for windows里，windows下改了文件，docker容器里没有反应。这个表现的原因可能是两种：  </p>
-<ol>
-<li>容器里的文件没有改变</li>
-<li>文件改变了，但容器无法感应到改变</li>
-</ol>
-<p>为了确认是哪种原因，我进入到相应的node容器里，手工启动 <code>npm start</code> ，然后在Windows下编辑文件并保存。确实没有重编译，于是我停掉 <code>npm start</code> ，cat对应的文件查看是否是我改动后的样子。</p>
-<p>确认是原因2，即某种原因导致了docker for windows的容器无法感应到windows通过volume关联来的文件夹里文件的变化。</p>
-<h2 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h2><p>之所以想写这篇文章，也是希望后来有用中文关键字来搜索的同学有机会找到解决方案，会用英文直接搜到那是最吼的啦。</p>
-<p>Google几番搜索后找到了<a target="_blank" rel="noopener" href="https://forums.docker.com/t/file-system-watch-does-not-work-with-mounted-volumes/12038/13">docker论坛里这个帖子</a>，简单理解了下问题原因：</p>
+<p>点开左上角的苹果图标可以看到硬盘占用情况，系统自带的分析能在一定程度上告诉你硬盘被什么占用了。但是有很大的体积显示的是系统文件，这时需要额外的软件帮助分析体积占用原因了。</p>
+<p><img src="https://cfr2.lihuanyu.com/mac%E7%A1%AC%E7%9B%98%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5.png" alt="mac磁盘占用情况"></p>
+<p>OmnidiskSweeper 可以帮助分析磁盘体积构成，找到那些体积非常大但并不重要的文件，比如一些缓存、日志、废弃的SDK等等。</p>
+<p>之所以推荐这款软件是因为它非常的干净纯粹，就只是计算磁盘文件体积，要删除什么完全由用户决定。相比之下，不管是 Windows 还是 mac 别的清理软件，都有点像流氓软件，功能不多不好用不说。一旦安装上，想卸载就很费劲了。</p>
+<p>软件界面大概这样：<br><img src="https://cfr2.lihuanyu.com/Omnisweeper%E7%95%8C%E9%9D%A2.png" alt="Omnisweeper界面"></p>
+<p>之前被知乎安利的，后来换电脑时候想找找不到了，找了半天才找回来，感觉这个软件值得我写一篇文档记录及推荐。</p>
+<p>omni是一家有意思的软件公司，他们主要盈利的产品是下面这四兄弟。</p>
+<p><img src="https://cfr2.lihuanyu.com/omni%E5%9B%9B%E5%85%84%E5%BC%9F.png" alt="omni四兄弟"></p>
+<p>这家公司有意思的地方在于它的自我介绍：  </p>
 <blockquote>
-<p>Docker for Windows relies on SMB/CIFS support in Linux, and since propagating filesystem notifications is not supported our options are limited.</p>
+<p>The Omni Group makes and supports awesome apps for Mac, iPad, iPhone, Apple Watch, and the web. We’re an employee-owned company in beautiful Seattle, Washington.<br>这家公司为苹果公司的硬件和web平台开发一些牛逼的软件，它们是一家在西雅图的，由员工拥有的公司。</p>
 </blockquote>
-<p>Docker for Windows 依赖于Linux对SMB/CIFS的支持，但是由于文件系统的通知冒泡不支持，我们的能力受限。</p>
-<p>一般来说，到这个地方就算走到 <code>bad ending</code> ，大家可以洗洗睡了，然而，却有脑洞颇大的同学给出了一个python包，提出了一个hack方案。感谢作者。</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/merofeev/docker-windows-volume-watcher">python包：docker-windows-volume-watcher</a>，这个东西的原理就是它运行在Windows里，观测到文件的变化后，先读取文件的权限，再重写权限值为读取的这个值（等于没变），容器里的Linux就能检测到这个重写权限的变化，认为是文件变了，实现了通知容器这个文件变了的效果。</p>
-<p>所以，现在Windows的同学也可以愉快地一行命令启环境然后尽情开发啦。</p>
+<p>可以理解是一家全员持股的小而美的公司吧，看得出来苹果的产品、设计、风格很对他们的胃口。做的产品也都是用于提效方面的。而且他们还有关于愿景、使命、价值观方面的阐述与展示。</p>
+<p>而这个 OmnidiskSweeper 属于 Omni Labs 的一个小软件，这个分类的简介是：  </p>
+<blockquote>
+<p>Sometimes we make software for us, and we love it so much we make it available to you, too.<br>有时候我们也会开发一些软件为我们自己，我们很喜欢他们也希望可以帮到你们。</p>
+</blockquote>
+<p>好的，感谢Omni公司的慷慨。</p>
 
     </div>
 
@@ -252,6 +250,12 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/mac/" rel="tag"># mac</a>
+              <a href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag"># 工具</a>
+              <a href="/tags/%E7%A3%81%E7%9B%98%E6%B8%85%E7%90%86/" rel="tag"># 磁盘清理</a>
+              <a href="/tags/mac%E7%A3%81%E7%9B%98%E6%B8%85%E7%90%86/" rel="tag"># mac磁盘清理</a>
+          </div>
 
         
 
@@ -259,12 +263,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E5%B7%A5%E7%A8%8B%E5%8C%96%E5%AE%9E%E8%B7%B5/" rel="prev" title="前端项目工程化实践">
-      <i class="fa fa-chevron-left"></i> 前端项目工程化实践
+    <a href="/%E5%BC%80%E5%8F%91/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1SQL%E6%B3%A8%E5%85%A5%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" rel="prev" title="记录一次SQL注入与问题排查">
+      <i class="fa fa-chevron-left"></i> 记录一次SQL注入与问题排查
     </a></div>
       <div class="post-nav-item">
-    <a href="/%E5%89%8D%E7%AB%AF/mpx1/" rel="next" title="小程序开发者，为什么你应该尝试下MPX">
-      小程序开发者，为什么你应该尝试下MPX <i class="fa fa-chevron-right"></i>
+    <a href="/%E5%89%8D%E7%AB%AF/React%E7%9A%84key/" rel="next" title="React的key">
+      React的key <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -345,7 +349,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">项目概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">遇到的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3"><span class="nav-number">3.</span> <span class="nav-text">如何解决</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -359,18 +362,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
