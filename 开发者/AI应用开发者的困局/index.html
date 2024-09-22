@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.0.0-rc2">
+
+
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "jt8e57385h");
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/android-chrome-192x192.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="自从 openAI 带了这波 AI 热潮，很多工程师开始着手开发 AI 应用。比如我写了几个小程序，效果上看还不错的一个是AI绘图领域的。 这个小程序目前累计用户高达3.6万，日UV却只有100-200之间波动。留存率非常低，活跃用户留存仅10%-20%，新用户更惨，7日留存基本在1%-5%左右徘徊。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI应用开发者的困局">
+<meta property="og:url" content="https://www.lihuanyu.com/%E5%BC%80%E5%8F%91%E8%80%85/AI%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E8%80%85%E7%9A%84%E5%9B%B0%E5%B1%80/index.html">
+<meta property="og:site_name" content="牧宇的Blog">
+<meta property="og:description" content="自从 openAI 带了这波 AI 热潮，很多工程师开始着手开发 AI 应用。比如我写了几个小程序，效果上看还不错的一个是AI绘图领域的。 这个小程序目前累计用户高达3.6万，日UV却只有100-200之间波动。留存率非常低，活跃用户留存仅10%-20%，新用户更惨，7日留存基本在1%-5%左右徘徊。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-09-22T08:54:02.000Z">
+<meta property="article:modified_time" content="2024-09-22T10:39:16.283Z">
+<meta property="article:author" content="skyADMIN">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="开发者">
+<meta property="article:tag" content="思考">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.lihuanyu.com/%E5%BC%80%E5%8F%91%E8%80%85/AI%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E8%80%85%E7%9A%84%E5%9B%B0%E5%B1%80/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>AI应用开发者的困局 | 牧宇的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">牧宇的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">工程师的笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E5%BC%80%E5%8F%91%E8%80%85/AI%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E8%80%85%E7%9A%84%E5%9B%B0%E5%B1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AI应用开发者的困局
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-09-22 16:54:02 / 修改时间：18:39:16" itemprop="dateCreated datePublished" datetime="2024-09-22T16:54:02+08:00">2024-09-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%80%E5%8F%91%E8%80%85/" itemprop="url" rel="index"><span itemprop="name">开发者</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>自从 openAI 带了这波 AI 热潮，很多工程师开始着手开发 AI 应用。比如我写了几个小程序，效果上看还不错的一个是AI绘图领域的。</p>
+<p>这个小程序目前累计用户高达3.6万，日UV却只有100-200之间波动。留存率非常低，活跃用户留存仅10%-20%，新用户更惨，7日留存基本在1%-5%左右徘徊。</p>
+<span id="more"></span>
+
+<p>可能纯工具应用就是这么惨淡吧，而且好像不只是我这种小开发者有这种烦恼，大厂的应用也有类似的困扰。众多大厂的众多AI应用里，最为出名的应该就是字节跳动的豆包App吧，相比其他的文小言、KIMI、通义千问等应该是领先不少的，而据说（无数据来源，未经考证，请勿引用），豆包的流失率也高达98.xx% 。</p>
+<p>从自身感受上说也差不多，我安装了不少AI App，比如豆包、通义千问、Kimi、元宝等，但后续陆陆续续删掉了不少，现在只剩了豆包、通义、Claude。而这三者，也几乎不打开，偶尔打开也仅为了学习研究看看功能看看交互。感觉AI在移动端上，真的蛮鸡肋的。</p>
+<p>不过在桌面平台上，使用频率就会高很多，但也主要是 chatGPT 和 ClaudeAI，几乎不用国产AI。国产AI给我的感觉像是……内容审查给查坏了，不太聪明的样子……</p>
+<p>以上是AI能力方面的问题，可能随着时间都会慢慢改善。</p>
+<p>但对于独立开发而言，AI应用最大的问题在于，成本！</p>
+<p>几乎所有的AI的需要依赖显卡才可以运行，而显卡，实在是太贵了。</p>
+<p>最近看到一个案例，有个老哥把李继刚老师的汉语新解部署成了网站的形式，不需要登录就可以玩。我第一反应就是，它能撑多久？这个汉语新解是要求 ClaudeAI 的接口，很贵的，一次调用差不多要人民币2角钱左右。</p>
+<p>果然，刚刚看已经无法生成了，调用的时候就报错：无法生成svg。大概率是费用花完了。</p>
+<p>不只是这一个例子，想想AI出来后火起来的应用？真正用AI发财了的人靠的不是AI的能力，而是二道贩子、卖课的。因为国内无法使用，催生了大量的代理。卖课的也是搞笑，他们自己都跑不通AI商业化的流程，却敢大言不惭不学AI就要被时代抛弃了。</p>
+<p>总之，成本问题是独立开发者面对AI应用时的一座大山。AI绘图小程序也是一样，虽然是想办法尽可能降低成本了，已经是弹性部署，仅在有用户请求时才启动GPU，按秒计费了，但依然一张图要1-2角钱的成本。</p>
+<p>这个价格看起来不贵，但架不住人多。还好，我一开始就认识到这东西的费用不会低，所以一开始就决定一定需要鉴权+计费，计费不一定是真的要出钱，只是说一种限制，不能无限免费的一种限制。</p>
+<p>所以我根本没考虑过web，一个网页被攻击的门槛太低了，小程序虽然也会有风险，但门槛显然被提高了不少。</p>
+<p>最后的结果是，即使在如此压缩成本的情况下，也仅勉强靠广告和付费用户达成了收支平衡，至于说想盈利，我觉得很难。所以这个项目的结果大概率会是一个练手项目、一个学习项目。</p>
+<p>成本这座大山想要翻过去还是比较难的，只能期待计算成本的下降，至于说一些国产大模型厂商出来打价格战，疯狂降价甚至是免费提供，实际体验后发现这些模型的能力相较头部模型还是差太远了，用来翻译文档都有点吃力。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/%E5%BC%80%E5%8F%91%E8%80%85/" rel="tag"># 开发者</a>
+              <a href="/tags/%E6%80%9D%E8%80%83/" rel="tag"># 思考</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E6%9C%8D%E5%8A%A1%E7%AB%AF/%E5%A6%82%E4%BD%95%E6%8A%8Asvg%E6%B8%B2%E6%9F%93%E6%88%90png%E5%9B%BE%E7%89%87/" rel="prev" title="如何把svg渲染成png图片">
+      <i class="fa fa-chevron-left"></i> 如何把svg渲染成png图片
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  
+  <div class="comments">
+    <script src="https://giscus.app/client.js"
+        data-repo="sky-admin/sky-admin.github.io" 
+        data-repo-id="MDEwOlJlcG9zaXRvcnkxMTI0MjY1Nzk=" 
+        data-category="General"
+        data-category-id="DIC_kwDOBrN-U84CZDbX"
+        data-mapping="title" 
+        data-reactions-enabled="1" 
+        data-emit-metadata="1" 
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        data-input-position="bottom"
+        data-loading="lazy"
+        async>
+    </script>
+  </div>
+  
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">skyADMIN</p>
+  <div class="site-description" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">39</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sky-admin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sky-admin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">蜀ICP备15023364号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skyADMIN</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
