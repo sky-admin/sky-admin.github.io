@@ -35,17 +35,17 @@
 <meta property="og:site_name" content="牧宇的Blog">
 <meta property="og:description" content="我的个人 blog 还是比较有历史的，大概是13年的时候就开始备案域名搞云服务器玩，最早是用的 wordpress ，一个 PHP 的 CMS 系统。功能挺强的，但是维护实在麻烦心累，数据库的管理和迁移尤其麻烦。 后来就走上了静态生成这条路，先是 Jekyll 现在是 Hexo。现在Hexo的更新维护也比较慢了，也许未来还会换一个热门的，如果有时间的话。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cfr2.lihuanyu.com/cloudflare-r2-price.png">
-<meta property="og:image" content="https://cfr2.lihuanyu.com/cloudflare-r2-menu.png">
-<meta property="og:image" content="https://cfr2.lihuanyu.com/131335a6094f019b194eb8fc3b4084f.png">
+<meta property="og:image" content="https://aipaint.lihuanyu.com/cloudflare-r2-price.png">
+<meta property="og:image" content="https://aipaint.lihuanyu.com/cloudflare-r2-menu.png">
+<meta property="og:image" content="https://aipaint.lihuanyu.com/131335a6094f019b194eb8fc3b4084f.png">
 <meta property="article:published_time" content="2023-03-12T08:17:18.000Z">
-<meta property="article:modified_time" content="2024-09-22T10:39:16.291Z">
+<meta property="article:modified_time" content="2024-11-16T03:24:35.489Z">
 <meta property="article:author" content="skyADMIN">
 <meta property="article:tag" content="图床">
 <meta property="article:tag" content="运维">
 <meta property="article:tag" content="存储">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cfr2.lihuanyu.com/cloudflare-r2-price.png">
+<meta name="twitter:image" content="https://aipaint.lihuanyu.com/cloudflare-r2-price.png">
 
 <link rel="canonical" href="https://www.lihuanyu.com/%E8%BF%90%E7%BB%B4/%E4%BD%BF%E7%94%A8cloudflare%20R2%E6%89%98%E7%AE%A1%E5%9B%BE%E7%89%87/">
 
@@ -206,7 +206,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-09-22 18:39:16" itemprop="dateModified" datetime="2024-09-22T18:39:16+08:00">2024-09-22</time>
+                <time title="修改时间：2024-11-16 11:24:35" itemprop="dateModified" datetime="2024-11-16T11:24:35+08:00">2024-11-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -238,17 +238,17 @@
 <p>AWS 的 S3 服务（Simple Storage Service，简单存储服务）很早就听说过了，但是显然国情在此用不了。阿里云、腾讯云的 OSS （对象存储服务，我理解都一样，取名字而已）方案不光看着不简洁，且要收费，所以一直是考虑状态，先凑合本地图片用着。</p>
 <p>最近机缘巧合，使用了 cloudflare 的 worker 服务（稍后分享下如何使用 worker 解决 OpenAI 接口的代理问题），发现这个公司的服务蛮好用的，而且成本较低，免费额度对个人用户基本够用。</p>
 <p>cloudflare 提供了一个叫 R2 的服务，也是 OSS ，成本对个人用户<del>几乎免费</del>非常合理。<a target="_blank" rel="noopener" href="https://developers.cloudflare.com/r2/platform/pricing">R2定价说明文档。</a></p>
-<p><img src="https://cfr2.lihuanyu.com/cloudflare-r2-price.png" alt="R2的免费额度"></p>
+<p><img src="https://aipaint.lihuanyu.com/cloudflare-r2-price.png" alt="R2的免费额度"></p>
 <p>10个G以内的存储和1千万的查询都是免费的，于是，本 blog 有了几乎免费的图床可以使用了。</p>
 <p>过程也比较简单，分享下：</p>
 <p>前置要求，首先需要有一个自己的域名，使用国内的云服务器的话还需要备案操作。</p>
 <p>注册 cloudflare 省略。</p>
 <p>登录 cloudflare ，把域名的解析服务器配置到 cloudflare ，这样方便在使用R2的时候绑定一个自己的域名。在侧边菜单找到 R2 服务。</p>
-<p><img src="https://cfr2.lihuanyu.com/cloudflare-r2-menu.png" alt="cloudflare侧边菜单里的R2"></p>
+<p><img src="https://aipaint.lihuanyu.com/cloudflare-r2-menu.png" alt="cloudflare侧边菜单里的R2"></p>
 <p>启用 R2 服务。需要绑定一个信用卡，不知道绑定国内的可以吗，我是用的一张附属招银信用卡的visa卡。这里开通有时候会比较慢，不清楚是我当时遇到了什么问题还是都会慢，存在界面上展示开通了但是查询桶、创建桶都失败的情况，大概等了半小时左右好了。</p>
 <p>接下来就可以创建桶了，存储服务一般都这样，为什么叫桶我也不知道，并不影响什么。取个名就是了，可以理解为文件夹名也行，反正是个人使用。</p>
 <p>建好桶后，这时候已经可以上传图片、文件之类的了，但默认这个桶是公网不可访问的。去设置里配置下公开访问-链接域：</p>
-<p><img src="https://cfr2.lihuanyu.com/131335a6094f019b194eb8fc3b4084f.png" alt="配置公开访问"></p>
+<p><img src="https://aipaint.lihuanyu.com/131335a6094f019b194eb8fc3b4084f.png" alt="配置公开访问"></p>
 <p>虽然也可以用cloudflare提供的二级域名访问，但是那种方式一是有一些频率方面的限制，而是.dev的域名也被大防火墙拦截了，所以还是用自己的域名更好一些。</p>
 <p>配置完成后，上传图片，用刚刚配置的域名加上传后的文件名，即可访问到文件。比如本文的所有图片都是用的R2服务托管的。</p>
 <p>最近在玩 Stable Diffusion AI绘图，有了图床后面可以多上传一些好看的图片，不管是作为背景图还是贴合文章内容的图片抑或是单纯的美图分享，都更方便了。</p>
