@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.0.0-rc2">
+
+
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "jt8e57385h");
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/android-chrome-192x192.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="英语原文在此：https:&#x2F;&#x2F;ducin.dev&#x2F;what-is-frontend-architecture一开始看到了其他人的翻译，比较认可这篇文章的不少内容，所以进行一个转载，但又不想纠结于一些版权方面的问题，所以干脆基于原文让最近大火的 DeepSeek R1 帮我翻译一遍。   当你思考系统设计时，不要纠结于技术选型，而应聚焦于你希望系统具备的核心特性。技术选型只是这些特性的载体。 ——">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【译】什么是前端架构">
+<meta property="og:url" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E6%9E%B6%E6%9E%84/%E4%BB%80%E4%B9%88%E6%98%AF%E5%89%8D%E7%AB%AF%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:site_name" content="牧宇的Blog">
+<meta property="og:description" content="英语原文在此：https:&#x2F;&#x2F;ducin.dev&#x2F;what-is-frontend-architecture一开始看到了其他人的翻译，比较认可这篇文章的不少内容，所以进行一个转载，但又不想纠结于一些版权方面的问题，所以干脆基于原文让最近大火的 DeepSeek R1 帮我翻译一遍。   当你思考系统设计时，不要纠结于技术选型，而应聚焦于你希望系统具备的核心特性。技术选型只是这些特性的载体。 ——">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aipaint.lihuanyu.com/2025-01-29/blog-it-javascript-frameworks.png">
+<meta property="og:image" content="https://aipaint.lihuanyu.com/2025-01-29/%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E4%B8%8D%E6%98%AF%E6%9E%B6%E6%9E%84.png">
+<meta property="article:published_time" content="2025-01-29T13:25:29.000Z">
+<meta property="article:modified_time" content="2025-01-30T02:14:28.650Z">
+<meta property="article:author" content="skyADMIN">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="架构">
+<meta property="article:tag" content="技术">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aipaint.lihuanyu.com/2025-01-29/blog-it-javascript-frameworks.png">
+
+<link rel="canonical" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E6%9E%B6%E6%9E%84/%E4%BB%80%E4%B9%88%E6%98%AF%E5%89%8D%E7%AB%AF%E6%9E%B6%E6%9E%84/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>【译】什么是前端架构 | 牧宇的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">牧宇的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">工程师的笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/%E6%9E%B6%E6%9E%84/%E4%BB%80%E4%B9%88%E6%98%AF%E5%89%8D%E7%AB%AF%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【译】什么是前端架构
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-01-29 21:25:29" itemprop="dateCreated datePublished" datetime="2025-01-29T21:25:29+08:00">2025-01-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-01-30 10:14:28" itemprop="dateModified" datetime="2025-01-30T10:14:28+08:00">2025-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>英语原文在此：<a target="_blank" rel="noopener" href="https://ducin.dev/what-is-frontend-architecture">https://ducin.dev/what-is-frontend-architecture</a><br>一开始看到了其他人的翻译，比较认可这篇文章的不少内容，所以进行一个转载，但又不想纠结于一些版权方面的问题，所以干脆基于原文让最近大火的 DeepSeek R1 帮我翻译一遍。</p>
+</blockquote>
+<blockquote>
+<p>当你思考系统设计时，不要纠结于技术选型，而应聚焦于你希望系统具备的核心特性。技术选型只是这些特性的载体。 —— Gregor Hohpe</p>
+</blockquote>
+<p><strong>免责声明</strong>：如果你自认为只是个”码农”，请立即关闭本页面😉</p>
+<p>前端社区存在一个普遍问题😉：我们过度关注库、框架、打包工具、GitHub star 数等次要因素。我们常会狂热追捧某个工具（比如2015-2016年的Redux），然后滥用它。</p>
+<span id="more"></span>
+
+<p><img src="https://aipaint.lihuanyu.com/2025-01-29/blog-it-javascript-frameworks.png" alt="新框架新工具对前端开发者的蜜汁吸引力"></p>
+<p>后来，我们又因同样的原因彻底厌恶这个工具（比如现在的Redux）。这种爱恨都没有道理…究竟发生了什么？🤨</p>
+<p>“问题”根源在于：许多前端开发者缺乏软件架构的基本认知，因为我们总把注意力放在别处。而这些架构能力恰恰是项目长期成功的关键（虽非唯一因素）。因为架构是连接业务价值和技术实现的隐形桥梁。</p>
+<p>在开展开发者培训、技术咨询或团队招聘时，我常会提问：如何理解软件架构？哪些是核心要素？如何设计稳健的系统架构？架构师的角色是什么？</p>
+<p>在继续阅读前，建议你先尝试回答这些问题😉…</p>
+<p>滴答⏰…</p>
+<p>这个问题特意设计得非常开放，以便对话者能自由表达他们认为重要的观点。我不会给出任何暗示。但当回答开头是类似”（前端）架构就是如何组织目录和文件[…]”时，这对我来说立即成为危险信号🟥。没错，正是最近又有人这样回答，促使我写下本文。</p>
+<p>亲爱的读者，本文旨在<strong>转变你的关注焦点</strong>：启发你从不同维度思考架构。跳脱代码仓库中的结构，摆脱具体实现方案的束缚。集中精力思考你希望系统具备哪些核心特性。从更宏观的视角，你需要哪些系统能力。摆脱工具本身的局限，转而关注它们带来的权衡取舍。最重要的是——你的业务需求如何决定必要的软件能力。</p>
+<hr>
+<h2 id="什么是（前端）架构？"><a href="#什么是（前端）架构？" class="headerlink" title="什么是（前端）架构？"></a>什么是（前端）架构？</h2><p>某次推文讨论中我说😅</p>
+<p><img src="https://aipaint.lihuanyu.com/2025-01-29/%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E4%B8%8D%E6%98%AF%E6%9E%B6%E6%9E%84.png" alt="目录结构不是架构"></p>
+<p>在评论区被问到我对架构的定义。我的简洁回答是：</p>
+<p><strong>根据业务需求做出的、塑造当前系统且未来难以变更的决策。</strong></p>
+<p>事实上，软件架构并没有单一标准定义。我强烈推荐阅读<a target="_blank" rel="noopener" href="https://martinfowler.com/architecture/">Martin Fowler的软件架构指南</a>。其他替代定义包括：</p>
+<ul>
+<li>你希望在项目早期就做对的那些决策</li>
+<li>架构就是关于重要的事——无论它是什么</li>
+</ul>
+<p>注意两个关键词：<strong>重要</strong> 和 <strong>决策</strong>。</p>
+<p>在进入具体案例之前（文章后续会涉及），让我们从基础要素开始。</p>
+<hr>
+<h2 id="决策"><a href="#决策" class="headerlink" title="决策"></a>决策</h2><p>在项目的整个生命周期中，我们需要做出大量决策：语言平台选择、类库选型、编程范式、代码风格（Tabs还是空格🤔）…但更重要的是：</p>
+<ul>
+<li>如何确保业务优先级得到满足？</li>
+<li>如何让数十名开发者高效协作？</li>
+<li>如何实现高频部署（包含每日、每小时甚至周五的部署）？</li>
+</ul>
+<p>如你所见，这些主题的重要性差异巨大。我们分析的角度和做出的决策具有不同的相关权重。经验越丰富的开发者，越懂得在无关紧要处节省精力——特别是当决策容易修改时。</p>
+<p>那么，如何评估某个决策是否正确？</p>
+<hr>
+<h2 id="驱动因素"><a href="#驱动因素" class="headerlink" title="驱动因素"></a>驱动因素</h2><p>当面临困惑时，退一步审视全局总是明智的，这包括：</p>
+<ol>
+<li>业务<strong>最高优先级</strong>是什么？</li>
+<li>需要考虑哪些<strong>限制条件</strong>？</li>
+<li>哪些目标可以<strong>妥协</strong>（可选），哪些不可退让（必需）？</li>
+</ol>
+<p><strong>架构驱动因素是迫使我们在特定项目上下文中深度探索的关键要素</strong>。它相当于项目的语境过滤器，用于判断某个理论上的优势或劣势在具体情境中是否重要。</p>
+<p>典型架构驱动因素包括：</p>
+<ul>
+<li><strong>响应时间</strong>：系统必须极速响应</li>
+<li><strong>流量承载</strong>：需要处理海量请求</li>
+<li><strong>SLA/高可用</strong>：需保持约99.99%的正常运行时间</li>
+<li><strong>组织规模</strong>：需要支持数十甚至数百名开发者协作</li>
+<li><strong>上手门槛</strong>：应便于技能较弱的开发者理解</li>
+<li><strong>上市时间</strong>：因业务需求必须快速交付功能 （备注：商业成功的关键因素之一是 上市时间-TTM-Time To Marketing。TTM是指从产生想法到向客户推出最终产品或服务的时间长度。市场发展很快，延迟的TTM可能会毁掉整个商业理念。）</li>
+</ul>
+<p>在商业环境中，这些驱动因素几乎总是存在的。你的业务代表很可能直接表达过这些需求（只是未使用”驱动因素”这个术语）。若不能识别这些，你将可能专注错误方向，从而大幅降低成功概率。</p>
+<p>那么，我们该如何进行系统设计，以实现这些高层次目标呢？</p>
+<hr>
+<h2 id="权衡取舍"><a href="#权衡取舍" class="headerlink" title="权衡取舍"></a>权衡取舍</h2><p>必须清醒认识到：所有特性都有代价。若想让系统具备某个优点，就必须接受对应的成本。让我们扩展之前的驱动因素列表，列出可能的负面影响：</p>
+<table>
+<thead>
+<tr>
+<th>驱动因素</th>
+<th>所需代价</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统必须极速响应</td>
+<td>复杂度↑，灵活性↓</td>
+</tr>
+<tr>
+<td>通过水平扩展/自动扩缩容处理海量流量</td>
+<td>需从单体架构转向分布式系统</td>
+</tr>
+<tr>
+<td>保持99.99%正常运行时间</td>
+<td>需维护金丝雀发布、蓝绿部署等高成本方案</td>
+</tr>
+<tr>
+<td>支持大规模团队协作</td>
+<td>代码重复↑，基础设施复杂度↑</td>
+</tr>
+<tr>
+<td>便于初级开发者上手</td>
+<td>无法使用团队最爱的技术栈</td>
+</tr>
+<tr>
+<td>快速交付业务功能</td>
+<td>技术债务累积↑</td>
+</tr>
+</tbody></table>
+<p>取舍的本质在于：我们可以<strong>有意识地决定</strong>哪些可以放弃。例如：</p>
+<ul>
+<li><strong>问</strong>：99.99%可用性是否必要？<br><strong>答</strong>：必要，因合同条款要求</li>
+<li><strong>问</strong>：80%测试覆盖率是否必要？<br><strong>答</strong>：锦上添花，非必需，可舍弃</li>
+</ul>
+<p>制定架构决策时，<strong>必须聚焦驱动因素，同时牢记取舍代价</strong>。我们的目标是达成<strong>核心诉求</strong>，但也清楚可能需要<strong>牺牲</strong>什么。</p>
+<hr>
+<h2 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h2><p>还有一个不言而喻的真理：并非所有事情都能实现😉。</p>
+<p>有时即使所有分析都证明某个决策正确，我们仍无法实施。外部因素可能产生冲突：</p>
+<table>
+<thead>
+<tr>
+<th>理想决策</th>
+<th>现实阻碍</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统必须极速响应，但需接受复杂度↑和灵活性↓</td>
+<td>因故无法重构数据库</td>
+</tr>
+<tr>
+<td>通过水平扩展/自动扩缩容处理海量流量，需转向分布式系统</td>
+<td>因故无法更换云服务商</td>
+</tr>
+<tr>
+<td>业务需要快速交付功能，但会产生技术债务</td>
+<td>因故无法扩招开发人员</td>
+</tr>
+</tbody></table>
+<p>这就是现实的残酷之处。为了让挑战更有趣些——我们必须接受能力受限的事实😉。但我们仍然要达成目标！</p>
+<hr>
+<h2 id="简要回顾"><a href="#简要回顾" class="headerlink" title="简要回顾"></a>简要回顾</h2><p>快速总结架构决策的三要素：</p>
+<ol>
+<li><strong>驱动因素</strong>：业务核心诉求</li>
+<li><strong>权衡取舍</strong>：每个决策的代价</li>
+<li><strong>现实限制</strong>：不可抗的外部约束</li>
+</ol>
+<p><strong>跳出代码层面思考</strong></p>
+<hr>
+<h2 id="再次提问：什么是架构？"><a href="#再次提问：什么是架构？" class="headerlink" title="再次提问：什么是架构？"></a>再次提问：什么是架构？</h2><p>回顾我的简易定义：<br><strong>根据业务需求做出的、塑造当前系统且未来难以变更的决策。</strong></p>
+<p>现在通过具体案例区分<strong>架构决策</strong>与<strong>技术决策</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>架构决策 ✅</th>
+<th>技术决策 ❌</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>是否实施微前端（MFE）及实施方式</td>
+<td>使用webpack模块联邦或其他工具</td>
+</tr>
+<tr>
+<td>重用性与隔离性的优先级抉择</td>
+<td>是否使用barrel文件（index.js/ts）</td>
+</tr>
+<tr>
+<td>模型跨模块共享 vs ACL隔离</td>
+<td>采用类/OOP还是函数式/FP</td>
+</tr>
+<tr>
+<td>状态管理采用集中共享式 vs 分布式</td>
+<td>是否使用Redux类状态库</td>
+</tr>
+<tr>
+<td>数据获取模式：PULL vs PUSH</td>
+<td>使用Promise/async await/rxjs</td>
+</tr>
+<tr>
+<td>UI对实时数据的依赖程度</td>
+<td>选择Firebase/Supabase等BaaS</td>
+</tr>
+<tr>
+<td>客户端-服务端API契约变更权限</td>
+<td>使用GraphQL/REST/SSE协议</td>
+</tr>
+<tr>
+<td>确定核心架构驱动因素</td>
+<td>是否宣称遵循”最佳实践”</td>
+</tr>
+<tr>
+<td>LCP（最大内容渲染）优化是必备项还是加分项</td>
+<td>UI组件代码行数（LoC）</td>
+</tr>
+<tr>
+<td>系统单租户 vs 多租户架构</td>
+<td>认证数据存于Redux/Context/useState</td>
+</tr>
+<tr>
+<td>前端容错机制设计</td>
+<td>CI流水线强制80%测试覆盖率</td>
+</tr>
+</tbody></table>
+<p>通过这些对比，可以清晰看到架构决策与技术决策的本质区别😅。注意上述对照展现了架构决策与技术决策的根本差异。</p>
+<hr>
+<h2 id="为什么目录结构不应该被视作架构？"><a href="#为什么目录结构不应该被视作架构？" class="headerlink" title="为什么目录结构不应该被视作架构？"></a>为什么目录结构不应该被视作架构？</h2><p>目录结构是设计工作和引入规范的产物。它们旨在帮助我们：</p>
+<ul>
+<li>更快速地开发</li>
+<li>更安全地交付（减少破坏性变更）</li>
+</ul>
+<p>但目录结构本身不是目标，而是实现更高层次目标的手段，例如：</p>
+<ul>
+<li>通过微前端/模块化架构划分限界上下文</li>
+<li>支持独立团队间的解耦部署</li>
+<li>通过ACL（访问控制列表）隔离本地模型</li>
+</ul>
+<p>显然，目录结构可能更好地适配某个架构，也可能适配度较低。但究其本质，它只是某个概念的具象化<strong>实现</strong>——属于实现<strong>细节</strong>层面，是达成最终目标的路径。</p>
+<hr>
+<h2 id="目录结构无法告知我们什么"><a href="#目录结构无法告知我们什么" class="headerlink" title="目录结构无法告知我们什么"></a>目录结构无法告知我们什么</h2><p>许多关键架构要素无法通过目录结构推断，包括：</p>
+<ol>
+<li><strong>是否存在‘上帝类’</strong>：无法判断模块是否真正隔离为限界上下文</li>
+<li><strong>模型复用情况</strong>：无法识别契约层与前端逻辑是否共享同一模型</li>
+<li><strong>状态管理模式</strong>：无法确认是集中式共享状态还是分布式本地状态</li>
+<li><strong>代码耦合度</strong>：无法定位问题耦合点，无法判断是否应用依赖倒置原则</li>
+<li><strong>代码内聚性</strong>：无法评估模块间的功能聚合程度</li>
+</ol>
+<p>温和地说，目录结构的重要性不足以构成架构。它可能服务于某个架构（也可能不），但本身不是架构。</p>
+<hr>
+<h2 id="构建正确的前端架构认知"><a href="#构建正确的前端架构认知" class="headerlink" title="构建正确的前端架构认知"></a>构建正确的前端架构认知</h2><p>架构不是我们😘渴望、🥰向往或😤强制执行的东西。它不会突然浮现😶🌫️，更不该直接复制前公司的成功方案🥸（即便在之前公司运行良好）。</p>
+<p><strong>架构是沟通、分析和推理的产物</strong>。如同函数根据输入产生输出，架构师的职责就是持续收集知识经验，定期运行这个”输入→输出”函数。</p>
+<hr>
+<h2 id="输入源与获取方式"><a href="#输入源与获取方式" class="headerlink" title="输入源与获取方式"></a>输入源与获取方式</h2><p>架构师的核心技能是与管理层、业务方和开发团队的<strong>全方位沟通</strong>。需要收集的关键信息包括：</p>
+<h3 id="业务维度"><a href="#业务维度" class="headerlink" title="业务维度"></a>业务维度</h3><blockquote>
+<p><strong>产品核心优势</strong>：竞争差异点所在领域</p>
+</blockquote>
+<ul>
+<li><strong>核心领域保护</strong>：核心模块/功能/团队禁止外包</li>
+<li><strong>质量红线</strong>：不可妥协的质量标准</li>
+<li><strong>领域建模</strong>：采用事件风暴等DDD实践</li>
+<li><strong>非核心领域</strong>：次要优先级</li>
+</ul>
+<h3 id="组织维度"><a href="#组织维度" class="headerlink" title="组织维度"></a>组织维度</h3><blockquote>
+<p><strong>康威定律影响</strong>：公司结构如何决定系统交付形态</p>
+</blockquote>
+<ul>
+<li><strong>开发团队规模</strong>：部门人数与团队数量</li>
+<li><strong>产品导向程度</strong>：各团队是否100%独立负责子产品（开发→测试→部署全链路）</li>
+<li><strong>企业关联关系</strong>：关联公司、技术共享、并购等可能颠覆现有团队架构的因素</li>
+</ul>
+<h3 id="交付维度"><a href="#交付维度" class="headerlink" title="交付维度"></a>交付维度</h3><ul>
+<li><strong>预期交付速度</strong>：方案交付时间窗与技术储备匹配度</li>
+<li><strong>部署频率要求</strong>：持续交付准备度评估</li>
+</ul>
+<hr>
+<h2 id="进入开发维度"><a href="#进入开发维度" class="headerlink" title="进入开发维度"></a>进入开发维度</h2><p>在技术层面，我们需要形成以下问题链：</p>
+<h3 id="代码复用策略"><a href="#代码复用策略" class="headerlink" title="代码复用策略"></a>代码复用策略</h3><ul>
+<li><strong>应鼓励/抑制多少代码复用？</strong><ul>
+<li>复用越多代码量越少，但团队独立性越弱（特别是在共享模块频繁变更时，与无共享架构相比）</li>
+<li><strong>修改共享模块的后果分析</strong>（文件/组件库/制品等）：<ul>
+<li>是否触发重建？若需要，需重建多少模块？</li>
+<li>需要多少自动化测试？</li>
+<li>需部署多少组件？同步还是异步？</li>
+<li>总体耗时多少？</li>
+<li>共享机制引入的效率损耗？<ul>
+<li><strong>对系统可用性/SLA的影响评估</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="系统灵活性度量"><a href="#系统灵活性度量" class="headerlink" title="系统灵活性度量"></a>系统灵活性度量</h3><ul>
+<li><strong>系统灵活性与架构测量方式</strong><ul>
+<li><strong>TTM（上市时间）</strong>：预期值与当前实际值对比</li>
+<li><strong>部署频率（DF）</strong>：生产环境变更次数/单位时间</li>
+<li><strong>交付周期（CLT）</strong>：从开发者开始编码到生产部署的时间跨度</li>
+<li><strong>故障率（CFR）</strong>：变更引发故障的频率</li>
+<li><strong>恢复时间（MTTR/FDRT）</strong>：故障修复耗时</li>
+</ul>
+</li>
+</ul>
+<h3 id="系统稳定性保障"><a href="#系统稳定性保障" class="headerlink" title="系统稳定性保障"></a>系统稳定性保障</h3><p>（超越测试覆盖率等基础指标）</p>
+<ul>
+<li><strong>故障处理机制</strong>：<ul>
+<li>故障发生时的标准流程？</li>
+<li>该流程的实际调用频率？😄</li>
+</ul>
+</li>
+<li><strong>同步部署分析</strong>：<ul>
+<li>需同步部署的模块数量与体积？</li>
+<li>是否因CI/CD配置或仓库过度拆分导致依赖项冗余构建？</li>
+</ul>
+</li>
+<li><strong>团队信任机制</strong>：<ul>
+<li>是否信任其他团队的交付物？</li>
+<li>采用Git-flow还是主干开发？</li>
+<li>CI/CD流程如何适配这些决策？</li>
+</ul>
+</li>
+<li><strong>容错能力验证</strong>：<ul>
+<li>前端是否针对后端各类故障场景进行自动化测试？</li>
+</ul>
+</li>
+<li><strong>可观测性效用评估</strong>：<ul>
+<li>定位前端问题的耗时？</li>
+<li>回滚操作耗时？</li>
+<li>修复问题耗时？</li>
+<li>如何/何时发现核心Web指标（LCP/FID/CLS）的回归？</li>
+</ul>
+</li>
+</ul>
+<h3 id="跨平台策略"><a href="#跨平台策略" class="headerlink" title="跨平台策略"></a>跨平台策略</h3><ul>
+<li><strong>用户设备与环境</strong>：Web/原生移动端/混合方案？<ul>
+<li><strong>复用与分叉策略</strong>：<ul>
+<li>哪些组件应复用？</li>
+<li>哪些应为减少跨团队依赖而分叉？</li>
+</ul>
+</li>
+<li><strong>团队组织模式</strong>：<ul>
+<li>按技术平台划分 vs 按限界上下文划分？😉</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="特殊需求案例"><a href="#特殊需求案例" class="headerlink" title="特殊需求案例"></a>特殊需求案例</h3><ul>
+<li><p><strong>预期/必需的系统特性</strong></p>
+<ul>
+<li><p><strong>实时协作模式</strong>：</p>
+<ul>
+<li>现状：仅支持单用户操作</li>
+<li>需求：多用户实时编辑同一数据集</li>
+<li>方案对比：<ul>
+<li>直接状态修改（set/update）→ 缺乏共享模型</li>
+<li>命令模式（如Redux Action）→ 天然支持协作迭代</li>
+<li>进阶方案：CRDT（无冲突复制数据类型）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>数据实时性要求</strong>：</p>
+<ul>
+<li>社交帖子点赞数延迟 → 可容忍</li>
+<li>银行系统账户余额标签切换过期 → 不可接受</li>
+<li>解决方案：<ul>
+<li>客户端缓存失效策略（SWR）</li>
+<li>服务端推送机制（SSE/WebSocket）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>SDK兼容性管理</strong>：</p>
+<ul>
+<li>客户基于平台SDK开发定制功能</li>
+<li>平衡法则：<ul>
+<li>系统演进 vs 向后兼容</li>
+<li>案例：React组件props重构<ul>
+<li>后果：可能引发客户重大变更</li>
+<li>困境：即使实现并测试，仍可能因”无破坏性变更”要求被回滚</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>架构管理的本质在于提出正确问题。引用经典格言：<br><strong>“我宁愿拥有无法回答的问题，也不要接受不容置疑的答案”</strong></p>
+<p>通过深入思考这些问题，我们将确定适合的架构风格与关键技术选型。</p>
+<hr>
+<h2 id="工具决策-vs-架构决策"><a href="#工具决策-vs-架构决策" class="headerlink" title="工具决策 vs 架构决策"></a>工具决策 vs 架构决策</h2><p>有人可能会说：</p>
+<blockquote>
+<p>“嘿兄弟，但有些与工具、类库、规范或代码结构相关的决策，对项目有重大影响且后期难以更改。比如使用Redux就是架构决策！！！ 😉”</p>
+</blockquote>
+<p>嗯，是也不是。😉</p>
+<p>人们很容易执着于特定术语，却丢失了关键语境（即从业务和整体视角看什么是重要的）。</p>
+<p>确实，某些编码规范决策在多年后可能（非常）难以更改。编码规范、代码结构或目录结构（真的，任何东西）都可能加速或拖慢开发速度——当然！有些规范更合适，有些则不然。有些能让我们更快推进，有些则不能，等等。</p>
+<p>但当你跳出做出该决策的团队范围，这些就完全无关紧要了🔥。它们只是实现细节，在团队之外毫无意义。</p>
+<p><strong>示例</strong>：</p>
+<ul>
+<li>你决定每个文件只保留一个组件 → 在团队外完全无关</li>
+<li>你选择lodash/ramda工具库或不用任何库（因为”非我发明”） → 仍然与团队外无关</li>
+<li>你为每个模块设计特定文件结构 → 该规范影响测试、Storybook和重构 → 仍然与团队外无关<br>（顺便说，如果Storybook被团队外频繁使用，它就变得相关了）</li>
+</ul>
+<p>请注意：这些决策确实重要，对你的团队很关键。但仅对你的团队。它们不会带来/强制任何整体系统特性。如果决策不同，整体系统特性也不会改变。让我们进一步分析之前的说法：</p>
+<blockquote>
+<p>“使用Redux就是架构决策”</p>
+</blockquote>
+<p>（Redux对不住了😅）</p>
+<p>现在请注意：架构决策不是选择Redux本身！而是选择集中式状态管理方案，因为这可能导致模块间交叉依赖（所有人都能访问全局store的一切，对吧？），或者在将单体拆分为微前端时——使用多个独立store（如MobX）会更简单。此外，架构决策还涉及选择客户端事件溯源方案，因为业务可能需要实现实时协作功能。</p>
+<p>那么选择Redux会带来后果吗？当然。但再次强调，重点不在库本身，而在于Redux带来的高层次特性——既包括它提供的能力（前文提过），也包括引入的成本和限制。例如Redux是唯一数据源，这在考虑微前端时显然不利。Redux与其特性密不可分，但构建架构的是这些特性，而非工具本身。</p>
+<p>让我们再看一个Angular生态的例子：</p>
+<blockquote>
+<p>“不同意！如果是像NGRX这样的高层次库，选择库本身就是架构决策。需要回答多个问题：1.如何使用NGRX;2.是否总是使用Effects;3.是否通过Facade抽象;4.与哪些层级关联;5.如何跨域共享NGRX Store？”</p>
+</blockquote>
+<p>让我们一个一个来讨论：</p>
+<ul>
+<li><p><strong>我们如何使用NGRX？</strong><br>这是个狡猾的问题，因为”如何使用”可能涉及高层次和低层次两个维度。模棱两可的问题😉</p>
+</li>
+<li><p><strong>是否总是使用Effects？</strong><br>（上下文：NGRX Effects等同于redux-observable的epics——派发action后，通过rxjs响应式流处理，通常派生新action返回store）<br>这属于实现细节。无论选择命令式还是响应式范式，都属于编程（实现）范式，无关架构。未来可以改变这个决策。</p>
+</li>
+<li><p><strong>是否通过Facade抽象？</strong><br>这属于封装和/或设计模式/编码模式…比架构模式低一个层级。在C4模型中属于代码层（Level 4）（实现细节）。重申——对团队重要吗？重要。对外部重要吗？不重要。</p>
+</li>
+<li><p><strong>与哪些层级关联？</strong><br>可能涉及架构——但这与NGRX无关。使用其他状态管理方案（如React自定义hooks）时也会提出同样的问题。假设的层级（或其缺失）当然构成架构，但即使换用其他库，这个问题依然存在，对吧？</p>
+</li>
+<li><p><strong>如何跨域共享NGRX Store？</strong><br>绝对属于架构决策。但同样与NGRX本身无关，因为使用任何其他集中式状态管理方案时都会遇到同样的问题。对吗？</p>
+</li>
+</ul>
+<p><strong>补充说明</strong>：<br>是否使用NGRX/redux-observables当然会影响：</p>
+<ul>
+<li>前端开发者的入门门槛</li>
+<li>他们的积极性（与工具的爱恨情仇🥹）</li>
+<li>测试编写方式等</li>
+</ul>
+<p>但重申：当你走出团队/模块/仓库范围——这些真的有那么重要吗？</p>
+<p>归根结底，决策的变更成本高低，并不决定其在大局和/或长期中的相关性。同样，在团队/仓库内部极其重要的东西，也不必然对外部具有相关性。可能有，但不必然。</p>
+<p><strong>依我拙见，是否将选择Redux称为架构决策并不重要，只要我们聚焦于该决策带来的后果。</strong></p>
+<table>
+<thead>
+<tr>
+<th>特征</th>
+<th>工具决策</th>
+<th>架构决策</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>影响范围</td>
+<td>团队内部</td>
+<td>跨团队/系统</td>
+</tr>
+<tr>
+<td>变更成本</td>
+<td>可能高昂但局部</td>
+<td>系统性影响</td>
+</tr>
+<tr>
+<td>业务关联度</td>
+<td>间接</td>
+<td>直接驱动</td>
+</tr>
+<tr>
+<td>示例</td>
+<td>Redux/NGRX选型</td>
+<td>集中式状态管理策略</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>架构的核心在于做出重要决策。这些决策应：</p>
+<ol>
+<li><strong>由业务优先级驱动</strong></li>
+<li><strong>考量权衡取舍</strong></li>
+<li><strong>适应现实限制</strong></li>
+</ol>
+<p>面对这些挑战，架构师的职责是在<strong>业务优先级/需求</strong>与<strong>技术实现/复杂度</strong>之间找到平衡点。</p>
+<p>切勿混淆以下概念：</p>
+<ul>
+<li><strong>架构</strong>：助你达成目标的高层次决策</li>
+<li><strong>实现方式</strong>：工具、类库、规范、API 等底层细节</li>
+</ul>
+<p>后者只是实现目标的可能路径，从业务优先级和现实限制的角度看，它们只是次要细节。</p>
+<p>希望本文对你有所启发，感谢阅读🤓。<br>特别致谢 Damian、Mateusz 和 Manfred 提供的宝贵反馈。</p>
+<blockquote>
+<p>特别特别致谢 DeepSeek R1 提供的翻译</p>
+</blockquote>
+<hr>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a>
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a>
+              <a href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag"># 技术</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E9%9A%8F%E7%AC%94/25%E5%B9%B4%E7%9A%84%E5%BE%AE%E4%BF%A1%E7%BA%A2%E5%8C%85%E5%B0%81%E9%9D%A2/" rel="prev" title="25年的微信红包封面">
+      <i class="fa fa-chevron-left"></i> 25年的微信红包封面
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  
+  <div class="comments">
+    <script src="https://giscus.app/client.js"
+        data-repo="sky-admin/sky-admin.github.io" 
+        data-repo-id="MDEwOlJlcG9zaXRvcnkxMTI0MjY1Nzk=" 
+        data-category="General"
+        data-category-id="DIC_kwDOBrN-U84CZDbX"
+        data-mapping="title" 
+        data-reactions-enabled="1" 
+        data-emit-metadata="1" 
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        data-input-position="bottom"
+        data-loading="lazy"
+        async>
+    </script>
+  </div>
+  
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%EF%BC%88%E5%89%8D%E7%AB%AF%EF%BC%89%E6%9E%B6%E6%9E%84%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">什么是（前端）架构？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%B3%E7%AD%96"><span class="nav-number">2.</span> <span class="nav-text">决策</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A9%B1%E5%8A%A8%E5%9B%A0%E7%B4%A0"><span class="nav-number">3.</span> <span class="nav-text">驱动因素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9D%83%E8%A1%A1%E5%8F%96%E8%88%8D"><span class="nav-number">4.</span> <span class="nav-text">权衡取舍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%90%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E8%A6%81%E5%9B%9E%E9%A1%BE"><span class="nav-number">6.</span> <span class="nav-text">简要回顾</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%8D%E6%AC%A1%E6%8F%90%E9%97%AE%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AF%E6%9E%B6%E6%9E%84%EF%BC%9F"><span class="nav-number">7.</span> <span class="nav-text">再次提问：什么是架构？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E4%B8%8D%E5%BA%94%E8%AF%A5%E8%A2%AB%E8%A7%86%E4%BD%9C%E6%9E%B6%E6%9E%84%EF%BC%9F"><span class="nav-number">8.</span> <span class="nav-text">为什么目录结构不应该被视作架构？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E6%97%A0%E6%B3%95%E5%91%8A%E7%9F%A5%E6%88%91%E4%BB%AC%E4%BB%80%E4%B9%88"><span class="nav-number">9.</span> <span class="nav-text">目录结构无法告知我们什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%89%8D%E7%AB%AF%E6%9E%B6%E6%9E%84%E8%AE%A4%E7%9F%A5"><span class="nav-number">10.</span> <span class="nav-text">构建正确的前端架构认知</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%BA%90%E4%B8%8E%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F"><span class="nav-number">11.</span> <span class="nav-text">输入源与获取方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E7%BB%B4%E5%BA%A6"><span class="nav-number">11.1.</span> <span class="nav-text">业务维度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E7%BB%87%E7%BB%B4%E5%BA%A6"><span class="nav-number">11.2.</span> <span class="nav-text">组织维度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E4%BB%98%E7%BB%B4%E5%BA%A6"><span class="nav-number">11.3.</span> <span class="nav-text">交付维度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5%E5%BC%80%E5%8F%91%E7%BB%B4%E5%BA%A6"><span class="nav-number">12.</span> <span class="nav-text">进入开发维度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%A4%8D%E7%94%A8%E7%AD%96%E7%95%A5"><span class="nav-number">12.1.</span> <span class="nav-text">代码复用策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%81%B5%E6%B4%BB%E6%80%A7%E5%BA%A6%E9%87%8F"><span class="nav-number">12.2.</span> <span class="nav-text">系统灵活性度量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%A8%B3%E5%AE%9A%E6%80%A7%E4%BF%9D%E9%9A%9C"><span class="nav-number">12.3.</span> <span class="nav-text">系统稳定性保障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%A8%E5%B9%B3%E5%8F%B0%E7%AD%96%E7%95%A5"><span class="nav-number">12.4.</span> <span class="nav-text">跨平台策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A%E9%9C%80%E6%B1%82%E6%A1%88%E4%BE%8B"><span class="nav-number">12.5.</span> <span class="nav-text">特殊需求案例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E5%86%B3%E7%AD%96-vs-%E6%9E%B6%E6%9E%84%E5%86%B3%E7%AD%96"><span class="nav-number">13.</span> <span class="nav-text">工具决策 vs 架构决策</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">14.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">skyADMIN</p>
+  <div class="site-description" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sky-admin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sky-admin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">蜀ICP备15023364号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skyADMIN</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
