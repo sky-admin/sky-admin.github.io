@@ -28,27 +28,25 @@
     var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Mac 电脑性能不错，但是内存和硬盘都是大坑，又贵又小。虽然 mac 软件不多并不像 Windows 一样占用硬盘过大，但是长期使用下来，磁盘空间也是一个问题。今天推荐一个 mac 磁盘清理工具，或者说磁盘体积分析工具，方便找到磁盘空间被占用的原因。">
+  <meta name="description" content="阮一峰的 Blog 里提到，现在互联网创业几乎消失了，并引用了一篇文章同时总结了4个原因。  互联网行业已经成熟了，留给创业者的机会大幅减少。互联网的大部分果实已被摘取，早期的高增长难以再现。真正的创新机会即使还能找到，也会被现有的大公司快速抄袭，不会留给创业者。AI 大模型出现后，互联网本身也在衰弱，创业机会就更少了。 创业的机会成本变大了。一个大厂的高级工程师，现在的薪酬（包括股票期权）超过百">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mac磁盘清理工具推荐">
-<meta property="og:url" content="https://www.lihuanyu.com/%E5%85%B6%E5%AE%83/Mac%E7%A3%81%E7%9B%98%E6%B8%85%E7%90%86%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/index.html">
+<meta property="og:title" content="互联网创业寒冬">
+<meta property="og:url" content="https://www.lihuanyu.com/%E9%9A%8F%E7%AC%94/2025/%E4%BA%92%E8%81%94%E7%BD%91%E5%88%9B%E4%B8%9A%E5%AF%92%E5%86%AC/index.html">
 <meta property="og:site_name" content="牧宇的Blog">
-<meta property="og:description" content="Mac 电脑性能不错，但是内存和硬盘都是大坑，又贵又小。虽然 mac 软件不多并不像 Windows 一样占用硬盘过大，但是长期使用下来，磁盘空间也是一个问题。今天推荐一个 mac 磁盘清理工具，或者说磁盘体积分析工具，方便找到磁盘空间被占用的原因。">
+<meta property="og:description" content="阮一峰的 Blog 里提到，现在互联网创业几乎消失了，并引用了一篇文章同时总结了4个原因。  互联网行业已经成熟了，留给创业者的机会大幅减少。互联网的大部分果实已被摘取，早期的高增长难以再现。真正的创新机会即使还能找到，也会被现有的大公司快速抄袭，不会留给创业者。AI 大模型出现后，互联网本身也在衰弱，创业机会就更少了。 创业的机会成本变大了。一个大厂的高级工程师，现在的薪酬（包括股票期权）超过百">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://aipaint.lihuanyu.com/mac%E7%A1%AC%E7%9B%98%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5.png">
-<meta property="og:image" content="https://aipaint.lihuanyu.com/Omnisweeper%E7%95%8C%E9%9D%A2.png">
-<meta property="og:image" content="https://aipaint.lihuanyu.com/omni%E5%9B%9B%E5%85%84%E5%BC%9F.png">
-<meta property="article:published_time" content="2023-09-16T02:11:56.000Z">
-<meta property="article:modified_time" content="2023-09-16T02:11:56.000Z">
+<meta property="og:image" content="https://aipaint.lihuanyu.com/2025-02-16/civitai.png">
+<meta property="og:image" content="https://aipaint.lihuanyu.com/2025-02-16/00189-2544810901.png">
+<meta property="article:published_time" content="2025-02-16T14:16:13.000Z">
+<meta property="article:modified_time" content="2025-02-16T14:16:13.000Z">
 <meta property="article:author" content="skyADMIN">
-<meta property="article:tag" content="mac">
-<meta property="article:tag" content="工具">
-<meta property="article:tag" content="磁盘清理">
-<meta property="article:tag" content="mac磁盘清理">
+<meta property="article:tag" content="随笔">
+<meta property="article:tag" content="创业">
+<meta property="article:tag" content="互联网">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://aipaint.lihuanyu.com/mac%E7%A1%AC%E7%9B%98%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5.png">
+<meta name="twitter:image" content="https://aipaint.lihuanyu.com/2025-02-16/civitai.png">
 
-<link rel="canonical" href="https://www.lihuanyu.com/%E5%85%B6%E5%AE%83/Mac%E7%A3%81%E7%9B%98%E6%B8%85%E7%90%86%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/">
+<link rel="canonical" href="https://www.lihuanyu.com/%E9%9A%8F%E7%AC%94/2025/%E4%BA%92%E8%81%94%E7%BD%91%E5%88%9B%E4%B8%9A%E5%AF%92%E5%86%AC/">
 
 
 <script id="page-configurations">
@@ -61,7 +59,7 @@
   };
 </script>
 
-  <title>Mac磁盘清理工具推荐 | 牧宇的Blog</title>
+  <title>互联网创业寒冬 | 牧宇的Blog</title>
   
 
 
@@ -177,7 +175,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E5%85%B6%E5%AE%83/Mac%E7%A3%81%E7%9B%98%E6%B8%85%E7%90%86%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E9%9A%8F%E7%AC%94/2025/%E4%BA%92%E8%81%94%E7%BD%91%E5%88%9B%E4%B8%9A%E5%AF%92%E5%86%AC/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -190,7 +188,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Mac磁盘清理工具推荐
+          互联网创业寒冬
         </h1>
 
         <div class="post-meta">
@@ -200,7 +198,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-09-16 10:11:56" itemprop="dateCreated datePublished" datetime="2023-09-16T10:11:56+08:00">2023-09-16</time>
+              <time title="创建时间：2025-02-16 22:16:13" itemprop="dateCreated datePublished" datetime="2025-02-16T22:16:13+08:00">2025-02-16</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -208,7 +206,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%85%B6%E5%AE%83/" itemprop="url" rel="index"><span itemprop="name">其它</span></a>
+                  <a href="/categories/%E9%9A%8F%E7%AC%94/" itemprop="url" rel="index"><span itemprop="name">随笔</span></a>
                 </span>
             </span>
 
@@ -223,27 +221,37 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Mac 电脑性能不错，但是内存和硬盘都是大坑，又贵又小。虽然 mac 软件不多并不像 Windows 一样占用硬盘过大，但是长期使用下来，磁盘空间也是一个问题。今天推荐一个 mac 磁盘清理工具，或者说磁盘体积分析工具，方便找到磁盘空间被占用的原因。</p>
+        <p>阮一峰的 Blog 里提到，现在互联网创业几乎消失了，并引用了一篇文章同时总结了4个原因。</p>
+<ol>
+<li>互联网行业已经成熟了，留给创业者的机会大幅减少。互联网的大部分果实已被摘取，早期的高增长难以再现。真正的创新机会即使还能找到，也会被现有的大公司快速抄袭，不会留给创业者。AI 大模型出现后，互联网本身也在衰弱，创业机会就更少了。</li>
+<li>创业的机会成本变大了。一个大厂的高级工程师，现在的薪酬（包括股票期权）超过百万，创业很难打动他了。</li>
+<li>风险投资的商业模式难以实现了。风投预期的模式是项目高速增长，最终实现上市退出。而这越来越难做到了，能够指数式增长的线上项目现在基本找不到。</li>
+<li>创业者的生活态度发生了变化。人们比以前更重视生活质量，越来越不愿意接受创业带来的没日没夜的劳作、倦怠、失败的人际关系、心理健康问题。</li>
+</ol>
 <span id="more"></span>
 
-<p>点开左上角的苹果图标可以看到硬盘占用情况，系统自带的分析能在一定程度上告诉你硬盘被什么占用了。但是有很大的体积显示的是系统文件，这时需要额外的软件帮助分析体积占用原因了。</p>
-<p><img src="https://aipaint.lihuanyu.com/mac%E7%A1%AC%E7%9B%98%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5.png" alt="mac磁盘占用情况"></p>
-<p>OmnidiskSweeper 可以帮助分析磁盘体积构成，找到那些体积非常大但并不重要的文件，比如一些缓存、日志、废弃的SDK等等。</p>
-<p>之所以推荐这款软件是因为它非常的干净纯粹，就只是计算磁盘文件体积，要删除什么完全由用户决定。相比之下，不管是 Windows 还是 mac 别的清理软件，都有点像流氓软件，功能不多不好用不说。一旦安装上，想卸载就很费劲了。</p>
-<p>软件界面大概这样：<br><img src="https://aipaint.lihuanyu.com/Omnisweeper%E7%95%8C%E9%9D%A2.png" alt="Omnisweeper界面"></p>
-<p>之前被知乎安利的，后来换电脑时候想找找不到了，找了半天才找回来，感觉这个软件值得我写一篇文档记录及推荐。</p>
-<p>omni是一家有意思的软件公司，他们主要盈利的产品是下面这四兄弟。</p>
-<p><img src="https://aipaint.lihuanyu.com/omni%E5%9B%9B%E5%85%84%E5%BC%9F.png" alt="omni四兄弟"></p>
-<p>这家公司有意思的地方在于它的自我介绍：  </p>
+<p>阮一峰认为第一条是根本原因：互联网的高增长结束，行业的机会少了。</p>
+<p><img src="https://aipaint.lihuanyu.com/2025-02-16/civitai.png" alt="寒冬与巨鲸"></p>
+<p>但阮老师也不全是悲观，最后判断是，单纯的互联网创业，应该再也不会像以前那样兴旺了，很可能就是社会的平均增长率和回报率。<strong>未来互联网的机会更多是与其他行业结合</strong>，就好像现在的 AI 创业，很多都是 AI 为主，互联网为辅。</p>
+<p>我觉得很有道理，顺着链接看了下原文，很短小，遂找 AI 帮忙翻译为汉语，分享给各位。</p>
+<p>原文标题是《创业寒冬：Hacker News信仰崩塌记》</p>
 <blockquote>
-<p>The Omni Group makes and supports awesome apps for Mac, iPad, iPhone, Apple Watch, and the web. We’re an employee-owned company in beautiful Seattle, Washington.<br>这家公司为苹果公司的硬件和web平台开发一些牛逼的软件，它们是一家在西雅图的，由员工拥有的公司。</p>
+<p>Hacker News 是一个海外极客社区，形态非常类似贴吧、论坛。</p>
 </blockquote>
-<p>可以理解是一家全员持股的小而美的公司吧，看得出来苹果的产品、设计、风格很对他们的胃口。做的产品也都是用于提效方面的。而且他们还有关于愿景、使命、价值观方面的阐述与展示。</p>
-<p>而这个 OmnidiskSweeper 属于 Omni Labs 的一个小软件，这个分类的简介是：  </p>
+<p>2013年，一位创业失败者在Hacker News讲述经历。评论区充满温情：”失败只是一个事件，不是你的身份标签”、”收拾心情重新出发”、”这都是为下次成功积累经验”。</p>
+<p>转眼来到2025年。另一位连续六次折戟的创业者分享心路。这次评论区的画风突变：”当初去大厂打工可能更明智”、”这场老鼠赛跑根本不值得”、”最真实的故事总被掩埋，我们看到的都是精心粉饰的剧本”。</p>
 <blockquote>
-<p>Sometimes we make software for us, and we love it so much we make it available to you, too.<br>有时候我们也会开发一些软件为我们自己，我们很喜欢他们也希望可以帮到你们。</p>
+<p>老鼠赛跑原文是 Rat race ，是一个比喻性表达，指：现代社会中永无止境的竞争、常用来形容职场、城市生活中为追求成功/财富/地位而疲于奔命的状态，就像实验室里踩着滚轮不停奔跑却无法前进的老鼠。整句含义大概为：”与其在创业这种高风险、高压力的赛道无意义地消耗生命，不如选择更稳定的职业路径”</p>
 </blockquote>
-<p>好的，感谢Omni公司的慷慨。</p>
+<p>这种转变绝非个案。曾高呼”快速试错，频繁迭代”的极客圣地，如今开始系统性质疑创业本身的价值逻辑。</p>
+<p>究竟发生了什么？</p>
+<p>创业者的身心代价变得更加直观。过劳猝死、家庭破裂、抑郁症等案例，再也无法用”奋斗者文化”的遮羞布掩盖。</p>
+<p>科技巨头的薪资待遇改写了风险收益公式。当资深工程师在成熟企业轻松斩获30万美元+年薪，创业的财务合理性开始动摇。</p>
+<p>风险投资模式的局限性浮出水面。资本对超高速增长和退出预期的偏执，让无数创业者在真实商业逻辑与投资人诉求间进退维谷。</p>
+<p>行业进入成熟期。移动互联网时代的低垂果实已被摘尽，真正具有颠覆性的创新机会愈发稀缺。</p>
+<p>我们正在步入的”创业寒冬”，并非指创业行为的消亡，而是围绕它的造神运动正在冰封。</p>
+<p>这场寒冬过后，或许会孕育出更质朴的创业生态：既有传统风投模式的一席之地，也会涌现更多元化的创新路径。这个新生态可能不再光鲜，但必定更加真实。</p>
+<p><img src="https://aipaint.lihuanyu.com/2025-02-16/00189-2544810901.png" alt="希望之花"></p>
 
     </div>
 
@@ -253,10 +261,9 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/mac/" rel="tag"># mac</a>
-              <a href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag"># 工具</a>
-              <a href="/tags/%E7%A3%81%E7%9B%98%E6%B8%85%E7%90%86/" rel="tag"># 磁盘清理</a>
-              <a href="/tags/mac%E7%A3%81%E7%9B%98%E6%B8%85%E7%90%86/" rel="tag"># mac磁盘清理</a>
+              <a href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag"># 随笔</a>
+              <a href="/tags/%E5%88%9B%E4%B8%9A/" rel="tag"># 创业</a>
+              <a href="/tags/%E4%BA%92%E8%81%94%E7%BD%91/" rel="tag"># 互联网</a>
           </div>
 
         
@@ -265,13 +272,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/%E5%BC%80%E5%8F%91/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1SQL%E6%B3%A8%E5%85%A5%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" rel="prev" title="记录一次SQL注入与问题排查">
-      <i class="fa fa-chevron-left"></i> 记录一次SQL注入与问题排查
+    <a href="/%E8%BF%90%E7%BB%B4/2025/%E5%9C%A8Github%20Action%E9%87%8C%E6%9E%84%E5%BB%BA%E5%A4%A7%E5%9E%8BDocker%E9%95%9C%E5%83%8F/" rel="prev" title="在Github Action里构建大型Docker镜像">
+      <i class="fa fa-chevron-left"></i> 在Github Action里构建大型Docker镜像
     </a></div>
-      <div class="post-nav-item">
-    <a href="/%E5%89%8D%E7%AB%AF/React%E7%9A%84key/" rel="next" title="React的key">
-      React的key <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
