@@ -324,6 +324,131 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/2025/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BB%84%E4%BB%B6%E5%BA%93%E8%AF%A5%E7%94%A8rpx%E8%BF%98%E6%98%AFpx/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/%E5%89%8D%E7%AB%AF/2025/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BB%84%E4%BB%B6%E5%BA%93%E8%AF%A5%E7%94%A8rpx%E8%BF%98%E6%98%AFpx/" class="post-title-link" itemprop="url">小程序组件库该用rpx还是px？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-02-15 09:52:00" itemprop="dateCreated datePublished" datetime="2025-02-15T09:52:00+08:00">2025-02-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一、问题背景：组件库用-px，业务开发用-rpx"><a href="#一、问题背景：组件库用-px，业务开发用-rpx" class="headerlink" title="一、问题背景：组件库用 px，业务开发用 rpx"></a>一、问题背景：组件库用 px，业务开发用 rpx</h2><h3 id="1-1-现状冲突"><a href="#1-1-现状冲突" class="headerlink" title="1.1 现状冲突"></a>1.1 现状冲突</h3><p>目前小程序的开发领域有一个奇怪的现象：</p>
+<ul>
+<li><strong>组件库</strong>：Vant、Uni-UI 等主流组件库的样式表中，<code>width: 100px</code> 随处可见</li>
+<li><strong>业务代码</strong>：业务前端清一色使用 <code>width: 200rpx</code>，开发者对 rpx 趋之若鹜</li>
+</ul>
+<p>这就引出一个<strong>矛盾点</strong>：当开发者引入一个 px 单位的按钮组件时，必须手动覆盖样式或做单位转换：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 业务代码中强行适配 */</span></span><br><span class="line"><span class="selector-class">.van-button</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">200</span>rpx<span class="meta">!important</span>; <span class="comment">/* 破坏组件库封装性 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-为什么组件库坚持-px？"><a href="#1-2-为什么组件库坚持-px？" class="headerlink" title="1.2 为什么组件库坚持 px？"></a>1.2 为什么组件库坚持 px？</h3><p><strong>历史原因</strong>：2017 年微信小程序刚推出时，rpx 的渲染机制存在 BUG（如 iOS Retina 屏模糊），早期组件库被迫选择 px。<br><strong>跨端隐患</strong>：部分跨端框架（如 Taro）需用 px 兼容 H5 和 APP，直接使用 rpx 会导致多端样式混乱。<br><strong>稳定性担忧</strong>：px 在折叠屏、Pad 等设备上表现更可控，rpx 的全局缩放可能导致组件错位。</p>
+<hr>
+<h2 id="二、业务开发为何偏爱-rpx？"><a href="#二、业务开发为何偏爱-rpx？" class="headerlink" title="二、业务开发为何偏爱 rpx？"></a>二、业务开发为何偏爱 rpx？</h2><h3 id="2-1-效率碾压式优势"><a href="#2-1-效率碾压式优势" class="headerlink" title="2.1 效率碾压式优势"></a>2.1 效率碾压式优势</h3><p>假设设计师提供 750px 宽度的设计稿：</p>
+<ul>
+<li><strong>rpx 方案</strong>：直接按 1:1 映射，200px 的元素写作 <code>200rpx</code></li>
+<li><strong>px + 响应式方案</strong>：需计算百分比、设置断点、处理多端差异</li>
+</ul>
+<p><strong>实际对比</strong>：开发一个商品列表页：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* rpx 方案 */</span></span><br><span class="line"><span class="selector-class">.item</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">350</span>rpx; </span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">20</span>rpx;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* px + 响应式方案 */</span></span><br><span class="line"><span class="selector-class">.item</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">175px</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">10px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">max-width</span>: <span class="number">375px</span>) &#123;</span><br><span class="line">  <span class="selector-class">.item</span> &#123; <span class="attribute">width</span>: <span class="number">150px</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 还要考虑华为折叠屏、iPad等设备... */</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-设计协作的天然优势"><a href="#2-2-设计协作的天然优势" class="headerlink" title="2.2 设计协作的天然优势"></a>2.2 设计协作的天然优势</h3><p>当设计稿标注为 750px 时：</p>
+<ul>
+<li><strong>开发者</strong>：无需换算，<code>设计稿标注值 = rpx 值</code></li>
+<li><strong>设计师</strong>：不需要学习 vw/rem 等复杂单位</li>
+</ul>
+<hr>
+<h2 id="三、化解矛盾的工程方案"><a href="#三、化解矛盾的工程方案" class="headerlink" title="三、化解矛盾的工程方案"></a>三、化解矛盾的工程方案</h2><h3 id="3-1-方案一：组件库提供-rpx-版本"><a href="#3-1-方案一：组件库提供-rpx-版本" class="headerlink" title="3.1 方案一：组件库提供 rpx 版本"></a>3.1 方案一：组件库提供 rpx 版本</h3><p><strong>实现原理</strong>：通过 CSS 变量动态切换单位</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 组件库源码 */</span></span><br><span class="line"><span class="selector-class">.van-button</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="built_in">var</span>(--button-width, <span class="number">100px</span>); </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 业务代码注入变量 */</span></span><br><span class="line"><span class="selector-pseudo">:root</span> &#123;</span><br><span class="line">  <span class="attr">--button-width</span>: <span class="number">200</span>rpx; <span class="comment">/* 一键切换为 rpx */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>案例</strong>：京东 NutUI 小程序版支持 <code>px/rpx</code> 双模式，通过 <code>npm run build:rpx</code> 生成 rpx 版本。</p>
+<h3 id="3-2-方案二：构建工具自动转换"><a href="#3-2-方案二：构建工具自动转换" class="headerlink" title="3.2 方案二：构建工具自动转换"></a>3.2 方案二：构建工具自动转换</h3><p><strong>实现原理</strong>：用 PostCSS 插件批量转换组件库的 px → rpx</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// postcss.config.js</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">plugins</span>: &#123;</span><br><span class="line">    <span class="string">&#x27;postcss-px2rpx&#x27;</span>: &#123;</span><br><span class="line">      <span class="attr">ratio</span>: <span class="number">2</span> <span class="comment">// 1px = 2rpx（根据设计稿调整）</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>转换效果</strong>：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 输入：组件库源码 */</span></span><br><span class="line"><span class="selector-class">.van-button</span> &#123; <span class="attribute">width</span>: <span class="number">100px</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 输出：转换后代码 */</span></span><br><span class="line"><span class="selector-class">.van-button</span> &#123; <span class="attribute">width</span>: <span class="number">200</span>rpx; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这部分做得比较好的是滴滴的小程序框架 Mpx，它内置了px到rpx的转换功能，并且支持选择性转换，开发者可以通过注释来标记不需要转换的px，大大提高了开发灵活性和效率。</p>
+<hr>
+<h2 id="四、选型建议：根据团队类型抉择"><a href="#四、选型建议：根据团队类型抉择" class="headerlink" title="四、选型建议：根据团队类型抉择"></a>四、选型建议：根据团队类型抉择</h2><table>
+<thead>
+<tr>
+<th><strong>团队类型</strong></th>
+<th><strong>推荐方案</strong></th>
+<th><strong>原因</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>自研组件库</td>
+<td>原生支持 rpx</td>
+<td>掌控源码，无历史包袱</td>
+</tr>
+<tr>
+<td>使用第三方组件库</td>
+<td>方案二（构建工具转换）</td>
+<td>无侵入、低成本适配</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="五、总结与展望"><a href="#五、总结与展望" class="headerlink" title="五、总结与展望"></a>五、总结与展望</h2><h3 id="5-1-核心结论"><a href="#5-1-核心结论" class="headerlink" title="5.1 核心结论"></a>5.1 核心结论</h3><ul>
+<li><strong>组件库可以选择 rpx</strong></li>
+<li><strong>工程化是破局关键</strong>：通过工具抹平单位差异，开发者不必二选一</li>
+</ul>
+<p><strong>让技术回归本质</strong>：单位的本质是提升效率而非制造对立。当工具链足够成熟时，开发者终将摆脱单位之争，专注创造业务价值。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/AI/2025/%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2deepseek%E4%B8%8ESillyTavern/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -854,71 +979,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/uncategorized/shadcn-ui%E7%BB%84%E4%BB%B6%E5%BA%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="skyADMIN">
-      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="牧宇的Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/uncategorized/shadcn-ui%E7%BB%84%E4%BB%B6%E5%BA%93/" class="post-title-link" itemprop="url">shadcn-ui 组件库</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-02-07 11:37:53" itemprop="dateCreated datePublished" datetime="2024-02-07T11:37:53+08:00">2024-02-07</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>忘记之前在哪看到，说欧美市场现在普遍流行的组件库方案不是 AntD，也不是 mui，而是 shadcn-ui ，没听说过这个之前，最近碰巧看到 Solid-ui ，是一个非官方的 shadcn-ui 的 SolidJS 版本实现，就对其本体也很感兴趣，打开看了觉得有点意思。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/uncategorized/shadcn-ui%E7%BB%84%E4%BB%B6%E5%BA%93/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -988,7 +1048,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.0.0-rc2">
+
+
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "jt8e57385h");
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/android-chrome-192x192.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一、问题背景：组件库用 px，业务开发用 rpx1.1 现状冲突目前小程序的开发领域有一个奇怪的现象：  组件库：Vant、Uni-UI 等主流组件库的样式表中，width: 100px 随处可见 业务代码：业务前端清一色使用 width: 200rpx，开发者对 rpx 趋之若鹜  这就引出一个矛盾点：当开发者引入一个 px 单位的按钮组件时，必须手动覆盖样式或做单位转换： 1234&#x2F;* 业务代">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小程序组件库该用rpx还是px？">
+<meta property="og:url" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/2025/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BB%84%E4%BB%B6%E5%BA%93%E8%AF%A5%E7%94%A8rpx%E8%BF%98%E6%98%AFpx/index.html">
+<meta property="og:site_name" content="牧宇的Blog">
+<meta property="og:description" content="一、问题背景：组件库用 px，业务开发用 rpx1.1 现状冲突目前小程序的开发领域有一个奇怪的现象：  组件库：Vant、Uni-UI 等主流组件库的样式表中，width: 100px 随处可见 业务代码：业务前端清一色使用 width: 200rpx，开发者对 rpx 趋之若鹜  这就引出一个矛盾点：当开发者引入一个 px 单位的按钮组件时，必须手动覆盖样式或做单位转换： 1234&#x2F;* 业务代">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-02-15T01:52:00.000Z">
+<meta property="article:modified_time" content="2025-02-15T01:52:00.000Z">
+<meta property="article:author" content="skyADMIN">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="小程序">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/2025/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BB%84%E4%BB%B6%E5%BA%93%E8%AF%A5%E7%94%A8rpx%E8%BF%98%E6%98%AFpx/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>小程序组件库该用rpx还是px？ | 牧宇的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">牧宇的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">工程师的笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/2025/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BB%84%E4%BB%B6%E5%BA%93%E8%AF%A5%E7%94%A8rpx%E8%BF%98%E6%98%AFpx/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          小程序组件库该用rpx还是px？
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-02-15 09:52:00" itemprop="dateCreated datePublished" datetime="2025-02-15T09:52:00+08:00">2025-02-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、问题背景：组件库用-px，业务开发用-rpx"><a href="#一、问题背景：组件库用-px，业务开发用-rpx" class="headerlink" title="一、问题背景：组件库用 px，业务开发用 rpx"></a>一、问题背景：组件库用 px，业务开发用 rpx</h2><h3 id="1-1-现状冲突"><a href="#1-1-现状冲突" class="headerlink" title="1.1 现状冲突"></a>1.1 现状冲突</h3><p>目前小程序的开发领域有一个奇怪的现象：</p>
+<ul>
+<li><strong>组件库</strong>：Vant、Uni-UI 等主流组件库的样式表中，<code>width: 100px</code> 随处可见</li>
+<li><strong>业务代码</strong>：业务前端清一色使用 <code>width: 200rpx</code>，开发者对 rpx 趋之若鹜</li>
+</ul>
+<p>这就引出一个<strong>矛盾点</strong>：当开发者引入一个 px 单位的按钮组件时，必须手动覆盖样式或做单位转换：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 业务代码中强行适配 */</span></span><br><span class="line"><span class="selector-class">.van-button</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">200</span>rpx<span class="meta">!important</span>; <span class="comment">/* 破坏组件库封装性 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-为什么组件库坚持-px？"><a href="#1-2-为什么组件库坚持-px？" class="headerlink" title="1.2 为什么组件库坚持 px？"></a>1.2 为什么组件库坚持 px？</h3><p><strong>历史原因</strong>：2017 年微信小程序刚推出时，rpx 的渲染机制存在 BUG（如 iOS Retina 屏模糊），早期组件库被迫选择 px。<br><strong>跨端隐患</strong>：部分跨端框架（如 Taro）需用 px 兼容 H5 和 APP，直接使用 rpx 会导致多端样式混乱。<br><strong>稳定性担忧</strong>：px 在折叠屏、Pad 等设备上表现更可控，rpx 的全局缩放可能导致组件错位。</p>
+<hr>
+<h2 id="二、业务开发为何偏爱-rpx？"><a href="#二、业务开发为何偏爱-rpx？" class="headerlink" title="二、业务开发为何偏爱 rpx？"></a>二、业务开发为何偏爱 rpx？</h2><h3 id="2-1-效率碾压式优势"><a href="#2-1-效率碾压式优势" class="headerlink" title="2.1 效率碾压式优势"></a>2.1 效率碾压式优势</h3><p>假设设计师提供 750px 宽度的设计稿：</p>
+<ul>
+<li><strong>rpx 方案</strong>：直接按 1:1 映射，200px 的元素写作 <code>200rpx</code></li>
+<li><strong>px + 响应式方案</strong>：需计算百分比、设置断点、处理多端差异</li>
+</ul>
+<p><strong>实际对比</strong>：开发一个商品列表页：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* rpx 方案 */</span></span><br><span class="line"><span class="selector-class">.item</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">350</span>rpx; </span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">20</span>rpx;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* px + 响应式方案 */</span></span><br><span class="line"><span class="selector-class">.item</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">175px</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">10px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">max-width</span>: <span class="number">375px</span>) &#123;</span><br><span class="line">  <span class="selector-class">.item</span> &#123; <span class="attribute">width</span>: <span class="number">150px</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 还要考虑华为折叠屏、iPad等设备... */</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-设计协作的天然优势"><a href="#2-2-设计协作的天然优势" class="headerlink" title="2.2 设计协作的天然优势"></a>2.2 设计协作的天然优势</h3><p>当设计稿标注为 750px 时：</p>
+<ul>
+<li><strong>开发者</strong>：无需换算，<code>设计稿标注值 = rpx 值</code></li>
+<li><strong>设计师</strong>：不需要学习 vw/rem 等复杂单位</li>
+</ul>
+<hr>
+<h2 id="三、化解矛盾的工程方案"><a href="#三、化解矛盾的工程方案" class="headerlink" title="三、化解矛盾的工程方案"></a>三、化解矛盾的工程方案</h2><h3 id="3-1-方案一：组件库提供-rpx-版本"><a href="#3-1-方案一：组件库提供-rpx-版本" class="headerlink" title="3.1 方案一：组件库提供 rpx 版本"></a>3.1 方案一：组件库提供 rpx 版本</h3><p><strong>实现原理</strong>：通过 CSS 变量动态切换单位</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 组件库源码 */</span></span><br><span class="line"><span class="selector-class">.van-button</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="built_in">var</span>(--button-width, <span class="number">100px</span>); </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 业务代码注入变量 */</span></span><br><span class="line"><span class="selector-pseudo">:root</span> &#123;</span><br><span class="line">  <span class="attr">--button-width</span>: <span class="number">200</span>rpx; <span class="comment">/* 一键切换为 rpx */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>案例</strong>：京东 NutUI 小程序版支持 <code>px/rpx</code> 双模式，通过 <code>npm run build:rpx</code> 生成 rpx 版本。</p>
+<h3 id="3-2-方案二：构建工具自动转换"><a href="#3-2-方案二：构建工具自动转换" class="headerlink" title="3.2 方案二：构建工具自动转换"></a>3.2 方案二：构建工具自动转换</h3><p><strong>实现原理</strong>：用 PostCSS 插件批量转换组件库的 px → rpx</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// postcss.config.js</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">plugins</span>: &#123;</span><br><span class="line">    <span class="string">&#x27;postcss-px2rpx&#x27;</span>: &#123;</span><br><span class="line">      <span class="attr">ratio</span>: <span class="number">2</span> <span class="comment">// 1px = 2rpx（根据设计稿调整）</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>转换效果</strong>：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 输入：组件库源码 */</span></span><br><span class="line"><span class="selector-class">.van-button</span> &#123; <span class="attribute">width</span>: <span class="number">100px</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 输出：转换后代码 */</span></span><br><span class="line"><span class="selector-class">.van-button</span> &#123; <span class="attribute">width</span>: <span class="number">200</span>rpx; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这部分做得比较好的是滴滴的小程序框架 Mpx，它内置了px到rpx的转换功能，并且支持选择性转换，开发者可以通过注释来标记不需要转换的px，大大提高了开发灵活性和效率。</p>
+<hr>
+<h2 id="四、选型建议：根据团队类型抉择"><a href="#四、选型建议：根据团队类型抉择" class="headerlink" title="四、选型建议：根据团队类型抉择"></a>四、选型建议：根据团队类型抉择</h2><table>
+<thead>
+<tr>
+<th><strong>团队类型</strong></th>
+<th><strong>推荐方案</strong></th>
+<th><strong>原因</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>自研组件库</td>
+<td>原生支持 rpx</td>
+<td>掌控源码，无历史包袱</td>
+</tr>
+<tr>
+<td>使用第三方组件库</td>
+<td>方案二（构建工具转换）</td>
+<td>无侵入、低成本适配</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="五、总结与展望"><a href="#五、总结与展望" class="headerlink" title="五、总结与展望"></a>五、总结与展望</h2><h3 id="5-1-核心结论"><a href="#5-1-核心结论" class="headerlink" title="5.1 核心结论"></a>5.1 核心结论</h3><ul>
+<li><strong>组件库可以选择 rpx</strong></li>
+<li><strong>工程化是破局关键</strong>：通过工具抹平单位差异，开发者不必二选一</li>
+</ul>
+<p><strong>让技术回归本质</strong>：单位的本质是提升效率而非制造对立。当工具链足够成熟时，开发者终将摆脱单位之争，专注创造业务价值。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a>
+              <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag"># 小程序</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/AI/2025/%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2deepseek%E4%B8%8ESillyTavern/" rel="prev" title="本地部署deepseek与SillyTavern">
+      <i class="fa fa-chevron-left"></i> 本地部署deepseek与SillyTavern
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/%E8%BF%90%E7%BB%B4/2025/%E5%9C%A8Github%20Action%E9%87%8C%E6%9E%84%E5%BB%BA%E5%A4%A7%E5%9E%8BDocker%E9%95%9C%E5%83%8F/" rel="next" title="在Github Action里构建大型Docker镜像">
+      在Github Action里构建大型Docker镜像 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  
+  <div class="comments">
+    <script src="https://giscus.app/client.js"
+        data-repo="sky-admin/sky-admin.github.io" 
+        data-repo-id="MDEwOlJlcG9zaXRvcnkxMTI0MjY1Nzk=" 
+        data-category="General"
+        data-category-id="DIC_kwDOBrN-U84CZDbX"
+        data-mapping="title" 
+        data-reactions-enabled="1" 
+        data-emit-metadata="1" 
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        data-input-position="bottom"
+        data-loading="lazy"
+        async>
+    </script>
+  </div>
+  
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E9%97%AE%E9%A2%98%E8%83%8C%E6%99%AF%EF%BC%9A%E7%BB%84%E4%BB%B6%E5%BA%93%E7%94%A8-px%EF%BC%8C%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E7%94%A8-rpx"><span class="nav-number">1.</span> <span class="nav-text">一、问题背景：组件库用 px，业务开发用 rpx</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E7%8E%B0%E7%8A%B6%E5%86%B2%E7%AA%81"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 现状冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BB%84%E4%BB%B6%E5%BA%93%E5%9D%9A%E6%8C%81-px%EF%BC%9F"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 为什么组件库坚持 px？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%B8%9A%E5%8A%A1%E5%BC%80%E5%8F%91%E4%B8%BA%E4%BD%95%E5%81%8F%E7%88%B1-rpx%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">二、业务开发为何偏爱 rpx？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%95%88%E7%8E%87%E7%A2%BE%E5%8E%8B%E5%BC%8F%E4%BC%98%E5%8A%BF"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 效率碾压式优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E8%AE%BE%E8%AE%A1%E5%8D%8F%E4%BD%9C%E7%9A%84%E5%A4%A9%E7%84%B6%E4%BC%98%E5%8A%BF"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 设计协作的天然优势</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%8C%96%E8%A7%A3%E7%9F%9B%E7%9B%BE%E7%9A%84%E5%B7%A5%E7%A8%8B%E6%96%B9%E6%A1%88"><span class="nav-number">3.</span> <span class="nav-text">三、化解矛盾的工程方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E6%96%B9%E6%A1%88%E4%B8%80%EF%BC%9A%E7%BB%84%E4%BB%B6%E5%BA%93%E6%8F%90%E4%BE%9B-rpx-%E7%89%88%E6%9C%AC"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 方案一：组件库提供 rpx 版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E6%96%B9%E6%A1%88%E4%BA%8C%EF%BC%9A%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7%E8%87%AA%E5%8A%A8%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 方案二：构建工具自动转换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E9%80%89%E5%9E%8B%E5%BB%BA%E8%AE%AE%EF%BC%9A%E6%A0%B9%E6%8D%AE%E5%9B%A2%E9%98%9F%E7%B1%BB%E5%9E%8B%E6%8A%89%E6%8B%A9"><span class="nav-number">4.</span> <span class="nav-text">四、选型建议：根据团队类型抉择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93%E4%B8%8E%E5%B1%95%E6%9C%9B"><span class="nav-number">5.</span> <span class="nav-text">五、总结与展望</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E6%A0%B8%E5%BF%83%E7%BB%93%E8%AE%BA"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 核心结论</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">skyADMIN</p>
+  <div class="site-description" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sky-admin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sky-admin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">蜀ICP备15023364号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skyADMIN</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
