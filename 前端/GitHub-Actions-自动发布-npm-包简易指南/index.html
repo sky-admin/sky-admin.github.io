@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.0.0-rc2">
+
+
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "jt8e57385h");
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/android-chrome-192x192.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="概述GitHub Actions作为GitHub原生的CI&#x2F;CD工具，为开发者提供了强大的自动化能力。通过GitHub Actions自动发布npm包，可以显著提升开发效率，减少人为错误，确保发布流程的一致性和可靠性。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GitHub Actions 自动发布 npm 包简易指南">
+<meta property="og:url" content="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/GitHub-Actions-%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%83-npm-%E5%8C%85%E7%AE%80%E6%98%93%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:site_name" content="牧宇的Blog">
+<meta property="og:description" content="概述GitHub Actions作为GitHub原生的CI&#x2F;CD工具，为开发者提供了强大的自动化能力。通过GitHub Actions自动发布npm包，可以显著提升开发效率，减少人为错误，确保发布流程的一致性和可靠性。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-07-19T14:18:34.000Z">
+<meta property="article:modified_time" content="2025-07-19T14:18:34.000Z">
+<meta property="article:author" content="skyADMIN">
+<meta property="article:tag" content="Github Action">
+<meta property="article:tag" content="自动化">
+<meta property="article:tag" content="前端">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/GitHub-Actions-%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%83-npm-%E5%8C%85%E7%AE%80%E6%98%93%E6%8C%87%E5%8D%97/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>GitHub Actions 自动发布 npm 包简易指南 | 牧宇的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">牧宇的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">工程师的笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E5%89%8D%E7%AB%AF/GitHub-Actions-%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%83-npm-%E5%8C%85%E7%AE%80%E6%98%93%E6%8C%87%E5%8D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GitHub Actions 自动发布 npm 包简易指南
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-19 22:18:34" itemprop="dateCreated datePublished" datetime="2025-07-19T22:18:34+08:00">2025-07-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>GitHub Actions作为GitHub原生的CI/CD工具，为开发者提供了强大的自动化能力。通过GitHub Actions自动发布npm包，可以显著提升开发效率，减少人为错误，确保发布流程的一致性和可靠性。</p>
+<span id="more"></span>
+
+<p><strong>本指南专注于简单实用的配置方案，特别适合：</strong></p>
+<ul>
+<li><p>个人开发者的小型项目</p>
+</li>
+<li><p>不需要复杂自动化流程的简单项目</p>
+</li>
+<li><p>希望快速上手、配置简单的场景</p>
+</li>
+<li><p>追求可靠性而非复杂功能的项目</p>
+</li>
+</ul>
+<p>相比复杂的语义化版本控制方案（如semantic-release），本方案采用手动版本管理，配置简单，维护成本低，非常适合个人项目使用。</p>
+<h2 id="基础配置"><a href="#基础配置" class="headerlink" title="基础配置"></a>基础配置</h2><h3 id="1-npm-Token配置"><a href="#1-npm-Token配置" class="headerlink" title="1. npm Token配置"></a>1. npm Token配置</h3><p>首先需要在npm官网创建访问令牌：</p>
+<ol>
+<li><p>登录 <a target="_blank" rel="noopener" href="https://www.npmjs.com/">npmjs.com</a></p>
+</li>
+<li><p>进入 Access Tokens 页面</p>
+</li>
+<li><p>创建新的 Classic Token，类型选择 “Automation”</p>
+</li>
+<li><p>复制生成的token（注意！只显示一次）</p>
+</li>
+</ol>
+<p>在GitHub仓库中配置Secrets：</p>
+<ol>
+<li><p>进入仓库 Settings → Secrets and variables → Actions</p>
+</li>
+<li><p>创建新的Repository secret</p>
+</li>
+<li><p>Name: <code>NPM_TOKEN</code>，Value: 刚才复制的token</p>
+</li>
+</ol>
+<h3 id="2-基础工作流配置"><a href="#2-基础工作流配置" class="headerlink" title="2. 基础工作流配置"></a>2. 基础工作流配置</h3><p>创建 <code>.github/workflows/npm-publish.yml</code> 文件：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">Publish</span> <span class="string">NPM</span> <span class="string">Package</span></span><br><span class="line"></span><br><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">tags:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&#x27;v*&#x27;</span>  <span class="comment"># 当推送v开头的标签时触发</span></span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">publish:</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/checkout@v4</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/setup-node@v4</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">node-version:</span> <span class="string">&#x27;20&#x27;</span></span><br><span class="line">          <span class="attr">registry-url:</span> <span class="string">&#x27;https://registry.npmjs.org/&#x27;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">run:</span> <span class="string">npm</span> <span class="string">ci</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">run:</span> <span class="string">npm</span> <span class="string">test</span> <span class="comment"># optional</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">run:</span> <span class="string">npm</span> <span class="string">publish</span></span><br><span class="line">        <span class="attr">env:</span></span><br><span class="line">          <span class="attr">NODE_AUTH_TOKEN:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.NPM_TOKEN</span> <span class="string">&#125;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="简单发布流程"><a href="#简单发布流程" class="headerlink" title="简单发布流程"></a>简单发布流程</h2><h3 id="1-手动版本管理"><a href="#1-手动版本管理" class="headerlink" title="1. 手动版本管理"></a>1. 手动版本管理</h3><p>使用npm内置命令管理版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 补丁版本 (1.0.0 -&gt; 1.0.1)</span></span><br><span class="line">npm version patch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 次要版本 (1.0.0 -&gt; 1.1.0)  </span></span><br><span class="line">npm version minor</span><br><span class="line"></span><br><span class="line"><span class="comment"># 主要版本 (1.0.0 -&gt; 2.0.0)</span></span><br><span class="line">npm version major</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-发布步骤"><a href="#2-发布步骤" class="headerlink" title="2. 发布步骤"></a>2. 发布步骤</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 更新版本号并创建标签</span></span><br><span class="line">npm version patch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 推送代码和标签到GitHub</span></span><br><span class="line">git push origin main --tags</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. GitHub Actions自动触发发布</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="安全最佳实践"><a href="#安全最佳实践" class="headerlink" title="安全最佳实践"></a>安全最佳实践</h2><h3 id="1-Token安全管理"><a href="#1-Token安全管理" class="headerlink" title="1. Token安全管理"></a>1. Token安全管理</h3><ul>
+<li><p><strong>使用Automation类型token</strong>：绕过2FA限制，专门用于CI/CD</p>
+</li>
+<li><p><strong>最小权限原则</strong>：只授予必要的发布权限</p>
+</li>
+<li><p><strong>定期轮换token</strong>：建议定期更新访问令牌</p>
+</li>
+<li><p><strong>环境变量隔离</strong>：只在npm publish步骤中暴露token</p>
+</li>
+</ul>
+<h3 id="2-工作流安全配置"><a href="#2-工作流安全配置" class="headerlink" title="2. 工作流安全配置"></a>2. 工作流安全配置</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">permissions:</span></span><br><span class="line">  <span class="attr">contents:</span> <span class="string">read</span></span><br><span class="line">  <span class="attr">packages:</span> <span class="string">write</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-分支保护策略"><a href="#3-分支保护策略" class="headerlink" title="3. 分支保护策略"></a>3. 分支保护策略</h3><ul>
+<li><p>限制对主分支的直接推送</p>
+</li>
+<li><p>要求通过Pull Request进行代码审查</p>
+</li>
+<li><p>启用状态检查，确保测试通过后才能合并</p>
+</li>
+</ul>
+<h2 id="常见问题和解决方案"><a href="#常见问题和解决方案" class="headerlink" title="常见问题和解决方案"></a>常见问题和解决方案</h2><h3 id="1-版本冲突"><a href="#1-版本冲突" class="headerlink" title="1. 版本冲突"></a>1. 版本冲突</h3><ul>
+<li><p>确保每次发布前版本号已更新</p>
+</li>
+<li><p>检查npm上是否已存在相同版本</p>
+</li>
+<li><p>使用 <code>npm version</code> 命令避免手动错误</p>
+</li>
+</ul>
+<h3 id="2-权限问题"><a href="#2-权限问题" class="headerlink" title="2. 权限问题"></a>2. 权限问题</h3><ul>
+<li><p>确保NPM_TOKEN具有发布权限</p>
+</li>
+<li><p>检查包名是否已被占用</p>
+</li>
+<li><p>验证组织权限设置</p>
+</li>
+</ul>
+<h3 id="3-构建失败"><a href="#3-构建失败" class="headerlink" title="3. 构建失败"></a>3. 构建失败</h3><ul>
+<li><p>添加完整的测试步骤</p>
+</li>
+<li><p>确保依赖安装正确</p>
+</li>
+<li><p>使用缓存优化构建速度</p>
+</li>
+</ul>
+<h2 id="最佳实践总结"><a href="#最佳实践总结" class="headerlink" title="最佳实践总结"></a>最佳实践总结</h2><ol>
+<li><p><strong>安全第一</strong>：妥善管理访问令牌，使用最小权限原则</p>
+</li>
+<li><p><strong>简单可靠</strong>：使用标签触发，避免复杂的自动化逻辑</p>
+</li>
+<li><p><strong>测试保障</strong>：发布前确保所有测试通过</p>
+</li>
+<li><p><strong>版本管理</strong>：使用npm内置版本管理命令</p>
+</li>
+<li><p><strong>监控告警</strong>：设置基本的失败检测</p>
+</li>
+</ol>
+<h2 id="pnpm版本配置"><a href="#pnpm版本配置" class="headerlink" title="pnpm版本配置"></a>pnpm版本配置</h2><p>对于使用pnpm的项目，可以使用以下配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">Publish</span> <span class="string">NPM</span> <span class="string">Package</span> <span class="string">(pnpm)</span></span><br><span class="line"></span><br><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">tags:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&#x27;v*&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">publish:</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/checkout@v4</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">pnpm/action-setup@v2</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">version:</span> <span class="number">9</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/setup-node@v4</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">node-version:</span> <span class="string">&#x27;20&#x27;</span></span><br><span class="line">          <span class="attr">registry-url:</span> <span class="string">&#x27;https://registry.npmjs.org/&#x27;</span></span><br><span class="line">          <span class="attr">cache:</span> <span class="string">&#x27;pnpm&#x27;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">run:</span> <span class="string">pnpm</span> <span class="string">install</span> <span class="string">--frozen-lockfile</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">run:</span> <span class="string">pnpm</span> <span class="string">test</span> <span class="comment"># optional</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">run:</span> <span class="string">pnpm</span> <span class="string">publish</span> <span class="string">--no-git-checks</span></span><br><span class="line">        <span class="attr">env:</span></span><br><span class="line">          <span class="attr">NODE_AUTH_TOKEN:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.NPM_TOKEN</span> <span class="string">&#125;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>pnpm配置要点：</strong></p>
+<ul>
+<li><p>使用 <code>pnpm/action-setup@v2</code> 安装pnpm</p>
+</li>
+<li><p>使用 <code>cache: &#39;pnpm&#39;</code> 启用pnpm缓存</p>
+</li>
+<li><p>使用 <code>pnpm install --frozen-lockfile</code> 确保依赖一致性</p>
+</li>
+<li><p>使用 <code>pnpm publish --no-git-checks</code> 发布包</p>
+</li>
+</ul>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><h3 id="package-json配置检查"><a href="#package-json配置检查" class="headerlink" title="package.json配置检查"></a>package.json配置检查</h3><p>发布前请确保package.json配置正确：</p>
+<ol>
+<li><strong>移除private字段</strong>：如果存在 <code>&quot;private&quot;: true</code>，必须删除或设为 <code>false</code></li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;your-package-name&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="comment">// &quot;private&quot;: true,  ← 删除这行，注意json不支持注释，必须删除</span></span><br><span class="line">    <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Your package description&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p><strong>确保包名可用</strong>：检查npm上是否已存在同名包</p>
+</li>
+<li><p><strong>设置正确的入口文件</strong>：确保 <code>main</code> 字段指向正确的文件</p>
+</li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;main&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dist/index.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;types&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dist/index.d.ts&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Github-Action/" rel="tag"># Github Action</a>
+              <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag"># 自动化</a>
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E9%9A%8F%E7%AC%94/2025/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6%E4%B8%8E%E4%BA%BA%E5%9B%A0%E5%B7%A5%E7%A8%8B/" rel="prev" title="无人驾驶与人因工程">
+      <i class="fa fa-chevron-left"></i> 无人驾驶与人因工程
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  
+  <div class="comments">
+    <script src="https://giscus.app/client.js"
+        data-repo="sky-admin/sky-admin.github.io" 
+        data-repo-id="MDEwOlJlcG9zaXRvcnkxMTI0MjY1Nzk=" 
+        data-category="General"
+        data-category-id="DIC_kwDOBrN-U84CZDbX"
+        data-mapping="title" 
+        data-reactions-enabled="1" 
+        data-emit-metadata="1" 
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        data-input-position="bottom"
+        data-loading="lazy"
+        async>
+    </script>
+  </div>
+  
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">基础配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-npm-Token%E9%85%8D%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">1. npm Token配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%9F%BA%E7%A1%80%E5%B7%A5%E4%BD%9C%E6%B5%81%E9%85%8D%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">2. 基础工作流配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E5%8F%91%E5%B8%83%E6%B5%81%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">简单发布流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%89%8B%E5%8A%A8%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86"><span class="nav-number">3.1.</span> <span class="nav-text">1. 手动版本管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%8F%91%E5%B8%83%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.2.</span> <span class="nav-text">2. 发布步骤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">4.</span> <span class="nav-text">安全最佳实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Token%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86"><span class="nav-number">4.1.</span> <span class="nav-text">1. Token安全管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%AE%89%E5%85%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">4.2.</span> <span class="nav-text">2. 工作流安全配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%88%86%E6%94%AF%E4%BF%9D%E6%8A%A4%E7%AD%96%E7%95%A5"><span class="nav-number">4.3.</span> <span class="nav-text">3. 分支保护策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">5.</span> <span class="nav-text">常见问题和解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%89%88%E6%9C%AC%E5%86%B2%E7%AA%81"><span class="nav-number">5.1.</span> <span class="nav-text">1. 版本冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%9D%83%E9%99%90%E9%97%AE%E9%A2%98"><span class="nav-number">5.2.</span> <span class="nav-text">2. 权限问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%9E%84%E5%BB%BA%E5%A4%B1%E8%B4%A5"><span class="nav-number">5.3.</span> <span class="nav-text">3. 构建失败</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">最佳实践总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pnpm%E7%89%88%E6%9C%AC%E9%85%8D%E7%BD%AE"><span class="nav-number">7.</span> <span class="nav-text">pnpm版本配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">8.</span> <span class="nav-text">注意事项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#package-json%E9%85%8D%E7%BD%AE%E6%A3%80%E6%9F%A5"><span class="nav-number">8.1.</span> <span class="nav-text">package.json配置检查</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">skyADMIN</p>
+  <div class="site-description" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">61</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sky-admin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sky-admin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">蜀ICP备15023364号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skyADMIN</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
