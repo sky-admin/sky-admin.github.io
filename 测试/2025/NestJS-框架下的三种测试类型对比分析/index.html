@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.0.0-rc2">
+
+
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "jt8e57385h");
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/android-chrome-192x192.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="概述本文以NestJS框架为例，深入对比分析单元测试、集成测试和端到端(E2E)测试的核心区别，帮助开发者在实际项目中选择合适的测试策略。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NestJS 框架下的三种测试类型对比分析">
+<meta property="og:url" content="https://www.lihuanyu.com/%E6%B5%8B%E8%AF%95/2025/NestJS-%E6%A1%86%E6%9E%B6%E4%B8%8B%E7%9A%84%E4%B8%89%E7%A7%8D%E6%B5%8B%E8%AF%95%E7%B1%BB%E5%9E%8B%E5%AF%B9%E6%AF%94%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="牧宇的Blog">
+<meta property="og:description" content="概述本文以NestJS框架为例，深入对比分析单元测试、集成测试和端到端(E2E)测试的核心区别，帮助开发者在实际项目中选择合适的测试策略。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-07-20T07:04:57.000Z">
+<meta property="article:modified_time" content="2025-07-20T07:04:57.000Z">
+<meta property="article:author" content="skyADMIN">
+<meta property="article:tag" content="Node">
+<meta property="article:tag" content="自动化测试">
+<meta property="article:tag" content="Nestjs测试">
+<meta property="article:tag" content="单元测试">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.lihuanyu.com/%E6%B5%8B%E8%AF%95/2025/NestJS-%E6%A1%86%E6%9E%B6%E4%B8%8B%E7%9A%84%E4%B8%89%E7%A7%8D%E6%B5%8B%E8%AF%95%E7%B1%BB%E5%9E%8B%E5%AF%B9%E6%AF%94%E5%88%86%E6%9E%90/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>NestJS 框架下的三种测试类型对比分析 | 牧宇的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">牧宇的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">工程师的笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/%E6%B5%8B%E8%AF%95/2025/NestJS-%E6%A1%86%E6%9E%B6%E4%B8%8B%E7%9A%84%E4%B8%89%E7%A7%8D%E6%B5%8B%E8%AF%95%E7%B1%BB%E5%9E%8B%E5%AF%B9%E6%AF%94%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NestJS 框架下的三种测试类型对比分析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-20 15:04:57" itemprop="dateCreated datePublished" datetime="2025-07-20T15:04:57+08:00">2025-07-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">测试</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>本文以NestJS框架为例，深入对比分析单元测试、集成测试和端到端(E2E)测试的核心区别，帮助开发者在实际项目中选择合适的测试策略。</p>
+<span id="more"></span>
+
+<h2 id="1-三种测试类型的核心区别"><a href="#1-三种测试类型的核心区别" class="headerlink" title="1. 三种测试类型的核心区别"></a>1. 三种测试类型的核心区别</h2><h3 id="1-1-定义与测试范围对比"><a href="#1-1-定义与测试范围对比" class="headerlink" title="1.1 定义与测试范围对比"></a>1.1 定义与测试范围对比</h3><table>
+<thead>
+<tr>
+<th>测试类型</th>
+<th>定义</th>
+<th>测试范围</th>
+<th>NestJS中的体现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>单元测试</strong></td>
+<td>测试单个函数、方法或类的逻辑</td>
+<td>最小可测试单元</td>
+<td>Service方法、Controller方法、Pipe、Guard等</td>
+</tr>
+<tr>
+<td><strong>集成测试</strong></td>
+<td>测试多个模块间的交互</td>
+<td>模块间接口和数据流</td>
+<td>Service与Repository交互、Module间通信</td>
+</tr>
+<tr>
+<td><strong>E2E测试</strong></td>
+<td>测试完整的用户场景</td>
+<td>整个应用流程</td>
+<td>HTTP请求到响应的完整链路</td>
+</tr>
+</tbody></table>
+<h3 id="1-2-执行特性对比"><a href="#1-2-执行特性对比" class="headerlink" title="1.2 执行特性对比"></a>1.2 执行特性对比</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>单元测试</th>
+<th>集成测试</th>
+<th>E2E测试</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>执行速度</strong></td>
+<td>极快(毫秒级)</td>
+<td>中等(秒级)</td>
+<td>较慢(分钟级)</td>
+</tr>
+<tr>
+<td><strong>隔离性</strong></td>
+<td>完全隔离</td>
+<td>部分隔离</td>
+<td>无隔离</td>
+</tr>
+<tr>
+<td><strong>依赖处理</strong></td>
+<td>Mock所有依赖</td>
+<td>Mock外部依赖</td>
+<td>使用真实依赖</td>
+</tr>
+<tr>
+<td><strong>环境要求</strong></td>
+<td>无需外部环境</td>
+<td>需要部分真实环境</td>
+<td>需要完整环境</td>
+</tr>
+</tbody></table>
+<h2 id="2-NestJS框架下的具体实现对比"><a href="#2-NestJS框架下的具体实现对比" class="headerlink" title="2. NestJS框架下的具体实现对比"></a>2. NestJS框架下的具体实现对比</h2><h3 id="2-1-单元测试示例"><a href="#2-1-单元测试示例" class="headerlink" title="2.1 单元测试示例"></a>2.1 单元测试示例</h3><p><strong>测试目标：UserService中的创建用户方法</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// user.service.ts</span></span><br><span class="line"><span class="meta">@Injectable</span>()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"><span class="keyword">private</span> userRepository: UserRepository</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">async</span> <span class="title function_">createUser</span>(<span class="attr">userData</span>: <span class="title class_">CreateUserDto</span>): <span class="title class_">Promise</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> existingUser = <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="property">userRepository</span>.<span class="title function_">findByEmail</span>(userData.<span class="property">email</span>);</span><br><span class="line">    <span class="keyword">if</span> (existingUser) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ConflictException</span>(<span class="string">&#x27;User already exists&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">userRepository</span>.<span class="title function_">create</span>(userData);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>单元测试实现：</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// user.service.spec.ts</span></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&#x27;UserService&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> <span class="attr">service</span>: <span class="title class_">UserService</span>;</span><br><span class="line">  <span class="keyword">let</span> <span class="attr">mockRepository</span>: jest.<span class="property">Mocked</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">beforeEach</span>(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> mockRepo = &#123;</span><br><span class="line">      <span class="attr">findByEmail</span>: jest.<span class="title function_">fn</span>(),</span><br><span class="line">      <span class="attr">create</span>: jest.<span class="title function_">fn</span>(),</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="variable language_">module</span> = <span class="keyword">await</span> <span class="title class_">Test</span>.<span class="title function_">createTestingModule</span>(&#123;</span><br><span class="line">      <span class="attr">providers</span>: [</span><br><span class="line">        <span class="title class_">UserService</span>,</span><br><span class="line">        &#123; <span class="attr">provide</span>: <span class="title class_">UserRepository</span>, <span class="attr">useValue</span>: mockRepo &#125;,</span><br><span class="line">      ],</span><br><span class="line">    &#125;).<span class="title function_">compile</span>();</span><br><span class="line"></span><br><span class="line">    service = <span class="variable language_">module</span>.<span class="title function_">get</span>(<span class="title class_">UserService</span>);</span><br><span class="line">    mockRepository = <span class="variable language_">module</span>.<span class="title function_">get</span>(<span class="title class_">UserRepository</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;should create user when email not exists&#x27;</span>, <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="comment">// Arrange</span></span><br><span class="line">    <span class="keyword">const</span> userData = &#123; <span class="attr">email</span>: <span class="string">&#x27;test@example.com&#x27;</span>, <span class="attr">name</span>: <span class="string">&#x27;Test User&#x27;</span> &#125;;</span><br><span class="line">    mockRepository.<span class="property">findByEmail</span>.<span class="title function_">mockResolvedValue</span>(<span class="literal">null</span>);</span><br><span class="line">    mockRepository.<span class="property">create</span>.<span class="title function_">mockResolvedValue</span>(&#123; <span class="attr">id</span>: <span class="number">1</span>, ...userData &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Act</span></span><br><span class="line">    <span class="keyword">const</span> result = <span class="keyword">await</span> service.<span class="title function_">createUser</span>(userData);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Assert</span></span><br><span class="line">    <span class="title function_">expect</span>(mockRepository.<span class="property">findByEmail</span>).<span class="title function_">toHaveBeenCalledWith</span>(userData.<span class="property">email</span>);</span><br><span class="line">    <span class="title function_">expect</span>(mockRepository.<span class="property">create</span>).<span class="title function_">toHaveBeenCalledWith</span>(userData);</span><br><span class="line">    <span class="title function_">expect</span>(result).<span class="title function_">toEqual</span>(&#123; <span class="attr">id</span>: <span class="number">1</span>, ...userData &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>特点分析：</strong></p>
+<ul>
+<li><p>✅ <strong>完全隔离</strong>：Mock了UserRepository依赖</p>
+</li>
+<li><p>✅ <strong>快速执行</strong>：无需数据库连接</p>
+</li>
+<li><p>✅ <strong>精确验证</strong>：只测试业务逻辑</p>
+</li>
+<li><p>❌ <strong>无法发现</strong>：Repository接口变更问题</p>
+</li>
+</ul>
+<h3 id="2-2-集成测试示例"><a href="#2-2-集成测试示例" class="headerlink" title="2.2 集成测试示例"></a>2.2 集成测试示例</h3><p><strong>测试目标：UserService与真实数据库的交互</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// user.integration.spec.ts</span></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&#x27;UserService Integration&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> <span class="attr">app</span>: <span class="title class_">INestApplication</span>;</span><br><span class="line">  <span class="keyword">let</span> <span class="attr">service</span>: <span class="title class_">UserService</span>;</span><br><span class="line">  <span class="keyword">let</span> <span class="attr">repository</span>: <span class="title class_">Repository</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">beforeAll</span>(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="variable language_">module</span> = <span class="keyword">await</span> <span class="title class_">Test</span>.<span class="title function_">createTestingModule</span>(&#123;</span><br><span class="line">      <span class="attr">imports</span>: [</span><br><span class="line">        <span class="title class_">TypeOrmModule</span>.<span class="title function_">forRoot</span>(&#123;</span><br><span class="line">          <span class="attr">type</span>: <span class="string">&#x27;sqlite&#x27;</span>,</span><br><span class="line">          <span class="attr">database</span>: <span class="string">&#x27;:memory:&#x27;</span>,</span><br><span class="line">          <span class="attr">entities</span>: [<span class="title class_">User</span>],</span><br><span class="line">          <span class="attr">synchronize</span>: <span class="literal">true</span>,</span><br><span class="line">        &#125;),</span><br><span class="line">        <span class="title class_">TypeOrmModule</span>.<span class="title function_">forFeature</span>([<span class="title class_">User</span>]),</span><br><span class="line">      ],</span><br><span class="line">      <span class="attr">providers</span>: [<span class="title class_">UserService</span>, <span class="title class_">UserRepository</span>],</span><br><span class="line">    &#125;).<span class="title function_">compile</span>();</span><br><span class="line"></span><br><span class="line">    app = <span class="variable language_">module</span>.<span class="title function_">createNestApplication</span>();</span><br><span class="line">    <span class="keyword">await</span> app.<span class="title function_">init</span>();</span><br><span class="line">    </span><br><span class="line">    service = <span class="variable language_">module</span>.<span class="title function_">get</span>(<span class="title class_">UserService</span>);</span><br><span class="line">    repository = <span class="variable language_">module</span>.<span class="property">get</span>&gt;(<span class="title function_">getRepositoryToken</span>(<span class="title class_">User</span>));</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">beforeEach</span>(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="keyword">await</span> repository.<span class="title function_">clear</span>(); <span class="comment">// 清理测试数据</span></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;should create user and save to database&#x27;</span>, <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="comment">// Arrange</span></span><br><span class="line">    <span class="keyword">const</span> userData = &#123; <span class="attr">email</span>: <span class="string">&#x27;test@example.com&#x27;</span>, <span class="attr">name</span>: <span class="string">&#x27;Test User&#x27;</span> &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Act</span></span><br><span class="line">    <span class="keyword">const</span> createdUser = <span class="keyword">await</span> service.<span class="title function_">createUser</span>(userData);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Assert</span></span><br><span class="line">    <span class="title function_">expect</span>(createdUser.<span class="property">id</span>).<span class="title function_">toBeDefined</span>();</span><br><span class="line">    <span class="title function_">expect</span>(createdUser.<span class="property">email</span>).<span class="title function_">toBe</span>(userData.<span class="property">email</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 验证数据确实保存到数据库</span></span><br><span class="line">    <span class="keyword">const</span> savedUser = <span class="keyword">await</span> repository.<span class="title function_">findOne</span>(&#123; <span class="attr">where</span>: &#123; <span class="attr">email</span>: userData.<span class="property">email</span> &#125; &#125;);</span><br><span class="line">    <span class="title function_">expect</span>(savedUser).<span class="title function_">toBeTruthy</span>();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;should throw conflict when user already exists&#x27;</span>, <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="comment">// Arrange</span></span><br><span class="line">    <span class="keyword">const</span> userData = &#123; <span class="attr">email</span>: <span class="string">&#x27;test@example.com&#x27;</span>, <span class="attr">name</span>: <span class="string">&#x27;Test User&#x27;</span> &#125;;</span><br><span class="line">    <span class="keyword">await</span> repository.<span class="title function_">save</span>(userData); <span class="comment">// 预先创建用户</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Act &amp; Assert</span></span><br><span class="line">    <span class="keyword">await</span> <span class="title function_">expect</span>(service.<span class="title function_">createUser</span>(userData)).<span class="property">rejects</span>.<span class="title function_">toThrow</span>(<span class="title class_">ConflictException</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>特点分析：</strong></p>
+<ul>
+<li><p>✅ <strong>真实交互</strong>：使用真实数据库操作</p>
+</li>
+<li><p>✅ <strong>接口验证</strong>：能发现Service与Repository接口问题</p>
+</li>
+<li><p>✅ <strong>数据验证</strong>：确认数据正确保存</p>
+</li>
+<li><p>❌ <strong>执行较慢</strong>：需要数据库操作</p>
+</li>
+<li><p>❌ <strong>环境依赖</strong>：需要配置测试数据库</p>
+</li>
+</ul>
+<h3 id="2-3-E2E测试示例"><a href="#2-3-E2E测试示例" class="headerlink" title="2.3 E2E测试示例"></a>2.3 E2E测试示例</h3><p><strong>测试目标：完整的用户注册API流程</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// user.e2e-spec.ts</span></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&#x27;User E2E&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> <span class="attr">app</span>: <span class="title class_">INestApplication</span>;</span><br><span class="line">  <span class="keyword">let</span> <span class="attr">httpServer</span>: <span class="built_in">any</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">beforeAll</span>(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="variable language_">module</span> = <span class="keyword">await</span> <span class="title class_">Test</span>.<span class="title function_">createTestingModule</span>(&#123;</span><br><span class="line">      <span class="attr">imports</span>: [<span class="title class_">AppModule</span>], <span class="comment">// 导入完整应用模块</span></span><br><span class="line">    &#125;).<span class="title function_">compile</span>();</span><br><span class="line"></span><br><span class="line">    app = <span class="variable language_">module</span>.<span class="title function_">createNestApplication</span>();</span><br><span class="line">    app.<span class="title function_">useGlobalPipes</span>(<span class="keyword">new</span> <span class="title class_">ValidationPipe</span>()); <span class="comment">// 应用全局管道</span></span><br><span class="line">    <span class="keyword">await</span> app.<span class="title function_">init</span>();</span><br><span class="line">    </span><br><span class="line">    httpServer = app.<span class="title function_">getHttpServer</span>();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">beforeEach</span>(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="comment">// 清理测试数据</span></span><br><span class="line">    <span class="keyword">const</span> userRepository = app.<span class="property">get</span>&gt;(<span class="title function_">getRepositoryToken</span>(<span class="title class_">User</span>));</span><br><span class="line">    <span class="keyword">await</span> userRepository.<span class="title function_">clear</span>();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;/users (POST) - should create user successfully&#x27;</span>, <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="comment">// Arrange</span></span><br><span class="line">    <span class="keyword">const</span> userData = &#123;</span><br><span class="line">      <span class="attr">email</span>: <span class="string">&#x27;test@example.com&#x27;</span>,</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&#x27;Test User&#x27;</span>,</span><br><span class="line">      <span class="attr">password</span>: <span class="string">&#x27;password123&#x27;</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Act</span></span><br><span class="line">    <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="title function_">request</span>(httpServer)</span><br><span class="line">      .<span class="title function_">post</span>(<span class="string">&#x27;/users&#x27;</span>)</span><br><span class="line">      .<span class="title function_">send</span>(userData)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="number">201</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Assert</span></span><br><span class="line">    <span class="title function_">expect</span>(response.<span class="property">body</span>).<span class="title function_">toMatchObject</span>(&#123;</span><br><span class="line">      <span class="attr">id</span>: expect.<span class="title function_">any</span>(<span class="title class_">Number</span>),</span><br><span class="line">      <span class="attr">email</span>: userData.<span class="property">email</span>,</span><br><span class="line">      <span class="attr">name</span>: userData.<span class="property">name</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="title function_">expect</span>(response.<span class="property">body</span>.<span class="property">password</span>).<span class="title function_">toBeUndefined</span>(); <span class="comment">// 密码不应返回</span></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;/users (POST) - should return 409 when user exists&#x27;</span>, <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="comment">// Arrange</span></span><br><span class="line">    <span class="keyword">const</span> userData = &#123;</span><br><span class="line">      <span class="attr">email</span>: <span class="string">&#x27;test@example.com&#x27;</span>,</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&#x27;Test User&#x27;</span>,</span><br><span class="line">      <span class="attr">password</span>: <span class="string">&#x27;password123&#x27;</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 先创建用户</span></span><br><span class="line">    <span class="keyword">await</span> <span class="title function_">request</span>(httpServer)</span><br><span class="line">      .<span class="title function_">post</span>(<span class="string">&#x27;/users&#x27;</span>)</span><br><span class="line">      .<span class="title function_">send</span>(userData)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="number">201</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Act &amp; Assert</span></span><br><span class="line">    <span class="keyword">await</span> <span class="title function_">request</span>(httpServer)</span><br><span class="line">      .<span class="title function_">post</span>(<span class="string">&#x27;/users&#x27;</span>)</span><br><span class="line">      .<span class="title function_">send</span>(userData)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="number">409</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;/users (POST) - should validate input data&#x27;</span>, <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="comment">// Act &amp; Assert</span></span><br><span class="line">    <span class="keyword">await</span> <span class="title function_">request</span>(httpServer)</span><br><span class="line">      .<span class="title function_">post</span>(<span class="string">&#x27;/users&#x27;</span>)</span><br><span class="line">      .<span class="title function_">send</span>(&#123;</span><br><span class="line">        <span class="attr">email</span>: <span class="string">&#x27;invalid-email&#x27;</span>, <span class="comment">// 无效邮箱</span></span><br><span class="line">        <span class="attr">name</span>: <span class="string">&#x27;&#x27;</span>, <span class="comment">// 空名称</span></span><br><span class="line">      &#125;)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="number">400</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>特点分析：</strong></p>
+<ul>
+<li><p>✅ <strong>完整流程</strong>：测试HTTP请求到数据库的完整链路</p>
+</li>
+<li><p>✅ <strong>真实场景</strong>：模拟用户实际操作</p>
+</li>
+<li><p>✅ <strong>全面验证</strong>：包含验证、异常处理、响应格式等</p>
+</li>
+<li><p>❌ <strong>执行最慢</strong>：启动完整应用</p>
+</li>
+<li><p>❌ <strong>维护成本高</strong>：接口变更需要同步更新</p>
+</li>
+</ul>
+<h2 id="3-在NestJS项目中的选择策略"><a href="#3-在NestJS项目中的选择策略" class="headerlink" title="3. 在NestJS项目中的选择策略"></a>3. 在NestJS项目中的选择策略</h2><h3 id="3-1-测试金字塔在NestJS中的应用"><a href="#3-1-测试金字塔在NestJS中的应用" class="headerlink" title="3.1 测试金字塔在NestJS中的应用"></a>3.1 测试金字塔在NestJS中的应用</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">        E2E Tests (10%)</span><br><span class="line">      ┌─────────────────┐</span><br><span class="line">      │   核心业务流程   │</span><br><span class="line">      └─────────────────┘</span><br><span class="line">    </span><br><span class="line">    Integration Tests (20%)</span><br><span class="line">   ┌───────────────────────┐</span><br><span class="line">   │  Service ↔ Repository │</span><br><span class="line">   │  Module间交互          │</span><br><span class="line">   └───────────────────────┘</span><br><span class="line"></span><br><span class="line">Unit Tests (70%)</span><br><span class="line">┌─────────────────────────────┐</span><br><span class="line">│ Service方法、Controller方法  │</span><br><span class="line">│ Pipe、Guard、Interceptor    │</span><br><span class="line">│ 工具函数、业务逻辑           │</span><br><span class="line">└─────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-具体应用建议"><a href="#3-2-具体应用建议" class="headerlink" title="3.2 具体应用建议"></a>3.2 具体应用建议</h3><p><strong>单元测试重点关注：</strong></p>
+<ul>
+<li><p>Service中的业务逻辑方法</p>
+</li>
+<li><p>Controller中的参数处理和响应格式化</p>
+</li>
+<li><p>自定义Pipe的数据转换逻辑</p>
+</li>
+<li><p>Guard的权限验证逻辑</p>
+</li>
+<li><p>工具函数和算法</p>
+</li>
+</ul>
+<p><strong>集成测试重点关注：</strong></p>
+<ul>
+<li><p>Service与Repository的数据操作</p>
+</li>
+<li><p>Module间的依赖注入</p>
+</li>
+<li><p>第三方服务的集成（如Redis、消息队列）</p>
+</li>
+<li><p>数据库事务处理</p>
+</li>
+</ul>
+<p><strong>E2E测试重点关注：</strong></p>
+<ul>
+<li><p>用户注册/登录流程</p>
+</li>
+<li><p>核心业务操作流程</p>
+</li>
+<li><p>权限控制的完整验证</p>
+</li>
+<li><p>错误处理的用户体验</p>
+</li>
+</ul>
+<h2 id="4-实际项目中的测试配置"><a href="#4-实际项目中的测试配置" class="headerlink" title="4. 实际项目中的测试配置"></a>4. 实际项目中的测试配置</h2><h3 id="4-1-package-json测试脚本"><a href="#4-1-package-json测试脚本" class="headerlink" title="4.1 package.json测试脚本"></a>4.1 package.json测试脚本</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;scripts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;test&quot;</span><span class="punctuation">:</span> <span class="string">&quot;jest&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test:watch&quot;</span><span class="punctuation">:</span> <span class="string">&quot;jest --watch&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test:cov&quot;</span><span class="punctuation">:</span> <span class="string">&quot;jest --coverage&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test:integration&quot;</span><span class="punctuation">:</span> <span class="string">&quot;jest --config ./test/jest-integration.json&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test:e2e&quot;</span><span class="punctuation">:</span> <span class="string">&quot;jest --config ./test/jest-e2e.json&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-Jest配置文件"><a href="#4-2-Jest配置文件" class="headerlink" title="4.2 Jest配置文件"></a>4.2 Jest配置文件</h3><p><strong>单元测试配置 (jest.config.js):</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">moduleFileExtensions</span>: [<span class="string">&#x27;js&#x27;</span>, <span class="string">&#x27;json&#x27;</span>, <span class="string">&#x27;ts&#x27;</span>],</span><br><span class="line">  <span class="attr">rootDir</span>: <span class="string">&#x27;src&#x27;</span>,</span><br><span class="line">  <span class="attr">testRegex</span>: <span class="string">&#x27;.*\\.spec\\.ts$&#x27;</span>, <span class="comment">// 只匹配 .spec.ts 文件</span></span><br><span class="line">  <span class="attr">transform</span>: &#123; <span class="string">&#x27;^.+\\.(t|j)s$&#x27;</span>: <span class="string">&#x27;ts-jest&#x27;</span> &#125;,</span><br><span class="line">  <span class="attr">collectCoverageFrom</span>: [<span class="string">&#x27;**/*.(t|j)s&#x27;</span>],</span><br><span class="line">  <span class="attr">coverageDirectory</span>: <span class="string">&#x27;../coverage&#x27;</span>,</span><br><span class="line">  <span class="attr">testEnvironment</span>: <span class="string">&#x27;node&#x27;</span>,</span><br><span class="line">  <span class="attr">testPathIgnorePatterns</span>: [<span class="string">&#x27;.*\\.integration\\.spec\\.ts$&#x27;</span>], <span class="comment">// 排除集成测试</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>集成测试配置 (test/jest-integration.json):</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;moduleFileExtensions&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;js&quot;</span><span class="punctuation">,</span> <span class="string">&quot;json&quot;</span><span class="punctuation">,</span> <span class="string">&quot;ts&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;rootDir&quot;</span><span class="punctuation">:</span> <span class="string">&quot;../src&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;testEnvironment&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;testRegex&quot;</span><span class="punctuation">:</span> <span class="string">&quot;.*\\.integration\\.spec\\.ts$&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;transform&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;^.+\\.(t|j)s$&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ts-jest&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;setupFilesAfterEnv&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;/../test/integration-setup.ts&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>E2E测试配置 (test/jest-e2e.json):</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;moduleFileExtensions&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;js&quot;</span><span class="punctuation">,</span> <span class="string">&quot;json&quot;</span><span class="punctuation">,</span> <span class="string">&quot;ts&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;rootDir&quot;</span><span class="punctuation">:</span> <span class="string">&quot;.&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;testEnvironment&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;testRegex&quot;</span><span class="punctuation">:</span> <span class="string">&quot;.e2e-spec.ts$&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;transform&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;^.+\\.(t|j)s$&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ts-jest&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>集成测试环境设置 (test/integration-setup.ts):</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Test</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/testing&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">TypeOrmModule</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/typeorm&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 全局集成测试配置</span></span><br><span class="line"><span class="title function_">beforeAll</span>(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">  <span class="comment">// 设置测试数据库连接等</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title function_">afterAll</span>(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">  <span class="comment">// 清理资源</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h2><p>在NestJS框架下，三种测试类型各有其适用场景：</p>
+<p><strong>选择单元测试当：</strong></p>
+<ul>
+<li><p>验证复杂业务逻辑</p>
+</li>
+<li><p>需要快速反馈</p>
+</li>
+<li><p>测试覆盖率要求高</p>
+</li>
+</ul>
+<p><strong>选择集成测试当：</strong></p>
+<ul>
+<li><p>验证数据库操作</p>
+</li>
+<li><p>测试模块间交互</p>
+</li>
+<li><p>确保接口契约正确</p>
+</li>
+</ul>
+<p><strong>选择E2E测试当：</strong></p>
+<ul>
+<li><p>验证关键业务流程</p>
+</li>
+<li><p>确保用户体验</p>
+</li>
+<li><p>发布前的最终验证</p>
+</li>
+</ul>
+<p>合理的测试策略应该是70%单元测试 + 20%集成测试 + 10%E2E测试，这样既能保证代码质量，又能控制测试维护成本。</p>
+<h2 id="6-扩展：其他测试类型的补充说明"><a href="#6-扩展：其他测试类型的补充说明" class="headerlink" title="6. 扩展：其他测试类型的补充说明"></a>6. 扩展：其他测试类型的补充说明</h2><h3 id="6-1-测试分类的两个维度"><a href="#6-1-测试分类的两个维度" class="headerlink" title="6.1 测试分类的两个维度"></a>6.1 测试分类的两个维度</h3><p>虽然本文重点讨论单元测试、集成测试和E2E测试，但在实际项目中还存在其他测试类型。理解测试的分类维度很重要：</p>
+<p><strong>按执行方式分类：</strong></p>
+<ul>
+<li><p><strong>自动化测试</strong>：通过代码自动执行（本文重点）</p>
+</li>
+<li><p><strong>工具驱动测试</strong>：使用专门工具执行</p>
+</li>
+<li><p><strong>手工测试</strong>：需要人工操作</p>
+</li>
+</ul>
+<p><strong>按测试目标分类：</strong></p>
+<ul>
+<li><p><strong>功能性测试</strong>：验证功能是否正确实现</p>
+</li>
+<li><p><strong>非功能性测试</strong>：验证性能、安全、可用性等</p>
+</li>
+</ul>
+<h3 id="6-2-代码驱动的自动化测试-vs-其他测试类型"><a href="#6-2-代码驱动的自动化测试-vs-其他测试类型" class="headerlink" title="6.2 代码驱动的自动化测试 vs 其他测试类型"></a>6.2 代码驱动的自动化测试 vs 其他测试类型</h3><h4 id="本文讨论的三种测试（代码驱动）"><a href="#本文讨论的三种测试（代码驱动）" class="headerlink" title="本文讨论的三种测试（代码驱动）"></a>本文讨论的三种测试（代码驱动）</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 完全通过代码自动执行</span></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&#x27;UserService&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;should create user when email not exists&#x27;</span>, <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="comment">// 自动化的断言检查</span></span><br><span class="line">    <span class="title function_">expect</span>(result.<span class="property">email</span>).<span class="title function_">toBe</span>(<span class="string">&#x27;test@example.com&#x27;</span>);</span><br><span class="line">    <span class="title function_">expect</span>(mockRepository.<span class="property">create</span>).<span class="title function_">toHaveBeenCalledWith</span>(userData);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>特点：</strong></p>
+<ul>
+<li><p>✅ 完全自动化执行</p>
+</li>
+<li><p>✅ 可集成到CI/CD流程</p>
+</li>
+<li><p>✅ 开发过程中持续运行</p>
+</li>
+<li><p>✅ 快速反馈和问题定位</p>
+</li>
+</ul>
+<h4 id="其他测试类型（工具-人工驱动）"><a href="#其他测试类型（工具-人工驱动）" class="headerlink" title="其他测试类型（工具/人工驱动）"></a>其他测试类型（工具/人工驱动）</h4><p><strong>API测试（工具驱动）：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用Postman/Newman</span></span><br><span class="line">newman run api-tests.postman_collection.json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用专门的API测试工具</span></span><br><span class="line">curl -X POST http://localhost:3000/users \</span><br><span class="line">  -H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span><br><span class="line">  -d <span class="string">&#x27;&#123;&quot;email&quot;:&quot;test@example.com&quot;,&quot;name&quot;:&quot;Test User&quot;&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>性能测试（工具驱动）：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用Artillery进行负载测试</span></span><br><span class="line">artillery run load-test.yml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用JMeter</span></span><br><span class="line">jmeter -n -t performance-test.jmx</span><br></pre></td></tr></table></figure>
+
+<p><strong>安全测试（工具驱动）：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 依赖漏洞扫描</span></span><br><span class="line">npm audit</span><br><span class="line">snyk <span class="built_in">test</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 代码安全扫描</span></span><br><span class="line">eslint --ext .ts src/ --config .eslintrc-security.js</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-3-完整的测试策略配置"><a href="#6-3-完整的测试策略配置" class="headerlink" title="6.3 完整的测试策略配置"></a>6.3 完整的测试策略配置</h3><h4 id="package-json中的完整测试脚本"><a href="#package-json中的完整测试脚本" class="headerlink" title="package.json中的完整测试脚本"></a>package.json中的完整测试脚本</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;scripts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="comment">// 代码驱动的自动化测试（本文重点）</span></span><br><span class="line">    <span class="attr">&quot;test&quot;</span><span class="punctuation">:</span> <span class="string">&quot;jest&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test:unit&quot;</span><span class="punctuation">:</span> <span class="string">&quot;jest --config ./test/jest-unit.json&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test:integration&quot;</span><span class="punctuation">:</span> <span class="string">&quot;jest --config ./test/jest-integration.json&quot;</span><span class="punctuation">,</span> </span><br><span class="line">    <span class="attr">&quot;test:e2e&quot;</span><span class="punctuation">:</span> <span class="string">&quot;jest --config ./test/jest-e2e.json&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test:watch&quot;</span><span class="punctuation">:</span> <span class="string">&quot;jest --watch&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test:cov&quot;</span><span class="punctuation">:</span> <span class="string">&quot;jest --coverage&quot;</span><span class="punctuation">,</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 工具驱动的测试</span></span><br><span class="line">    <span class="attr">&quot;test:api&quot;</span><span class="punctuation">:</span> <span class="string">&quot;newman run ./test/api-tests.postman_collection.json&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test:performance&quot;</span><span class="punctuation">:</span> <span class="string">&quot;artillery run ./test/load-test.yml&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test:security&quot;</span><span class="punctuation">:</span> <span class="string">&quot;npm audit &amp;&amp; snyk test&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test:lint&quot;</span><span class="punctuation">:</span> <span class="string">&quot;eslint src/**/*.ts&quot;</span><span class="punctuation">,</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 综合测试脚本</span></span><br><span class="line">    <span class="attr">&quot;test:all&quot;</span><span class="punctuation">:</span> <span class="string">&quot;npm run test:unit &amp;&amp; npm run test:integration &amp;&amp; npm run test:e2e&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test:ci&quot;</span><span class="punctuation">:</span> <span class="string">&quot;npm run test:lint &amp;&amp; npm run test:security &amp;&amp; npm run test:all&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="6-4-测试策略的完整图景"><a href="#6-4-测试策略的完整图景" class="headerlink" title="6.4 测试策略的完整图景"></a>6.4 测试策略的完整图景</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">代码驱动的自动化测试（开发者日常）    其他测试类型（专项/阶段性）</span><br><span class="line">                                   </span><br><span class="line">    E2E Tests (10%)                Manual Testing</span><br><span class="line">   ┌─────────────────┐              ┌─────────────────┐</span><br><span class="line">   │  关键业务流程    │              │  可用性、探索性  │</span><br><span class="line">   └─────────────────┘              └─────────────────┘</span><br><span class="line">                                   </span><br><span class="line">  Integration Tests (20%)          Tool-based Testing  </span><br><span class="line"> ┌─────────────────────┐            ┌─────────────────┐</span><br><span class="line"> │  模块间交互验证      │            │ 性能、安全扫描   │</span><br><span class="line"> └─────────────────────┘            └─────────────────┘</span><br><span class="line">                                   </span><br><span class="line">Unit Tests (70%)                   Static Analysis</span><br><span class="line">┌─────────────────────┐             ┌─────────────────┐</span><br><span class="line">│  业务逻辑验证        │             │ 代码质量检查     │</span><br><span class="line">└─────────────────────┘             └─────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-5-为什么本文重点讲代码驱动的测试"><a href="#6-5-为什么本文重点讲代码驱动的测试" class="headerlink" title="6.5 为什么本文重点讲代码驱动的测试"></a>6.5 为什么本文重点讲代码驱动的测试</h3><p><strong>开发者日常最需要的技能：</strong></p>
+<ol>
+<li><p><strong>高频使用</strong>：每天开发过程中都要编写和运行</p>
+</li>
+<li><p><strong>即时反馈</strong>：能在编码时立即发现问题</p>
+</li>
+<li><p><strong>CI/CD集成</strong>：可以自动化集成到部署流程</p>
+</li>
+<li><p><strong>成本效益</strong>：一次编写，持续受益</p>
+</li>
+</ol>
+<p><strong>其他测试类型的特点：</strong></p>
+<ul>
+<li><p><strong>执行频率较低</strong>：通常在特定阶段执行（如发布前）</p>
+</li>
+<li><p><strong>专门工具</strong>：需要学习和配置专门的测试工具</p>
+</li>
+<li><p><strong>专业团队</strong>：更多由QA或运维团队负责</p>
+</li>
+<li><p><strong>环境要求</strong>：需要特殊的测试环境和数据</p>
+</li>
+</ul>
+<h3 id="6-6-实际项目中的应用建议"><a href="#6-6-实际项目中的应用建议" class="headerlink" title="6.6 实际项目中的应用建议"></a>6.6 实际项目中的应用建议</h3><p><strong>开发阶段（每日）：</strong></p>
+<ul>
+<li><p>单元测试：验证业务逻辑</p>
+</li>
+<li><p>集成测试：验证模块交互</p>
+</li>
+<li><p>代码质量检查：ESLint、Prettier</p>
+</li>
+</ul>
+<p><strong>集成阶段（每次提交）：</strong></p>
+<ul>
+<li><p>E2E测试：验证关键流程</p>
+</li>
+<li><p>API测试：验证接口契约</p>
+</li>
+<li><p>安全扫描：检查依赖漏洞</p>
+</li>
+</ul>
+<p><strong>发布阶段（版本发布前）：</strong></p>
+<ul>
+<li><p>性能测试：验证系统负载能力</p>
+</li>
+<li><p>兼容性测试：多浏览器/设备验证</p>
+</li>
+<li><p>手工测试：用户体验验证</p>
+</li>
+</ul>
+<p>通过这种分层的测试策略，既保证了开发效率，又确保了产品质量。代码驱动的自动化测试构成了质量保障的基础，而其他测试类型则在特定场景下提供补充验证。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Node/" rel="tag"># Node</a>
+              <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag"># 自动化测试</a>
+              <a href="/tags/Nestjs%E6%B5%8B%E8%AF%95/" rel="tag"># Nestjs测试</a>
+              <a href="/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" rel="tag"># 单元测试</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E5%89%8D%E7%AB%AF/2025/GitHub-Actions-%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%83-npm-%E5%8C%85%E7%AE%80%E6%98%93%E6%8C%87%E5%8D%97/" rel="prev" title="GitHub Actions 自动发布 npm 包简易指南">
+      <i class="fa fa-chevron-left"></i> GitHub Actions 自动发布 npm 包简易指南
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  
+  <div class="comments">
+    <script src="https://giscus.app/client.js"
+        data-repo="sky-admin/sky-admin.github.io" 
+        data-repo-id="MDEwOlJlcG9zaXRvcnkxMTI0MjY1Nzk=" 
+        data-category="General"
+        data-category-id="DIC_kwDOBrN-U84CZDbX"
+        data-mapping="title" 
+        data-reactions-enabled="1" 
+        data-emit-metadata="1" 
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        data-input-position="bottom"
+        data-loading="lazy"
+        async>
+    </script>
+  </div>
+  
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%B8%89%E7%A7%8D%E6%B5%8B%E8%AF%95%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">1. 三种测试类型的核心区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%AE%9A%E4%B9%89%E4%B8%8E%E6%B5%8B%E8%AF%95%E8%8C%83%E5%9B%B4%E5%AF%B9%E6%AF%94"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 定义与测试范围对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E6%89%A7%E8%A1%8C%E7%89%B9%E6%80%A7%E5%AF%B9%E6%AF%94"><span class="nav-number">2.2.</span> <span class="nav-text">1.2 执行特性对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-NestJS%E6%A1%86%E6%9E%B6%E4%B8%8B%E7%9A%84%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0%E5%AF%B9%E6%AF%94"><span class="nav-number">3.</span> <span class="nav-text">2. NestJS框架下的具体实现对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 单元测试示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E9%9B%86%E6%88%90%E6%B5%8B%E8%AF%95%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 集成测试示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-E2E%E6%B5%8B%E8%AF%95%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.3.</span> <span class="nav-text">2.3 E2E测试示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%9C%A8NestJS%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E9%80%89%E6%8B%A9%E7%AD%96%E7%95%A5"><span class="nav-number">4.</span> <span class="nav-text">3. 在NestJS项目中的选择策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E6%B5%8B%E8%AF%95%E9%87%91%E5%AD%97%E5%A1%94%E5%9C%A8NestJS%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">4.1.</span> <span class="nav-text">3.1 测试金字塔在NestJS中的应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%85%B7%E4%BD%93%E5%BA%94%E7%94%A8%E5%BB%BA%E8%AE%AE"><span class="nav-number">4.2.</span> <span class="nav-text">3.2 具体应用建议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%AE%9E%E9%99%85%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E6%B5%8B%E8%AF%95%E9%85%8D%E7%BD%AE"><span class="nav-number">5.</span> <span class="nav-text">4. 实际项目中的测试配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-package-json%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC"><span class="nav-number">5.1.</span> <span class="nav-text">4.1 package.json测试脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Jest%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">5.2.</span> <span class="nav-text">4.2 Jest配置文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">5. 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E6%89%A9%E5%B1%95%EF%BC%9A%E5%85%B6%E4%BB%96%E6%B5%8B%E8%AF%95%E7%B1%BB%E5%9E%8B%E7%9A%84%E8%A1%A5%E5%85%85%E8%AF%B4%E6%98%8E"><span class="nav-number">7.</span> <span class="nav-text">6. 扩展：其他测试类型的补充说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E6%B5%8B%E8%AF%95%E5%88%86%E7%B1%BB%E7%9A%84%E4%B8%A4%E4%B8%AA%E7%BB%B4%E5%BA%A6"><span class="nav-number">7.1.</span> <span class="nav-text">6.1 测试分类的两个维度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E4%BB%A3%E7%A0%81%E9%A9%B1%E5%8A%A8%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95-vs-%E5%85%B6%E4%BB%96%E6%B5%8B%E8%AF%95%E7%B1%BB%E5%9E%8B"><span class="nav-number">7.2.</span> <span class="nav-text">6.2 代码驱动的自动化测试 vs 其他测试类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%AC%E6%96%87%E8%AE%A8%E8%AE%BA%E7%9A%84%E4%B8%89%E7%A7%8D%E6%B5%8B%E8%AF%95%EF%BC%88%E4%BB%A3%E7%A0%81%E9%A9%B1%E5%8A%A8%EF%BC%89"><span class="nav-number">7.2.1.</span> <span class="nav-text">本文讨论的三种测试（代码驱动）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%B5%8B%E8%AF%95%E7%B1%BB%E5%9E%8B%EF%BC%88%E5%B7%A5%E5%85%B7-%E4%BA%BA%E5%B7%A5%E9%A9%B1%E5%8A%A8%EF%BC%89"><span class="nav-number">7.2.2.</span> <span class="nav-text">其他测试类型（工具&#x2F;人工驱动）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E5%AE%8C%E6%95%B4%E7%9A%84%E6%B5%8B%E8%AF%95%E7%AD%96%E7%95%A5%E9%85%8D%E7%BD%AE"><span class="nav-number">7.3.</span> <span class="nav-text">6.3 完整的测试策略配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#package-json%E4%B8%AD%E7%9A%84%E5%AE%8C%E6%95%B4%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC"><span class="nav-number">7.3.1.</span> <span class="nav-text">package.json中的完整测试脚本</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E6%B5%8B%E8%AF%95%E7%AD%96%E7%95%A5%E7%9A%84%E5%AE%8C%E6%95%B4%E5%9B%BE%E6%99%AF"><span class="nav-number">7.4.</span> <span class="nav-text">6.4 测试策略的完整图景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%AC%E6%96%87%E9%87%8D%E7%82%B9%E8%AE%B2%E4%BB%A3%E7%A0%81%E9%A9%B1%E5%8A%A8%E7%9A%84%E6%B5%8B%E8%AF%95"><span class="nav-number">7.5.</span> <span class="nav-text">6.5 为什么本文重点讲代码驱动的测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-%E5%AE%9E%E9%99%85%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8%E5%BB%BA%E8%AE%AE"><span class="nav-number">7.6.</span> <span class="nav-text">6.6 实际项目中的应用建议</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">skyADMIN</p>
+  <div class="site-description" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">65</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sky-admin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sky-admin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">蜀ICP备15023364号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skyADMIN</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
