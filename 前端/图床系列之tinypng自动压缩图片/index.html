@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 7.0.0-rc2">
+<meta name="generator" content="Hexo 7.3.0">
 
 
 <script type="text/javascript">
@@ -54,7 +54,7 @@
     lang   : 'zh-CN'
   };
 </script>
-
+<link rel="manifest" href="/manifest.json" />
   <title>图床系列之tinypng自动压缩图片 | 牧宇的Blog</title>
   
 
@@ -230,7 +230,7 @@
 <p>第二步读文档：<a target="_blank" rel="noopener" href="https://tinypng.com/developers/reference">https://tinypng.com/developers/reference</a></p>
 <p>太多字了不想读怎么办？打开 chatGPT 开始聊天。先告诉 chatGPT 我想在图片上传前通过 tinypng 的服务对图片进行压缩，我的服务是用 cloudflare 的 worker 编写的，图片存储在 R2 里，前端代码是用 solidjs 写的。</p>
 <p>chatGPT 就给了我一堆代码：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="variable constant_">TINYPNG_API_KEY</span> = <span class="string">&#x27;前面申请到的 API KEY&#x27;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">compressImage</span>(<span class="params">file: File</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> tinypngUrl = <span class="string">&#x27;https://api.tinify.com/shrink&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="title function_">fetch</span>(tinypngUrl, &#123;</span><br><span class="line">    <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">    <span class="attr">headers</span>: &#123;</span><br><span class="line">      <span class="title class_">Authorization</span>: <span class="string">&#x27;Basic &#x27;</span> + <span class="title function_">btoa</span>(<span class="string">&#x27;api:&#x27;</span> + <span class="variable constant_">TINYPNG_API_KEY</span>),</span><br><span class="line">      <span class="string">&#x27;Content-Type&#x27;</span>: file.<span class="property">type</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">body</span>: file,</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!response.<span class="property">ok</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;Error compressing image: &#x27;</span> + response.<span class="property">statusText</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> result = <span class="keyword">await</span> response.<span class="title function_">json</span>();</span><br><span class="line">  <span class="comment">// @ts-ignore</span></span><br><span class="line">  <span class="keyword">const</span> compressedImageUrl = result.<span class="property">output</span>.<span class="property">url</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> compressedImageResponse = <span class="keyword">await</span> <span class="title function_">fetch</span>(compressedImageUrl);</span><br><span class="line">  <span class="keyword">if</span> (!compressedImageResponse.<span class="property">ok</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(</span><br><span class="line">      <span class="string">&#x27;Error fetching compressed image: &#x27;</span> + compressedImageResponse.<span class="property">statusText</span>,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> compressedImageResponse.<span class="title function_">arrayBuffer</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="variable constant_">TINYPNG_API_KEY</span> = <span class="string">&#x27;前面申请到的 API KEY&#x27;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">compressImage</span>(<span class="params"><span class="attr">file</span>: <span class="title class_">File</span></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> tinypngUrl = <span class="string">&#x27;https://api.tinify.com/shrink&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="title function_">fetch</span>(tinypngUrl, &#123;</span><br><span class="line">    <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">    <span class="attr">headers</span>: &#123;</span><br><span class="line">      <span class="title class_">Authorization</span>: <span class="string">&#x27;Basic &#x27;</span> + <span class="title function_">btoa</span>(<span class="string">&#x27;api:&#x27;</span> + <span class="variable constant_">TINYPNG_API_KEY</span>),</span><br><span class="line">      <span class="string">&#x27;Content-Type&#x27;</span>: file.<span class="property">type</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">body</span>: file,</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!response.<span class="property">ok</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;Error compressing image: &#x27;</span> + response.<span class="property">statusText</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> result = <span class="keyword">await</span> response.<span class="title function_">json</span>();</span><br><span class="line">  <span class="comment">// @ts-ignore</span></span><br><span class="line">  <span class="keyword">const</span> compressedImageUrl = result.<span class="property">output</span>.<span class="property">url</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> compressedImageResponse = <span class="keyword">await</span> <span class="title function_">fetch</span>(compressedImageUrl);</span><br><span class="line">  <span class="keyword">if</span> (!compressedImageResponse.<span class="property">ok</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(</span><br><span class="line">      <span class="string">&#x27;Error fetching compressed image: &#x27;</span> + compressedImageResponse.<span class="property">statusText</span>,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> compressedImageResponse.<span class="title function_">arrayBuffer</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>拿到的结果是一个 arrayBuffer，直接给到 OSS.put 方法即可（相关代码参考上一篇）。</p>
 
@@ -351,18 +351,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-count">52</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">65</span>
+        <span class="site-state-item-count">69</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -455,6 +455,14 @@
   
 
   
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+</script>
 
 </body>
 </html>
