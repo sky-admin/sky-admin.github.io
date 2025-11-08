@@ -166,6 +166,9 @@ template {
 [hidden] {
   display: none;
 }
+:root {
+  text-autospace: normal;
+}
 ::selection {
   background: #262a30;
   color: #eee;
@@ -1168,7 +1171,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #6affff;
+  background: #110ed2;
   border-radius: 50%;
   content: ' ';
   display: inline-block;

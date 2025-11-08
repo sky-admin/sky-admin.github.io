@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+
+
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "jt8e57385h");
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/android-chrome-192x192.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.lihuanyu.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前言这篇文章记录了我在Ubuntu 22.04轻量应用服务器上部署Docker和Redis的完整过程，包括安装、配置、运行和资源监控。通过实际操作，验证Docker在Linux服务器上的资源开销确实很小。 环境：  系统：Ubuntu 22.04 LTS 配置：入门级配置（轻量应用服务器） 目标：部署一个用于配置同步的Redis实例">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu 22.04上部署Docker Redis实战">
+<meta property="og:url" content="https://www.lihuanyu.com/Docker/%E8%BF%90%E7%BB%B4/2025/Ubuntu%2022.04%E4%B8%8A%E9%83%A8%E7%BD%B2Docker%20Redis%E5%AE%9E%E6%88%98/index.html">
+<meta property="og:site_name" content="牧宇的Blog">
+<meta property="og:description" content="前言这篇文章记录了我在Ubuntu 22.04轻量应用服务器上部署Docker和Redis的完整过程，包括安装、配置、运行和资源监控。通过实际操作，验证Docker在Linux服务器上的资源开销确实很小。 环境：  系统：Ubuntu 22.04 LTS 配置：入门级配置（轻量应用服务器） 目标：部署一个用于配置同步的Redis实例">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-08T13:19:20.000Z">
+<meta property="article:modified_time" content="2025-11-08T13:19:20.000Z">
+<meta property="article:author" content="skyADMIN">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Redis">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="容器化">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.lihuanyu.com/Docker/%E8%BF%90%E7%BB%B4/2025/Ubuntu%2022.04%E4%B8%8A%E9%83%A8%E7%BD%B2Docker%20Redis%E5%AE%9E%E6%88%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="manifest" href="/manifest.json" />
+  <title>Ubuntu 22.04上部署Docker Redis实战 | 牧宇的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">牧宇的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">工程师的笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.lihuanyu.com/Docker/%E8%BF%90%E7%BB%B4/2025/Ubuntu%2022.04%E4%B8%8A%E9%83%A8%E7%BD%B2Docker%20Redis%E5%AE%9E%E6%88%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="skyADMIN">
+      <meta itemprop="description" content="地势坤，厚德载物之象，故君子不争炎凉。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牧宇的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Ubuntu 22.04上部署Docker Redis实战
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-08 21:19:20" itemprop="dateCreated datePublished" datetime="2025-11-08T21:19:20+08:00">2025-11-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">运维</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这篇文章记录了我在Ubuntu 22.04轻量应用服务器上部署Docker和Redis的完整过程，包括安装、配置、运行和资源监控。通过实际操作，验证Docker在Linux服务器上的资源开销确实很小。</p>
+<p>环境：</p>
+<ul>
+<li>系统：Ubuntu 22.04 LTS</li>
+<li>配置：入门级配置（轻量应用服务器）</li>
+<li>目标：部署一个用于配置同步的Redis实例</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h2><p>首先更新系统包并安装必要依赖：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install -y apt-transport-https ca-certificates curl software-properties-common</span><br></pre></td></tr></table></figure>
+
+<p>添加Docker官方GPG密钥：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | <span class="built_in">sudo</span> gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg</span><br></pre></td></tr></table></figure>
+
+<p>添加Docker仓库：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;deb [arch=<span class="subst">$(dpkg --print-architecture)</span> signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu <span class="subst">$(lsb_release -cs)</span> stable&quot;</span> | <span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/apt/sources.list.d/docker.list &gt; /dev/null</span><br></pre></td></tr></table></figure>
+
+<p>安装Docker CE（社区版）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install -y docker-ce docker-ce-cli containerd.io</span><br></pre></td></tr></table></figure>
+
+<p>启动Docker并设置开机自启：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动Docker服务</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl start docker</span><br><span class="line"><span class="comment"># 设置Docker开机自启</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> docker</span><br><span class="line"><span class="comment"># 检查是否已设置开机自启</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl is-enabled docker</span><br><span class="line"><span class="comment"># 输出 enabled 表示已设置开机自启</span></span><br></pre></td></tr></table></figure>
+
+<p>验证安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker --version</span><br><span class="line"><span class="comment"># 输出类似：Docker version 28.2.2, build 28.2.2-0ubuntu1~22.04.1</span></span><br></pre></td></tr></table></figure>
+
+<p>为了避免每次都使用sudo，可以将当前用户添加到docker组：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> usermod -aG docker ubuntu</span><br></pre></td></tr></table></figure>
+
+<p>注意：如果你的用户名不是ubuntu，请将命令中的ubuntu替换为实际的用户名（可以用 <code>whoami</code> 命令查看）。执行后需要重新登录才能生效。</p>
+<p><strong>重要</strong>​：执行上述命令后，必须完全退出当前SSH会话并重新登录，用户组权限才会生效。</p>
+<p>如果不想重新登录，可以使用以下命令临时激活权限（仅对当前会话有效）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">newgrp docker</span><br></pre></td></tr></table></figure>
+
+<p>或者暂时继续使用sudo运行docker命令（在后续步骤中，所有docker命令前都需要加sudo）。</p>
+<p>验证权限是否生效：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker ps</span><br><span class="line"><span class="comment"># 如果不报错，说明权限配置成功</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="配置Docker镜像源"><a href="#配置Docker镜像源" class="headerlink" title="配置Docker镜像源"></a>配置Docker镜像源</h2><p>Docker官方镜像仓库在国内访问较慢，配置国内镜像源可以显著提高拉取速度。</p>
+<p>创建或编辑Docker配置文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/docker</span><br><span class="line"><span class="built_in">sudo</span> nano /etc/docker/daemon.json</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>​：目前国内很多公共Docker镜像源已经关闭，建议使用云服务商提供的镜像加速器。以下是常见云服务商镜像源配置示例</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;registry-mirrors&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;https://mirror.ccs.tencentyun.com&quot;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果你使用的是其他云服务商（如阿里云、华为云等），请查询对应厂商的Docker镜像加速器地址并进行配置。</p>
+<p>重启Docker服务使配置生效：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl daemon-reload</span><br><span class="line"><span class="built_in">sudo</span> systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<p>验证配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker info | grep -A 3 <span class="string">&quot;Registry Mirrors&quot;</span></span><br><span class="line"><span class="comment"># 应该能看到配置的镜像源地址</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="拉取Redis镜像"><a href="#拉取Redis镜像" class="headerlink" title="拉取Redis镜像"></a>拉取Redis镜像</h2><p>注意：<code>docker search</code> 命令不使用镜像源，在国内网络环境下可能无法访问。如果需要搜索镜像，可以访问 Docker Hub 官网（<a target="_blank" rel="noopener" href="https://hub.docker.com/">https://hub.docker.com</a>）。这里我们直接拉取已知的Redis镜像。</p>
+<p>拉取Redis的Alpine版本。选择Alpine的原因是它基于轻量级的Alpine Linux，镜像体积比标准版小很多：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull redis:alpine</span><br></pre></td></tr></table></figure>
+
+<p>拉取完成后查看镜像：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images redis</span><br></pre></td></tr></table></figure>
+
+<p>输出示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">REPOSITORY   TAG       IMAGE ID       CREATED        SIZE</span><br><span class="line">redis        alpine    3900abf41552   2 weeks ago    40.5MB</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，Alpine版本只有40MB左右，而标准版通常在100MB以上。</p>
+<h2 id="运行Redis容器"><a href="#运行Redis容器" class="headerlink" title="运行Redis容器"></a>运行Redis容器</h2><p>使用以下命令启动Redis容器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name redis-config \</span><br><span class="line">  -p 6379:6379 \</span><br><span class="line">  --restart=always \</span><br><span class="line">  -m 50m \</span><br><span class="line">  --memory-swap 50m \</span><br><span class="line">  redis:alpine redis-server --maxmemory 20mb --maxmemory-policy allkeys-lru</span><br></pre></td></tr></table></figure>
+
+<p>参数说明：</p>
+<ul>
+<li><code>-d</code>：后台运行</li>
+<li><code>--name redis-config</code>：容器名称</li>
+<li><code>-p 6379:6379</code>：端口映射，宿主机6379映射到容器6379</li>
+<li><code>--restart=always</code>：容器异常退出时自动重启，服务器重启后也会自动启动</li>
+<li><code>-m 50m</code>：限制容器最大内存使用为50MB</li>
+<li><code>--memory-swap 50m</code>：限制内存+swap总和为50MB，防止使用swap</li>
+<li><code>redis-server --maxmemory 20mb</code>：限制Redis最大使用20MB内存</li>
+<li><code>--maxmemory-policy allkeys-lru</code>：内存满时使用LRU算法淘汰键</li>
+</ul>
+<p>验证容器运行状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure>
+
+<p>输出示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS                    NAMES</span><br><span class="line">a1b2c3d4e5f6   redis:alpine   &quot;redis-server --maxm…&quot;   10 seconds ago   Up 9 seconds   0.0.0.0:6379-&gt;6379/tcp   redis-config</span><br></pre></td></tr></table></figure>
+
+<p>测试Redis连接：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it redis-config redis-cli ping</span><br><span class="line"><span class="comment"># 输出：PONG</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="观察资源占用"><a href="#观察资源占用" class="headerlink" title="观察资源占用"></a>观察资源占用</h2><p>使用<code>docker stats</code>实时查看容器资源使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stats redis-config --no-stream</span><br></pre></td></tr></table></figure>
+
+<p>输出示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID   NAME           CPU %     MEM USAGE / LIMIT   MEM %     NET I/O       BLOCK I/O   PIDS</span><br><span class="line">a1b2c3d4e5f6   redis-config   0.15%     7.8MiB / 50MiB      15.60%    1.2kB / 0B    0B / 0B     5</span><br></pre></td></tr></table></figure>
+
+<p>可以看到：</p>
+<ul>
+<li>CPU使用率：0.15%（几乎可以忽略）</li>
+<li>内存使用：7.8MB / 50MB限制（实际使用很少）</li>
+<li>进程数：5个</li>
+</ul>
+<p>查看系统总体内存使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">free -h</span><br></pre></td></tr></table></figure>
+
+<p>输出示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">              total        used        free      shared  buff/cache   available</span><br><span class="line">Mem:          3.8Gi       850Mi       2.1Gi       1.0Mi       850Mi       2.7Gi</span><br><span class="line">Swap:            0B          0B          0B</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，Docker和Redis容器占用极小，大部分内存仍然可用。</p>
+<p>使用<code>htop</code>查看进程详情（如未安装：<code>sudo apt install htop</code>）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htop</span><br></pre></td></tr></table></figure>
+
+<p>在进程列表中可以找到Redis相关进程，每个进程的内存占用都很小。按<code>F4</code>搜索”redis”可以快速定位。</p>
+<p>再次确认容器占用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> redis-config redis-cli info memory | grep used_memory_human</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">used_memory_human:1.2M</span><br></pre></td></tr></table></figure>
+
+<p>Redis自身报告只使用了1.2MB内存（未存储数据时的基础开销）。</p>
+<h2 id="性能测试"><a href="#性能测试" class="headerlink" title="性能测试"></a>性能测试</h2><p>使用Redis自带的benchmark工具测试性能:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> redis-config redis-cli --intrinsic-latency 5</span><br></pre></td></tr></table></figure>
+
+<p>测试延迟,输出示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Max latency so far: 1 microseconds.</span><br><span class="line">Max latency so far: 16 microseconds.</span><br><span class="line">Max latency so far: 133 microseconds.</span><br><span class="line">Max latency so far: 293 microseconds.</span><br><span class="line">Max latency so far: 549 microseconds.</span><br><span class="line">Max latency so far: 760 microseconds.</span><br><span class="line">Max latency so far: 2012 microseconds.</span><br><span class="line"></span><br><span class="line">72455986 total runs (avg latency: 0.0690 microseconds / 69.01 nanoseconds per run).</span><br><span class="line">Worst run took 29156x longer than the average latency.</span><br></pre></td></tr></table></figure>
+
+<p><strong>测试结果</strong>​：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">平均延迟：69 纳秒</span><br><span class="line">最大延迟：2012 微秒 (2ms)</span><br><span class="line">测试次数：72,455,986 次</span><br></pre></td></tr></table></figure>
+
+<p><strong>结论</strong>​：在轻量应用服务器环境下，表现良好。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>整个部署过程非常顺利，从零开始安装Docker到运行配置完善的Redis容器，全程不到10分钟。这次实践让我对Docker在Linux环境下的轻量级特性有了更直观的认识。</p>
+<p><strong>核心收获：</strong></p>
+<p><strong>1. 部署体验优秀</strong></p>
+<p>Ubuntu 22.04对Docker的支持非常完善，安装过程清晰流畅。官方文档详实，即使是新手也能快速上手。通过配置国内镜像源，完全解决了网络访问慢的问题。</p>
+<p><strong>2. 资源占用惊人地低</strong></p>
+<p>实测数据令人印象深刻：</p>
+<ul>
+<li>Redis容器空载时仅占用约8MB内存</li>
+<li>写入1000条测试数据后，内存占用增加到8.5MB</li>
+<li>CPU使用率始终保持在0.2%以下</li>
+<li>即使在入门级配置的轻量服务器上，这点开销也几乎可以忽略不计</li>
+</ul>
+<p>相比在Mac/Windows上通过虚拟机运行Docker，Linux原生环境的开销要小一个数量级。这验证了之前调研中提到的结论：Docker在Linux上是真正的轻量级容器技术，而非虚拟机。</p>
+<p><strong>3. 性能表现出色</strong></p>
+<p>使用Redis内置的延迟测试工具，平均延迟仅为69纳秒，即使在轻量应用服务器的环境下，也能保持微秒级的响应速度。这样的性能足以满足大多数应用场景的需求。</p>
+<p><strong>4. 运维管理简单</strong></p>
+<p>一条命令完成容器启动，配置好资源限制和自动重启策略后，基本实现了”一劳永逸”。无需手动安装Redis及其依赖，不用担心环境配置冲突，也不需要编写复杂的服务管理脚本。</p>
+<p><strong>实用建议：</strong></p>
+<p>对于入门级或中低配置的云服务器，完全可以放心使用Docker部署轻量级服务。多个类似容器同时运行也不会对系统造成明显压力。如果你正在考虑是否在配置较低的服务器上使用Docker，建议先进行类似的小规模测试，实际数据会比理论分析更有说服力。</p>
+<p>这次实战不仅验证了Docker的轻量级特性，也为后续在生产环境中大规模使用容器技术提供了信心。容器化不是性能的负担，而是现代应用部署的最佳实践之一。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag"># 运维</a>
+              <a href="/tags/Docker/" rel="tag"># Docker</a>
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/%E5%AE%B9%E5%99%A8%E5%8C%96/" rel="tag"># 容器化</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Docker/2025/%E9%87%8D%E6%96%B0%E8%AE%A4%E8%AF%86Docker%E7%9A%84%E6%80%A7%E8%83%BD%E5%BC%80%E9%94%80/" rel="prev" title="重新认识Docker的性能开销">
+      <i class="fa fa-chevron-left"></i> 重新认识Docker的性能开销
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  
+  <div class="comments">
+    <script src="https://giscus.app/client.js"
+        data-repo="sky-admin/sky-admin.github.io" 
+        data-repo-id="MDEwOlJlcG9zaXRvcnkxMTI0MjY1Nzk=" 
+        data-category="General"
+        data-category-id="DIC_kwDOBrN-U84CZDbX"
+        data-mapping="title" 
+        data-reactions-enabled="1" 
+        data-emit-metadata="1" 
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        data-input-position="bottom"
+        data-loading="lazy"
+        async>
+    </script>
+  </div>
+  
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Docker"><span class="nav-number">2.</span> <span class="nav-text">安装Docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEDocker%E9%95%9C%E5%83%8F%E6%BA%90"><span class="nav-number">3.</span> <span class="nav-text">配置Docker镜像源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8B%89%E5%8F%96Redis%E9%95%9C%E5%83%8F"><span class="nav-number">4.</span> <span class="nav-text">拉取Redis镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8CRedis%E5%AE%B9%E5%99%A8"><span class="nav-number">5.</span> <span class="nav-text">运行Redis容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%82%E5%AF%9F%E8%B5%84%E6%BA%90%E5%8D%A0%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">观察资源占用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95"><span class="nav-number">7.</span> <span class="nav-text">性能测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">skyADMIN</p>
+  <div class="site-description" itemprop="description">地势坤，厚德载物之象，故君子不争炎凉。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">53</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sky-admin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sky-admin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">蜀ICP备15023364号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skyADMIN</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+</script>
+
+</body>
+</html>
